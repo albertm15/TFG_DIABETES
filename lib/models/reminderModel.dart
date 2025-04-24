@@ -1,0 +1,50 @@
+import 'package:diabetes_tfg_app/auxiliarResources/repeatConfigEnum.dart';
+import 'package:uuid/uuid.dart';
+
+class ReminderModel {
+  String id;
+  String userId;
+  String title;
+  String time;
+  String date;
+  bool repeat;
+  String repeatConfig;
+
+  factory ReminderModel.newEntity(String userId, String title, String time,
+      String date, bool repeat, String repeatConfig) {
+    return ReminderModel.withId(
+        Uuid().v4(), userId, title, time, date, repeat, repeatConfig);
+  }
+
+  ReminderModel.withId(this.id, this.userId, this.title, this.time, this.date,
+      this.repeat, this.repeatConfig);
+
+  factory ReminderModel.fromMap(Map<String, dynamic> map) {
+    return ReminderModel.withId(
+      map["id"],
+      map["userId"],
+      map["title"],
+      map["time"],
+      map["date"],
+      map["repeat"],
+      map["repeatConfig"],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": this.id,
+      "userId": this.userId,
+      "foodConsumed": this.title,
+      "totalInsulinUnits": this.time,
+      "totalCarbs": this.date,
+      "time": this.repeat,
+      "date": this.repeatConfig
+    };
+  }
+
+  @override
+  String toString() {
+    return "Transactions(id: $id, userId: $userId,title: $title, time: $time, date: $date, repeat: $repeat, repeatConfig: $repeatConfig)";
+  }
+}
