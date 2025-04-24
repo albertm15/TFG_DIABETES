@@ -71,7 +71,7 @@ void main() async {
   //AuthServiceManager.updatePassword("emailSender");
   //AuthServiceManager.resetForgottenPassword(
   //    "emailsenderspringproject@gmail.com");
-  AuthServiceManager.deleteUser();
+  //AuthServiceManager.deleteUser();
   //---
   runApp(MaterialApp(
       home: BackgroundBase(child: Homepage()),
