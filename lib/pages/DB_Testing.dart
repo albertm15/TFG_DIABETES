@@ -8,7 +8,6 @@ import 'package:diabetes_tfg_app/database/local/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/local/insulinLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/reminderDAO.dart';
 import 'package:diabetes_tfg_app/database/local/userDAO.dart';
-import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';

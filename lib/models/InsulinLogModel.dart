@@ -1,4 +1,3 @@
-import 'package:diabetes_tfg_app/auxiliarResources/InjectionLocationsEnum.dart';
 import 'package:uuid/uuid.dart';
 
 class InsulinLogModel {

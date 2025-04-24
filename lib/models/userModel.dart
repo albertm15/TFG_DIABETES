@@ -5,18 +5,15 @@ import 'package:uuid/uuid.dart';
 class UserModel {
   String id;
   String email;
-  String passwordHash;
-  int height;
-  double weight;
-  int typeOfDiabetes;
-  String fullName;
-  String sex;
-  String country;
+  String? passwordHash;
+  int? height;
+  double? weight;
+  int? typeOfDiabetes;
+  String? fullName;
+  String? sex;
+  String? country;
 
-  /*
-  UserModel(this.email, this.passwordHash, this.height, this.weight,
-      this.typeOfDiabetes, this.fullName, this.sex, this.country);
-  */
+  UserModel(this.id, this.email);
 
   UserModel.withId(this.id, this.email, this.passwordHash, this.height,
       this.weight, this.typeOfDiabetes, this.fullName, this.sex, this.country);

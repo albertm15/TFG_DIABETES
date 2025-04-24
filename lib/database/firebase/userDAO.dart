@@ -6,6 +6,7 @@ import 'package:diabetes_tfg_app/models/userModel.dart';
 class UserDAOFB {
   final insatnceDB = DatabaseManager.instance;
 
+  //esto hay que cambiarlo porque no se van a mostrar todos los users en ningun momento, solo el suyo
   //getAll
   Future<List<UserModel>> getAll() async {
     QuerySnapshot snapshot;

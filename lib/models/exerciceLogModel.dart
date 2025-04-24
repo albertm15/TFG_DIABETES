@@ -1,4 +1,3 @@
-import 'package:diabetes_tfg_app/auxiliarResources/exerciceCategoryEnum.dart';
 import 'package:uuid/uuid.dart';
 
 class ExerciceLogModel {
