@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
@@ -57,6 +58,20 @@ void main() async {
   print(await userDAO.getById("1e2940c2-d57f-4595-99c4-62aaeb0cb35a"));
   print("fin get by id");
 
+  //test de auth
+  print(AuthServiceManager.checkIfLogged());
+  //AuthServiceManager.signUp(
+  //   "emailsenderspringproject@gmail.com", "emailSender1234");
+  //AuthServiceManager.logOut();
+  print(AuthServiceManager.checkIfLogged());
+  //AuthServiceManager.logIn(
+  //    "emailsenderspringproject@gmail.com", "emailSender1234");
+  print(AuthServiceManager.checkIfLogged());
+  print(AuthServiceManager.getCurrentUserUID());
+  //AuthServiceManager.updatePassword("emailSender");
+  //AuthServiceManager.resetForgottenPassword(
+  //    "emailsenderspringproject@gmail.com");
+  AuthServiceManager.deleteUser();
   //---
   runApp(MaterialApp(
       home: BackgroundBase(child: Homepage()),

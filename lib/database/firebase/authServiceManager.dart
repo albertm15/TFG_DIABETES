@@ -34,9 +34,11 @@ class AuthServiceManager {
       return false;
     } else {
       UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(
+              email: email.trim(), password: password);
 
       UserDAOFB().insert(UserModel(userCredential.user!.uid, email));
+
       return true;
     }
   }
