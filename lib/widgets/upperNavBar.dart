@@ -9,18 +9,21 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
+  //actualizar cada vez que se añada una nueva pantalla, añadirla tambien aqui:)
   void goBack(BuildContext context) {
     switch (pageName) {
-      case "Glucose":
+      case "Glucose" || "Insulin" || "Diet" || "Exercice & Health":
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => BackgroundBase(child: Homepage())));
         break;
+
       default:
         if (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
+        break;
     }
   }
 
