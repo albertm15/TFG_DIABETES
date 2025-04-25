@@ -6,6 +6,7 @@ import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -67,13 +68,13 @@ void main() async {
   //AuthServiceManager.logIn(
   //    "emailsenderspringproject@gmail.com", "emailSender1234");
   print(AuthServiceManager.checkIfLogged());
-  print(AuthServiceManager.getCurrentUserUID());
+  //print(AuthServiceManager.getCurrentUserUID());
   //AuthServiceManager.updatePassword("emailSender");
   //AuthServiceManager.resetForgottenPassword(
   //    "emailsenderspringproject@gmail.com");
   //AuthServiceManager.deleteUser();
   //---
   runApp(MaterialApp(
-      home: BackgroundBase(child: Homepage()),
+      home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
       debugShowCheckedModeBanner: false));
 }

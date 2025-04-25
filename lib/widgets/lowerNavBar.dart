@@ -5,6 +5,7 @@ import 'package:diabetes_tfg_app/pages/glucoseMainPage.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/insulinMainPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';
 
 class LowerNavBar extends StatelessWidget {
@@ -33,8 +34,8 @@ class LowerNavBar extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            BackgroundBase(child: GlucoseMainPage())));
+                        builder: (context) => DrawerScaffold(
+                            child: BackgroundBase(child: GlucoseMainPage()))));
               },
               icon: Icon(Icons.water_drop_outlined, color: Colors.white),
               iconSize: 40, // Ajusta el tamaño también aquí
@@ -45,9 +46,10 @@ class LowerNavBar extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BackgroundBase(
+                          builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
                                 child: InsulinMainPage(),
-                              )));
+                              ))));
                 },
                 icon: Image.asset(
                   'assets/images/Insulin_image_white.png',
@@ -60,8 +62,8 @@ class LowerNavBar extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            BackgroundBase(child: Homepage())));
+                        builder: (context) => DrawerScaffold(
+                            child: BackgroundBase(child: Homepage()))));
               },
               icon: Icon(Icons.home_outlined, color: Colors.white),
               iconSize: 40, // Ajusta el tamaño también aquí
@@ -72,8 +74,8 @@ class LowerNavBar extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            BackgroundBase(child: DietMainPage())));
+                        builder: (context) => DrawerScaffold(
+                            child: BackgroundBase(child: DietMainPage()))));
               },
               icon: Icon(Icons.fastfood_outlined, color: Colors.white),
               iconSize: 40, // Ajusta el tamaño también aquí
@@ -84,9 +86,10 @@ class LowerNavBar extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => BackgroundBase(
-                            //child: ExerciceAndHealthMainPage())));
-                            child: DbTestingPage())));
+                        builder: (context) => DrawerScaffold(
+                            child: BackgroundBase(
+                                //child: ExerciceAndHealthMainPage())));
+                                child: DbTestingPage()))));
               },
               icon: Icon(Icons.directions_run_rounded, color: Colors.white),
               iconSize: 40, // Ajusta el tamaño también aquí
