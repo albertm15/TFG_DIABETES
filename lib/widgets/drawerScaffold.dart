@@ -1,4 +1,7 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/pages/configurationPage.dart';
+import 'package:diabetes_tfg_app/pages/profilePage.dart';
+import 'package:diabetes_tfg_app/pages/reportsPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +82,15 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold)),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
+                                      //child: ExerciceAndHealthMainPage())));
+                                      child: ProfilePage()))));
+                    },
                   ),
                   ListTile(
                     leading: Icon(
@@ -92,7 +103,15 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold)),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
+                                      //child: ExerciceAndHealthMainPage())));
+                                      child: ConfigurationPage()))));
+                    },
                   ),
                   ListTile(
                     leading: Icon(
@@ -105,7 +124,15 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold)),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
+                                      //child: ExerciceAndHealthMainPage())));
+                                      child: ReportsPage()))));
+                    },
                   ),
                   SizedBox(height: 280),
                   ListTile(
