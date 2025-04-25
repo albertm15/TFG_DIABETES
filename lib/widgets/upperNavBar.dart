@@ -1,3 +1,5 @@
+import 'package:diabetes_tfg_app/pages/homePage.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:flutter/material.dart';
 
 class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
@@ -6,6 +8,21 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  void goBack(BuildContext context) {
+    switch (pageName) {
+      case "Glucose":
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BackgroundBase(child: Homepage())));
+        break;
+      default:
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +63,19 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 padding: EdgeInsets.only(left: 30),
               ),
               actions: [
-                IconButton(
-                  onPressed: () {
-                    print("Botón 'Back' presionado");
-                    if (Navigator.canPop(context)) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
-                  iconSize: 40,
-                  padding: EdgeInsets.only(right: 30),
-                ),
+                if (pageName == "Home Page")
+                  Container()
+                else
+                  IconButton(
+                    onPressed: () {
+                      print("Botón 'Back' presionado");
+                      goBack(context);
+                    },
+                    icon:
+                        Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+                    iconSize: 40,
+                    padding: EdgeInsets.only(right: 30),
+                  )
               ],
             )));
   }

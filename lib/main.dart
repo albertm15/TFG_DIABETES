@@ -61,7 +61,7 @@ void main() async {
   //test de auth
   print(AuthServiceManager.checkIfLogged());
   //AuthServiceManager.signUp(
-  //   "emailsenderspringproject@gmail.com", "emailSender1234");
+  //    "emailsenderspringproject@gmail.com", "emailSender1234");
   //AuthServiceManager.logOut();
   print(AuthServiceManager.checkIfLogged());
   //AuthServiceManager.logIn(
