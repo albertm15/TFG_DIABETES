@@ -179,8 +179,10 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
                       children: [
                         widget.child,
                         Positioned(
-                          top: 55,
-                          left: 22,
+                          top: MediaQuery.of(context).padding.top -
+                              5, // Se ajusta al espacio superior del dispositivo
+                          left:
+                              25, // Se ajusta al espacio izquierdo, aumentando para moverlo a la derecha
                           child: IconButton(
                             icon: Icon(Icons.menu_rounded,
                                 color: Colors.white, size: 40),

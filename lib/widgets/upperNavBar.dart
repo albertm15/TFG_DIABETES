@@ -49,15 +49,18 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             child: AppBar(
               backgroundColor: Colors.transparent,
-              title: Text(
+              title: Center(
+                  child: Text(
                 "$pageName",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 35,
                 ),
-              ),
-              leading: IconButton(
+              )),
+              leading: Container(),
+              /*
+              IconButton(
                 onPressed: () {
                   print("Botón 'Lateral Menu' presionado");
                 },
@@ -65,9 +68,12 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 iconSize: 40,
                 padding: EdgeInsets.only(left: 30),
               ),
+              */
               actions: [
                 if (pageName == "Home Page")
-                  Container()
+                  SizedBox(
+                    width: 40,
+                  )
                 else
                   IconButton(
                     onPressed: () {
