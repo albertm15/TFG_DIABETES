@@ -9,6 +9,7 @@ import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,8 +19,15 @@ void main() async {
 
   //--- testing DB
   print("insert");
-  GlucoseLogModel logModel = GlucoseLogModel.newEntity("userId", 122,
-      "22-02-2024", "22:04:34", "Elevado", false, true, "este es otro insert");
+  GlucoseLogModel logModel = GlucoseLogModel.newEntity(
+      "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1",
+      245,
+      DateFormat("dd-MM-yyyy").format(DateTime.now()),
+      "22:04:34",
+      "Elevado",
+      false,
+      true,
+      "este es otro insert");
   /*
   Map<String, dynamic> map = logModel.toMap();
   await FirebaseFirestore.instance.collection("glucoseLog").add(map);
@@ -73,6 +81,10 @@ void main() async {
   //AuthServiceManager.resetForgottenPassword(
   //    "emailsenderspringproject@gmail.com");
   //AuthServiceManager.deleteUser();
+  print(AuthServiceManager.getCurrentUserUID());
+
+  print(DateFormat('dd-MM-yyyy').format(DateTime.now()));
+  print(await daofb.getTodayLogs());
   //---
   runApp(MaterialApp(
       home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
