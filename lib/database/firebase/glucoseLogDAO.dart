@@ -3,7 +3,6 @@ import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/local/databaseManager.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
 
 class GlucoseLogDAOFB {
@@ -77,6 +76,7 @@ class GlucoseLogDAOFB {
             .where("userId", isEqualTo: uid)
             .where("date",
                 isEqualTo: DateFormat("dd-MM-yyyy").format(DateTime.now()))
+            .orderBy("time")
             .get(GetOptions(source: Source.cache));
       } else {
         snapshot = await FirebaseFirestore.instance
@@ -84,6 +84,52 @@ class GlucoseLogDAOFB {
             .where("userId", isEqualTo: uid)
             .where("date",
                 isEqualTo: DateFormat("dd-MM-yyyy").format(DateTime.now()))
+            .orderBy("time")
+            .get();
+      }
+
+      List<GlucoseLogModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(GlucoseLogModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
+
+  //getWeekLogs
+  Future<List<GlucoseLogModel>> getLast7DaysLogs() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("glucoseLog")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo: DateFormat("dd-MM-yyyy")
+                    .format(DateTime.now().subtract(Duration(days: 7))))
+            .where("date",
+                isLessThanOrEqualTo:
+                    DateFormat("dd-MM-yyyy").format(DateTime.now()))
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("glucoseLog")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo: DateFormat("dd-MM-yyyy")
+                    .format(DateTime.now().subtract(Duration(days: 7))))
+            .where("date",
+                isLessThanOrEqualTo:
+                    DateFormat("dd-MM-yyyy").format(DateTime.now()))
+            .orderBy("date")
+            .orderBy("time")
             .get();
       }
 

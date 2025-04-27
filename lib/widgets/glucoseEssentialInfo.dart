@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 class GlucoseEssentialInfo extends StatelessWidget {
+  final double avgGlucose;
+  final int hypoglucemies;
+  final int hyperglucemies;
+  const GlucoseEssentialInfo(
+      {required this.hypoglucemies,
+      required this.avgGlucose,
+      required this.hyperglucemies});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +31,7 @@ class GlucoseEssentialInfo extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text("5",
+                Text("$hypoglucemies",
                     style: TextStyle(
                       color: const Color.fromARGB(255, 255, 255, 255),
                       fontWeight: FontWeight.bold,
@@ -35,7 +43,7 @@ class GlucoseEssentialInfo extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 35,
                     )),
-                Text("94",
+                Text("${avgGlucose.floor()}",
                     style: TextStyle(
                       color: const Color.fromARGB(255, 255, 255, 255),
                       fontWeight: FontWeight.bold,
@@ -47,7 +55,7 @@ class GlucoseEssentialInfo extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 35,
                     )),
-                Text("3",
+                Text("$hyperglucemies",
                     style: TextStyle(
                       color: const Color.fromARGB(255, 255, 255, 255),
                       fontWeight: FontWeight.bold,
