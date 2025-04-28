@@ -1,6 +1,7 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/local/databaseManager.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
+import 'package:intl/intl.dart';
 
 class GlucoseLogDAO {
   final insatnceDB = DatabaseManager.instance;
@@ -43,5 +44,41 @@ class GlucoseLogDAO {
         .delete('GlucoseLogs', where: 'id = ?', whereArgs: [glucoseLog.id]);
 
     return id;
+  }
+
+  //getTodayLogs
+  Future<List<GlucoseLogModel>> getTodayLogs() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('GlucoseLogs',
+        orderBy: 'time DESC',
+        where: "date = ?",
+        whereArgs: [DateFormat("dd-MM-yyyy").format(DateTime.now())]);
+
+    List<GlucoseLogModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(GlucoseLogModel.fromMap(log));
+    }
+
+    return glucoseLogs;
+  }
+
+  //getWeekLogs
+  Future<List<GlucoseLogModel>> getWeekLogs() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('GlucoseLogs',
+        orderBy: 'time DESC',
+        where: "date <= ? and date >= ?",
+        whereArgs: [
+          DateFormat("dd-MM-yyyy").format(DateTime.now()),
+          DateFormat("dd-MM-yyyy")
+              .format(DateTime.now().subtract(Duration(days: 7)))
+        ]);
+
+    List<GlucoseLogModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(GlucoseLogModel.fromMap(log));
+    }
+
+    return glucoseLogs;
   }
 }

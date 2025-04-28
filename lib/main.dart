@@ -2,9 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
+import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
+import 'package:diabetes_tfg_app/pages/logIngPage.dart';
+import 'package:diabetes_tfg_app/pages/signUpPage.dart';
+import 'package:diabetes_tfg_app/pages/welcomePage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -75,21 +79,44 @@ void main() async {
   //AuthServiceManager.logOut();
   print(AuthServiceManager.checkIfLogged());
   //AuthServiceManager.logIn(
-  //    "emailsenderspringproject@gmail.com", "emailSender1234");
+  //   "emailsenderspringproject@gmail.com", "emailSender1234");
   print(AuthServiceManager.checkIfLogged());
   //print(AuthServiceManager.getCurrentUserUID());
   //AuthServiceManager.updatePassword("emailSender");
   //AuthServiceManager.resetForgottenPassword(
   //    "emailsenderspringproject@gmail.com");
   //AuthServiceManager.deleteUser();
-  print(AuthServiceManager.getCurrentUserUID());
+  //print(AuthServiceManager.getCurrentUserUID());
 
   print(DateFormat('dd-MM-yyyy').format(DateTime.now()));
   print(DateTime.now().hour);
   print(await daofb.getLast7DaysLogs());
   print(DateTime.now().subtract(Duration(days: 7)));
+
+  GlucoseLogModel logModel2 = GlucoseLogModel.newEntity(
+      "LocalUser",
+      125,
+      DateFormat("dd-MM-yyyy").format(DateTime.now()),
+      "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+      //"17:45:00",
+      "Elevado",
+      true,
+      false,
+      "este es otro insert");
+  GlucoseLogDAO glucoseLogDAO = GlucoseLogDAO();
+  //await glucoseLogDAO.insert(logModel2);
+  print(await glucoseLogDAO.getTodayLogs());
+  print(await glucoseLogDAO.getWeekLogs());
   //---
-  runApp(MaterialApp(
+  runApp(
+    MaterialApp(
+        /*
       home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
-      debugShowCheckedModeBanner: false));
+      debugShowCheckedModeBanner: false)
+      */
+        //home: LogInPage(),
+        //home: SignUpPage(),
+        home: Welcomepage(),
+        debugShowCheckedModeBanner: false),
+  );
 }

@@ -45,6 +45,7 @@ class AuthServiceManager {
 
   static Future<void> logOut() async {
     await FirebaseAuth.instance.signOut();
+    print("user logged out");
   }
 
   static Future<void> deleteUser() async {

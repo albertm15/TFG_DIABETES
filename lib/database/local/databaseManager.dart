@@ -13,8 +13,8 @@ class DatabaseManager {
         date TEXT,
         time TEXT,
         category TEXT,
-        hyperglucemy INTEGER,
-        hypoglucemy INTEGER,
+        hyperglucemia INTEGER,
+        hypoglucemia INTEGER,
         sensations TEXT
       );
 

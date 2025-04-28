@@ -1,7 +1,9 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/pages/configurationPage.dart';
+import 'package:diabetes_tfg_app/pages/logIngPage.dart';
 import 'package:diabetes_tfg_app/pages/profilePage.dart';
 import 'package:diabetes_tfg_app/pages/reportsPage.dart';
+import 'package:diabetes_tfg_app/pages/welcomePage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:flutter/material.dart';
 
@@ -150,6 +152,11 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
                       //Añadir un redirect a la pantalla de bienvenida despues de que se cierre la sesion
                       setState(() {
                         AuthServiceManager.logOut();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Welcomepage(),
+                            ));
                       });
                     },
                   ),

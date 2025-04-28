@@ -1,6 +1,10 @@
+import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/dailyGlucoseEvolutionChart.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseEssentialInfo.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
 import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
@@ -15,13 +19,15 @@ class Homepage extends StatefulWidget {
 class _HomePageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DrawerScaffold(
+        child: BackgroundBase(
+            child: Scaffold(
       appBar: UpperNavBar(pageName: "Home Page"),
       //body: Container(child: Center(child: Text("Hello"))),
       body: Container(child: Center(child: HomePageWidget())),
       bottomNavigationBar: LowerNavBar(),
       backgroundColor: Colors.transparent,
-    );
+    )));
   }
 }
 
@@ -40,13 +46,23 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   int hypoglucemies = 0;
 
   Future<void> getTodaysData() async {
-    GlucoseLogDAOFB dao = GlucoseLogDAOFB();
-    daylogs = await dao.getTodayLogs();
+    if (AuthServiceManager.checkIfLogged()) {
+      GlucoseLogDAOFB dao = GlucoseLogDAOFB();
+      daylogs = await dao.getTodayLogs();
+    } else {
+      GlucoseLogDAO dao = GlucoseLogDAO();
+      daylogs = await dao.getTodayLogs();
+    }
   }
 
   Future<void> getLast7DaysData() async {
-    GlucoseLogDAOFB dao = GlucoseLogDAOFB();
-    weeklogs = await dao.getLast7DaysLogs();
+    if (AuthServiceManager.checkIfLogged()) {
+      GlucoseLogDAOFB dao = GlucoseLogDAOFB();
+      weeklogs = await dao.getLast7DaysLogs();
+    } else {
+      GlucoseLogDAO dao = GlucoseLogDAO();
+      weeklogs = await dao.getWeekLogs();
+    }
   }
 
   void loadHypoHyper() {
