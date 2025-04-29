@@ -13,6 +13,19 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _passwordController1 = TextEditingController();
   final TextEditingController _passwordController2 = TextEditingController();
 
+  String transformErrorMessage(String errorMessage) {
+    switch (errorMessage) {
+      case "Exception: [firebase_auth/invalid-email] The email address is badly formatted.":
+        return "La dirección de correo electrónico no es válida";
+      case "Exception: [firebase_auth/email-already-in-use] The email address is already in use by another account.":
+        return "La dirección de correo electronico ya está en uso";
+      case "Exception: [firebase_auth/weak-password] Password should be at least 6 characters":
+        return "La contraseña es invalida, debe tener almenos 6 caracteres.";
+      default:
+        return errorMessage;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,32 +122,117 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          // Acción al confirmar
-                          print("button pressed: COFIRMAR");
-                          print(_emailController.text);
-                          print(_passwordController1.text);
-                          print(_passwordController2.text);
-                          if (_passwordController1.text.toString().compareTo(
-                                  _passwordController2.text.toString()) !=
-                              0) {
+                        onPressed: () async {
+                          if (_passwordController1.text !=
+                              _passwordController2.text) {
                             print("contraseñas distintas");
-                            AlertDialog(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 232, 99, 89),
-                              title: Title(
-                                  color: Colors.black,
-                                  child: Text(
-                                      "Las 2 contraseñas no coincides. Deben ser iguales")),
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 232, 80, 69),
+                                  title: Text(
+                                    "Las 2 contraseñas no coinciden",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  content: Text(
+                                      "Debes escribir la misma contraseña en ambos campos.",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16)),
+                                  actions: [
+                                    TextButton(
+                                      child: Text("OK",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20)),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Cierra el pop-up
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           } else {
-                            AuthServiceManager.signUp(_emailController.text,
-                                _passwordController1.text);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Homepage(),
-                                ));
+                            try {
+                              bool signUpSuccess =
+                                  await AuthServiceManager.signUp(
+                                _emailController.text,
+                                _passwordController1.text,
+                              );
+                              if (signUpSuccess) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Homepage()),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor:
+                                        Color.fromARGB(255, 232, 80, 69),
+                                    title: Text(
+                                      'No se pudo registrar',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    content: Text(
+                                      'Verifica tu conexión a internet e inténtalo de nuevo.',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: Text(
+                                          'OK',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            } catch (error) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor:
+                                      Color.fromARGB(255, 232, 80, 69),
+                                  title: Text(
+                                    'No se pudo registrar',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  content: Text(
+                                    transformErrorMessage(error.toString()),
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 16),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
                           }
                         },
                         style: ElevatedButton.styleFrom(

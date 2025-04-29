@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
@@ -107,6 +108,9 @@ void main() async {
   //await glucoseLogDAO.insert(logModel2);
   print(await glucoseLogDAO.getTodayLogs());
   print(await glucoseLogDAO.getWeekLogs());
+
+  final connectivity = await Connectivity().checkConnectivity();
+  print(connectivity);
   //---
   runApp(
     MaterialApp(

@@ -14,32 +14,40 @@ class AuthServiceManager {
 
   static Future<bool> logIn(String email, String password) async {
     //mirar de aplicar el check de la conexion con try catch y la excepcion
-    final connectivity = await Connectivity().checkConnectivity();
-    if (!connectivity.contains(ConnectivityResult.wifi) &&
-        !connectivity.contains(ConnectivityResult.mobile)) {
-      //el logIn no se puede hacer ya que no hay conexion
-      return false;
-    } else {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      return true;
+    try {
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        return false;
+      } else {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+
+        return true;
+      }
+    } catch (e) {
+      throw Exception('${e.toString()}');
     }
   }
 
   static Future<bool> signUp(String email, String password) async {
     //mirar de aplicar el check de la conexion con try catch y la excepcion
-    final connectivity = await Connectivity().checkConnectivity();
-    if (!connectivity.contains(ConnectivityResult.wifi) &&
-        !connectivity.contains(ConnectivityResult.mobile)) {
-      return false;
-    } else {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: email.trim(), password: password);
+    try {
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        return false;
+      } else {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: email.trim(), password: password);
 
-      UserDAOFB().insert(UserModel(userCredential.user!.uid, email));
+        UserDAOFB().insert(UserModel(userCredential.user!.uid, email));
 
-      return true;
+        return true;
+      }
+    } catch (e) {
+      throw Exception('${e.toString()}');
     }
   }
 
