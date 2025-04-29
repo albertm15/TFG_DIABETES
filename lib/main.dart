@@ -122,13 +122,16 @@ void main() async {
   final connectivity = await Connectivity().checkConnectivity();
   print(connectivity);
   //---
-  runApp(MaterialApp(
-          home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
-          debugShowCheckedModeBanner: false)
+  if (AuthServiceManager.checkIfLogged()) {
+    runApp(MaterialApp(
+        home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
+        debugShowCheckedModeBanner: false));
+  } else {
+    runApp(MaterialApp(home: Welcomepage(), debugShowCheckedModeBanner: false));
+  }
 
-      //home: LogInPage(),
-      //home: SignUpPage(),
-      //home: Welcomepage(),
-      //debugShowCheckedModeBanner: false),
-      );
+  //home: LogInPage(),
+  //home: SignUpPage(),
+  //home: Welcomepage(),
+  //debugShowCheckedModeBanner: false),
 }
