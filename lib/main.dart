@@ -6,7 +6,10 @@ import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
+import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/welcomePage.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -21,11 +24,11 @@ void main() async {
   print("insert");
   GlucoseLogModel logModel = GlucoseLogModel.newEntity(
       "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1",
-      125,
+      100,
       DateFormat("dd-MM-yyyy").format(DateTime.now()),
       "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
       //"17:45:00",
-      "Elevado",
+      "Normal",
       true,
       false,
       "este es otro insert");
@@ -107,15 +110,13 @@ void main() async {
   final connectivity = await Connectivity().checkConnectivity();
   print(connectivity);
   //---
-  runApp(
-    MaterialApp(
-        /*
-      home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
-      debugShowCheckedModeBanner: false)
-      */
-        //home: LogInPage(),
-        //home: SignUpPage(),
-        home: Welcomepage(),
-        debugShowCheckedModeBanner: false),
-  );
+  runApp(MaterialApp(
+          home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
+          debugShowCheckedModeBanner: false)
+
+      //home: LogInPage(),
+      //home: SignUpPage(),
+      //home: Welcomepage(),
+      //debugShowCheckedModeBanner: false),
+      );
 }

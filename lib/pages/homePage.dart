@@ -7,6 +7,7 @@ import 'package:diabetes_tfg_app/widgets/dailyGlucoseEvolutionChart.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseEssentialInfo.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
+import 'package:diabetes_tfg_app/widgets/minimizedLogsListHome.dart';
 import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
@@ -120,20 +121,15 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         SizedBox(height: 16),
         Container(
           height: 200,
-          /*
-          child: DailyGlucoseEvolutionChart(glucoseData: [
-            FlSpot(0, 100),
-            FlSpot(3, 90),
-            FlSpot(6, 95),
-            FlSpot(9, 120),
-            FlSpot(12, 150),
-            FlSpot(15, 380),
-            FlSpot(18, 270),
-            FlSpot(21, 100)
-          ]), 
-          */
           child: DailyGlucoseEvolutionChart(glucoseData: daylogs),
-        )
+        ),
+        SizedBox(height: 16),
+        Expanded(
+            child: MinimizedLogsListHome(
+                glucoseLogs: weeklogs,
+                insulinLogs: [],
+                dietLogs: [],
+                exerciceLogs: []))
       ],
     ));
   }

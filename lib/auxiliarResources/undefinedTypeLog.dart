@@ -1,0 +1,16 @@
+class UndefinedTypeLog {
+  final String id;
+  final DateTime dateTime;
+  final dynamic log;
+  final String type;
+  final String category;
+  final int value;
+
+  const UndefinedTypeLog(
+      {required this.id,
+      required this.dateTime,
+      required this.log,
+      required this.type,
+      required this.category,
+      required this.value});
+}

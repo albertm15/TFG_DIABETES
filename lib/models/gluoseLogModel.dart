@@ -1,7 +1,7 @@
 import 'package:uuid/uuid.dart';
 
 class GlucoseLogModel {
-  String? id;
+  String id;
   String userId;
   int glucoseValue;
   String date;
@@ -11,8 +11,8 @@ class GlucoseLogModel {
   bool hypoglucemia;
   String sensations;
 
-  GlucoseLogModel(this.userId, this.glucoseValue, this.date, this.time,
-      this.category, this.hyperglucemia, this.hypoglucemia, this.sensations);
+  /*GlucoseLogModel(this.userId, this.glucoseValue, this.date, this.time,
+      this.category, this.hyperglucemia, this.hypoglucemia, this.sensations);*/
 
   factory GlucoseLogModel.newEntity(
       String userId,
