@@ -42,7 +42,7 @@ class DietListTile extends StatelessWidget {
           ],
         ),
         title: Text(
-          '${log.value}mg/dl ${log.category}',
+          '${log.value}carbohidratos Comida',
           style: TextStyle(color: Colors.white),
         ),
         subtitle: Text(

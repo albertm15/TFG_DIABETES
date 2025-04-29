@@ -4,7 +4,7 @@ class ExerciceLogModel {
   String id;
   String userId;
   String category;
-  String duration;
+  int duration;
   String beforeSensations;
   String afterSensations;
   String date;
@@ -13,7 +13,7 @@ class ExerciceLogModel {
   factory ExerciceLogModel.newEntity(
       String userId,
       String category,
-      String duration,
+      int duration,
       String beforeSensations,
       String afterSensations,
       String date,

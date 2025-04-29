@@ -4,12 +4,12 @@ class DietLogModel {
   String id;
   String userId;
   double totalInsulinUnits;
-  String totalCarbs;
+  int totalCarbs;
   String time;
   String date;
 
   factory DietLogModel.newEntity(String userId, double totalInsulinUnits,
-      String totalCarbs, String time, String date) {
+      int totalCarbs, String time, String date) {
     return DietLogModel.withId(
         Uuid().v4(), userId, totalInsulinUnits, totalCarbs, time, date);
   }

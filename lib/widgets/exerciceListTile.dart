@@ -42,7 +42,7 @@ class ExerciceListTile extends StatelessWidget {
           ],
         ),
         title: Text(
-          '${log.value}mg/dl ${log.category}',
+          '${log.value}minutos ${log.category}',
           style: TextStyle(color: Colors.white),
         ),
         subtitle: Text(

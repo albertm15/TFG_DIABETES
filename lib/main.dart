@@ -26,10 +26,10 @@ void main() async {
   print("insert");
   GlucoseLogModel logModel = GlucoseLogModel.newEntity(
       "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1",
-      60,
+      140,
       DateFormat("dd-MM-yyyy").format(DateTime.now()),
-      "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-      //"17:45:00",
+      //"${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+      "06:45:00",
       "Normal",
       true,
       false,

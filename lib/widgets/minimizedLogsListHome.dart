@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
 import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
@@ -54,7 +53,7 @@ class MinimizedLogsListHome extends StatelessWidget {
           log: log,
           type: "diet",
           category: "",
-          value: 0));
+          value: log.totalCarbs.toDouble()));
     }
 
     for (ExerciceLogModel log in this.exerciceLogs) {
@@ -64,8 +63,8 @@ class MinimizedLogsListHome extends StatelessWidget {
           dateTime: dateTime,
           log: log,
           type: "exercice",
-          category: "",
-          value: 0));
+          category: log.category,
+          value: log.duration.toDouble()));
     }
 
     allLogs.sort((a, b) => -a.dateTime.compareTo(b.dateTime));
@@ -105,6 +104,10 @@ class MinimizedLogsListHome extends StatelessWidget {
               if (log.type == "glucose") {
                 return GlucoseListTile(log: log);
               } else if (log.type == "insulin") {
+                return InsulinListTile(log: log);
+              } else if (log.type == "diet") {
+                return InsulinListTile(log: log);
+              } else if (log.type == "exercice") {
                 return InsulinListTile(log: log);
               } else {
                 return SizedBox.shrink(); // para evitar errores
