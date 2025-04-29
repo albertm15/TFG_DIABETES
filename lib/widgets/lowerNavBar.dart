@@ -31,7 +31,7 @@ class LowerNavBar extends StatelessWidget {
             IconButton(
               onPressed: () {
                 print("Botón 'Glucose' presionado");
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => DrawerScaffold(
@@ -59,7 +59,7 @@ class LowerNavBar extends StatelessWidget {
             IconButton(
               onPressed: () {
                 print("Botón 'Home' presionado");
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => DrawerScaffold(
@@ -71,7 +71,7 @@ class LowerNavBar extends StatelessWidget {
             IconButton(
               onPressed: () {
                 print("Botón 'Diet' presionado");
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => DrawerScaffold(
@@ -83,13 +83,13 @@ class LowerNavBar extends StatelessWidget {
             IconButton(
               onPressed: () {
                 print("Botón 'Exercice & Health' presionado");
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => DrawerScaffold(
                             child: BackgroundBase(
-                                //child: ExerciceAndHealthMainPage())));
-                                child: DbTestingPage()))));
+                                child: ExerciceAndHealthMainPage()))));
+                //child: DbTestingPage()))));
               },
               icon: Icon(Icons.directions_run_rounded, color: Colors.white),
               iconSize: 40, // Ajusta el tamaño también aquí
