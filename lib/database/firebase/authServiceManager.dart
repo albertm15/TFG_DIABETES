@@ -67,12 +67,19 @@ class AuthServiceManager {
     await FirebaseAuth.instance.currentUser!.updatePassword(password);
   }
 
-  static Future<void> resetForgottenPassword(String email) async {
+  static Future<bool> resetForgottenPassword(String email) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        return false;
+      } else {
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+        return true;
+      }
     } catch (e) {
-      print("Error al enviar email de recuperación: $e");
-      //crear un AlertDialog o alo asi para mostrar que no existe ese eail en el auth
+      throw Exception('${e.toString()}');
     }
   }
 }

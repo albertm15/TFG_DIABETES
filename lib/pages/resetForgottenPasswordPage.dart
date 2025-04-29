@@ -13,6 +13,17 @@ class _ResetForgottenPasswordPageState
     extends State<ResetForgottenPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
 
+  String transformErrorMessage(String errorMessage) {
+    switch (errorMessage) {
+      case "Exception: [firebase_auth/missing-email] An email address must be provided.":
+        return "No se ha introducido una direccion de correo electrónico";
+      case "Exception: [firebase_auth/invalid-email] The email address is badly formatted.":
+        return "La dirección de correo electrónico no es válida.";
+      default:
+        return errorMessage;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,17 +105,79 @@ class _ResetForgottenPasswordPageState
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {
-                          // Acción al confirmar
-                          print("button pressed: Enviar");
-                          print(_emailController.text);
-                          AuthServiceManager.resetForgottenPassword(
-                              _emailController.text);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LogInPage(),
-                              ));
+                        onPressed: () async {
+                          try {
+                            bool resetPasswordSuccess =
+                                await AuthServiceManager.resetForgottenPassword(
+                                    _emailController.text);
+                            if (resetPasswordSuccess) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LogInPage()),
+                              );
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor:
+                                      Color.fromARGB(255, 232, 80, 69),
+                                  title: Text(
+                                    'No se pudo enviar el correo',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  content: Text(
+                                    'Verifica tu conexión a internet e inténtalo de nuevo.',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 16),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          } catch (error) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                backgroundColor:
+                                    Color.fromARGB(255, 232, 80, 69),
+                                title: Text(
+                                  'No se pudo enviar el correo',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                content: Text(
+                                  transformErrorMessage(error.toString()),
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 16),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: Text(
+                                      'OK',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
