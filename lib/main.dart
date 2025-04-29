@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
+import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
@@ -24,7 +26,7 @@ void main() async {
   print("insert");
   GlucoseLogModel logModel = GlucoseLogModel.newEntity(
       "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1",
-      100,
+      60,
       DateFormat("dd-MM-yyyy").format(DateTime.now()),
       "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
       //"17:45:00",
@@ -106,6 +108,16 @@ void main() async {
   //await glucoseLogDAO.insert(logModel2);
   print(await glucoseLogDAO.getTodayLogs());
   print(await glucoseLogDAO.getWeekLogs());
+
+  InsulinLogDAOFB insulinLogDAOFB = InsulinLogDAOFB();
+  InsulinLogModel insulinLogModel = InsulinLogModel.newEntity(
+      "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1",
+      5.5,
+      DateFormat("dd-MM-yyyy").format(DateTime.now()),
+      "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+      "Muslo derecho");
+  //insulinLogDAOFB.insert(insulinLogModel);
+  print(await insulinLogDAOFB.getLast7DaysLogs());
 
   final connectivity = await Connectivity().checkConnectivity();
   print(connectivity);

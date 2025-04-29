@@ -1,6 +1,17 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/dietDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/dietLogDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/exerciceLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/dietLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/exerciceLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/insulinLogDAO.dart';
+import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
+import 'package:diabetes_tfg_app/models/dietLogModel.dart';
+import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/dailyGlucoseEvolutionChart.dart';
@@ -39,7 +50,10 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   List<GlucoseLogModel> daylogs = [];
-  List<GlucoseLogModel> weeklogs = [];
+  List<GlucoseLogModel> glucoseWeeklogs = [];
+  List<InsulinLogModel> insulinWeeklogs = [];
+  List<DietLogModel> dietWeeklogs = [];
+  List<ExerciceLogModel> exerciceWeeklogs = [];
   int minGlucose = 0;
   int maxGlucose = 0;
   double avgGlucose = 0;
@@ -59,16 +73,28 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Future<void> getLast7DaysData() async {
     if (AuthServiceManager.checkIfLogged()) {
       GlucoseLogDAOFB dao = GlucoseLogDAOFB();
-      weeklogs = await dao.getLast7DaysLogs();
+      InsulinLogDAOFB dao2 = InsulinLogDAOFB();
+      DietLogDAOFB dao3 = DietLogDAOFB();
+      ExerciceLogDAOFB dao4 = ExerciceLogDAOFB();
+      glucoseWeeklogs = await dao.getLast7DaysLogs();
+      insulinWeeklogs = await dao2.getLast7DaysLogs();
+      dietWeeklogs = await dao3.getLast7DaysLogs();
+      exerciceWeeklogs = await dao4.getLast7DaysLogs();
     } else {
       GlucoseLogDAO dao = GlucoseLogDAO();
-      weeklogs = await dao.getWeekLogs();
+      InsulinLogDAO dao2 = InsulinLogDAO();
+      DietLogDAO dao3 = DietLogDAO();
+      ExerciceLogDAO dao4 = ExerciceLogDAO();
+      glucoseWeeklogs = await dao.getWeekLogs();
+      insulinWeeklogs = await dao2.getWeekLogs();
+      dietWeeklogs = await dao3.getWeekLogs();
+      exerciceWeeklogs = await dao4.getWeekLogs();
     }
   }
 
   void loadHypoHyper() {
-    if (!weeklogs.isEmpty) {
-      for (GlucoseLogModel log in weeklogs) {
+    if (!glucoseWeeklogs.isEmpty) {
+      for (GlucoseLogModel log in glucoseWeeklogs) {
         if (log.hyperglucemia) {
           hyperglucemies += 1;
         }
@@ -80,9 +106,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
 
   void loadMinMaxAvgGlucose() {
-    if (!weeklogs.isEmpty) {
-      minGlucose = weeklogs[0].glucoseValue;
-      for (GlucoseLogModel log in weeklogs) {
+    if (!glucoseWeeklogs.isEmpty) {
+      minGlucose = glucoseWeeklogs[0].glucoseValue;
+      for (GlucoseLogModel log in glucoseWeeklogs) {
         avgGlucose = avgGlucose + log.glucoseValue;
         if (maxGlucose < log.glucoseValue) {
           maxGlucose = log.glucoseValue;
@@ -91,7 +117,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           minGlucose = log.glucoseValue;
         }
       }
-      avgGlucose = avgGlucose / weeklogs.length;
+      avgGlucose = avgGlucose / glucoseWeeklogs.length;
     }
   }
 
@@ -126,10 +152,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         SizedBox(height: 16),
         Expanded(
             child: MinimizedLogsListHome(
-                glucoseLogs: weeklogs,
-                insulinLogs: [],
-                dietLogs: [],
-                exerciceLogs: []))
+                glucoseLogs: glucoseWeeklogs,
+                insulinLogs: insulinWeeklogs,
+                dietLogs: dietWeeklogs,
+                exerciceLogs: exerciceWeeklogs))
       ],
     ));
   }

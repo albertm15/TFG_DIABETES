@@ -4,7 +4,7 @@ class UndefinedTypeLog {
   final dynamic log;
   final String type;
   final String category;
-  final int value;
+  final double value;
 
   const UndefinedTypeLog(
       {required this.id,

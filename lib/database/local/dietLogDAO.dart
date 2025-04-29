@@ -1,5 +1,6 @@
 import 'package:diabetes_tfg_app/database/local/databaseManager.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
+import 'package:intl/intl.dart';
 
 class DietLogDAO {
   final insatnceDB = DatabaseManager.instance;
@@ -42,5 +43,25 @@ class DietLogDAO {
         await db.delete('DietLogs', where: 'id = ?', whereArgs: [dietLog.id]);
 
     return id;
+  }
+
+  //getWeekLogs
+  Future<List<DietLogModel>> getWeekLogs() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('DietLogs',
+        orderBy: 'time DESC',
+        where: "date <= ? and date >= ?",
+        whereArgs: [
+          DateFormat("dd-MM-yyyy").format(DateTime.now()),
+          DateFormat("dd-MM-yyyy")
+              .format(DateTime.now().subtract(Duration(days: 7)))
+        ]);
+
+    List<DietLogModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(DietLogModel.fromMap(log));
+    }
+
+    return glucoseLogs;
   }
 }

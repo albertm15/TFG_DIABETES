@@ -7,6 +7,7 @@ import 'package:diabetes_tfg_app/models/dietLogModel.dart';
 import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseListTile.dart';
+import 'package:diabetes_tfg_app/widgets/insulinListTile.dart';
 import 'package:flutter/material.dart';
 
 class MinimizedLogsListHome extends StatelessWidget {
@@ -31,7 +32,7 @@ class MinimizedLogsListHome extends StatelessWidget {
           log: log,
           type: "glucose",
           category: log.category,
-          value: log.glucoseValue));
+          value: log.glucoseValue.toDouble()));
     }
 
     for (InsulinLogModel log in this.insulinLogs) {
@@ -41,8 +42,8 @@ class MinimizedLogsListHome extends StatelessWidget {
           dateTime: dateTime,
           log: log,
           type: "insulin",
-          category: "",
-          value: 0));
+          category: log.location,
+          value: log.fastActingInsulinConsumed));
     }
 
     for (DietLogModel log in this.dietLogs) {
@@ -103,6 +104,8 @@ class MinimizedLogsListHome extends StatelessWidget {
               final log = allLogs[index];
               if (log.type == "glucose") {
                 return GlucoseListTile(log: log);
+              } else if (log.type == "insulin") {
+                return InsulinListTile(log: log);
               } else {
                 return SizedBox.shrink(); // para evitar errores
               }
