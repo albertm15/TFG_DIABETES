@@ -1,4 +1,3 @@
-import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/local/databaseManager.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:intl/intl.dart';

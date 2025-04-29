@@ -1,6 +1,5 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/pages/configurationPage.dart';
-import 'package:diabetes_tfg_app/pages/logIngPage.dart';
 import 'package:diabetes_tfg_app/pages/profilePage.dart';
 import 'package:diabetes_tfg_app/pages/reportsPage.dart';
 import 'package:diabetes_tfg_app/pages/welcomePage.dart';
