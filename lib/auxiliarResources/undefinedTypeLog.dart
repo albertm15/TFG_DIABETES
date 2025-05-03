@@ -1,6 +1,6 @@
 class UndefinedTypeLog {
   final String id;
-  final DateTime dateTime;
+  final String dateTime;
   final dynamic log;
   final String type;
   final String category;

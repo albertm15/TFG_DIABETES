@@ -66,11 +66,11 @@ class DietLogDAOFB {
             .collection("DietLog")
             .where("userId", isEqualTo: uid)
             .where("date",
-                isGreaterThanOrEqualTo: DateFormat("dd-MM-yyyy")
+                isGreaterThanOrEqualTo: DateFormat("yyyy-MM-dd")
                     .format(DateTime.now().subtract(Duration(days: 7))))
             .where("date",
                 isLessThanOrEqualTo:
-                    DateFormat("dd-MM-yyyy").format(DateTime.now()))
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
             .orderBy("date")
             .orderBy("time")
             .get(GetOptions(source: Source.cache));
@@ -79,11 +79,11 @@ class DietLogDAOFB {
             .collection("DietLog")
             .where("userId", isEqualTo: uid)
             .where("date",
-                isGreaterThanOrEqualTo: DateFormat("dd-MM-yyyy")
+                isGreaterThanOrEqualTo: DateFormat("yyyy-MM-dd")
                     .format(DateTime.now().subtract(Duration(days: 7))))
             .where("date",
                 isLessThanOrEqualTo:
-                    DateFormat("dd-MM-yyyy").format(DateTime.now()))
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
             .orderBy("date")
             .orderBy("time")
             .get();

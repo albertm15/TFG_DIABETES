@@ -46,7 +46,8 @@ class ExerciceListTile extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         subtitle: Text(
-          '${DateFormat('dd/MM/yyyy HH:mm').format(log.dateTime)}',
+          //'${DateFormat('dd/MM/yyyy HH:mm').format(log.dateTime)}',
+          "${log.dateTime}",
           style: TextStyle(color: Colors.white),
         ),
         trailing: Column(

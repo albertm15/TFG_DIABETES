@@ -5,9 +5,12 @@ import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
 import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
+import 'package:diabetes_tfg_app/widgets/dietListTile.dart';
+import 'package:diabetes_tfg_app/widgets/exerciceListTile.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseListTile.dart';
 import 'package:diabetes_tfg_app/widgets/insulinListTile.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 class MinimizedLogsListHome extends StatelessWidget {
   final List<GlucoseLogModel> glucoseLogs;
@@ -24,7 +27,7 @@ class MinimizedLogsListHome extends StatelessWidget {
   List<UndefinedTypeLog> sortAllLogs() {
     List<UndefinedTypeLog> allLogs = [];
     for (GlucoseLogModel log in this.glucoseLogs) {
-      DateTime dateTime = parseDateTime(log.date, log.time);
+      String dateTime = join(log.date, log.time);
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,
@@ -35,7 +38,7 @@ class MinimizedLogsListHome extends StatelessWidget {
     }
 
     for (InsulinLogModel log in this.insulinLogs) {
-      DateTime dateTime = parseDateTime(log.date, log.time);
+      String dateTime = join(log.date, log.time);
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,
@@ -46,7 +49,7 @@ class MinimizedLogsListHome extends StatelessWidget {
     }
 
     for (DietLogModel log in this.dietLogs) {
-      DateTime dateTime = parseDateTime(log.date, log.time);
+      String dateTime = join(log.date, log.time);
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,
@@ -57,7 +60,7 @@ class MinimizedLogsListHome extends StatelessWidget {
     }
 
     for (ExerciceLogModel log in this.exerciceLogs) {
-      DateTime dateTime = parseDateTime(log.date, log.time);
+      String dateTime = join(log.date, log.time);
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,
@@ -106,9 +109,9 @@ class MinimizedLogsListHome extends StatelessWidget {
               } else if (log.type == "insulin") {
                 return InsulinListTile(log: log);
               } else if (log.type == "diet") {
-                return InsulinListTile(log: log);
+                return DietListTile(log: log);
               } else if (log.type == "exercice") {
-                return InsulinListTile(log: log);
+                return ExerciceListTile(log: log);
               } else {
                 return SizedBox.shrink(); // para evitar errores
               }

@@ -52,8 +52,8 @@ class ExerciceLogDAO {
         orderBy: 'time DESC',
         where: "date <= ? and date >= ?",
         whereArgs: [
-          DateFormat("dd-MM-yyyy").format(DateTime.now()),
-          DateFormat("dd-MM-yyyy")
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          DateFormat("yyyy-MM-dd")
               .format(DateTime.now().subtract(Duration(days: 7)))
         ]);
 

@@ -27,7 +27,7 @@ void main() async {
   GlucoseLogModel logModel = GlucoseLogModel.newEntity(
       "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1",
       140,
-      DateFormat("dd-MM-yyyy").format(DateTime.now()),
+      DateFormat("yyyy-MM-dd").format(DateTime.now()),
       //"${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
       "06:45:00",
       "Normal",
@@ -89,7 +89,7 @@ void main() async {
   //AuthServiceManager.deleteUser();
   //print(AuthServiceManager.getCurrentUserUID());
 
-  print(DateFormat('dd-MM-yyyy').format(DateTime.now()));
+  print(DateFormat('yyyy-MM-dd').format(DateTime.now()));
   print(DateTime.now().hour);
   print(await daofb.getLast7DaysLogs());
   print(DateTime.now().subtract(Duration(days: 7)));
@@ -97,7 +97,7 @@ void main() async {
   GlucoseLogModel logModel2 = GlucoseLogModel.newEntity(
       "LocalUser",
       125,
-      DateFormat("dd-MM-yyyy").format(DateTime.now()),
+      DateFormat("yyyy-MM-dd").format(DateTime.now()),
       "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
       //"17:45:00",
       "Elevado",
@@ -113,7 +113,7 @@ void main() async {
   InsulinLogModel insulinLogModel = InsulinLogModel.newEntity(
       "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1",
       5.5,
-      DateFormat("dd-MM-yyyy").format(DateTime.now()),
+      DateFormat("yyyy-MM-dd").format(DateTime.now()),
       "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
       "Muslo derecho");
   //insulinLogDAOFB.insert(insulinLogModel);
@@ -121,6 +121,7 @@ void main() async {
 
   final connectivity = await Connectivity().checkConnectivity();
   print(connectivity);
+  print(await AuthServiceManager.getCurrentUserUID());
   //---
   if (AuthServiceManager.checkIfLogged()) {
     runApp(MaterialApp(
