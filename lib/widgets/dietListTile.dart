@@ -31,7 +31,7 @@ class DietListTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.water_drop_outlined,
+              Icons.fastfood_outlined,
               color: Colors.white,
             ),
             SizedBox(width: 8), // Espaciado entre los íconos

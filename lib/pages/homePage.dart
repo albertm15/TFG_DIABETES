@@ -132,7 +132,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   void initState() {
     super.initState();
     getHomeData();
-    print(glucoseWeeklogs);
   }
 
   @override

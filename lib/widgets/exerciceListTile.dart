@@ -1,6 +1,5 @@
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ExerciceListTile extends StatelessWidget {
   final UndefinedTypeLog log;
@@ -31,7 +30,7 @@ class ExerciceListTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.water_drop_outlined,
+              Icons.directions_run_rounded,
               color: Colors.white,
             ),
             SizedBox(width: 8), // Espaciado entre los íconos

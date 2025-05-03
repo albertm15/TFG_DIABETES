@@ -1,6 +1,5 @@
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class InsulinListTile extends StatelessWidget {
   final UndefinedTypeLog log;

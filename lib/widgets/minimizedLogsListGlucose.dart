@@ -1,28 +1,20 @@
 import 'dart:ui';
 
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
-import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
-import 'package:diabetes_tfg_app/models/dietLogModel.dart';
-import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
-import 'package:diabetes_tfg_app/widgets/dietListTile.dart';
-import 'package:diabetes_tfg_app/widgets/exerciceListTile.dart';
+import 'package:diabetes_tfg_app/pages/glucoseFormPage.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseListTile.dart';
-import 'package:diabetes_tfg_app/widgets/insulinListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
-class MinimizedLogsListHome extends StatelessWidget {
+class MinimizedLogsListGlucose extends StatelessWidget {
   final List<GlucoseLogModel> glucoseLogs;
-  final List<InsulinLogModel> insulinLogs;
-  final List<DietLogModel> dietLogs;
-  final List<ExerciceLogModel> exerciceLogs;
 
-  const MinimizedLogsListHome(
-      {required this.glucoseLogs,
-      required this.insulinLogs,
-      required this.dietLogs,
-      required this.exerciceLogs});
+  const MinimizedLogsListGlucose({
+    required this.glucoseLogs,
+  });
 
   List<UndefinedTypeLog> sortAllLogs() {
     List<UndefinedTypeLog> allLogs = [];
@@ -35,39 +27,6 @@ class MinimizedLogsListHome extends StatelessWidget {
           type: "glucose",
           category: log.category,
           value: log.glucoseValue.toDouble()));
-    }
-
-    for (InsulinLogModel log in this.insulinLogs) {
-      String dateTime = join(log.date, log.time);
-      allLogs.add(UndefinedTypeLog(
-          id: log.id,
-          dateTime: dateTime,
-          log: log,
-          type: "insulin",
-          category: log.location,
-          value: log.fastActingInsulinConsumed));
-    }
-
-    for (DietLogModel log in this.dietLogs) {
-      String dateTime = join(log.date, log.time);
-      allLogs.add(UndefinedTypeLog(
-          id: log.id,
-          dateTime: dateTime,
-          log: log,
-          type: "diet",
-          category: "",
-          value: log.totalCarbs.toDouble()));
-    }
-
-    for (ExerciceLogModel log in this.exerciceLogs) {
-      String dateTime = join(log.date, log.time);
-      allLogs.add(UndefinedTypeLog(
-          id: log.id,
-          dateTime: dateTime,
-          log: log,
-          type: "exercice",
-          category: log.category,
-          value: log.duration.toDouble()));
     }
 
     allLogs.sort((a, b) => -a.dateTime.compareTo(b.dateTime));
@@ -103,10 +62,16 @@ class MinimizedLogsListHome extends StatelessWidget {
                 ),
                 IconButton(
                     onPressed: () {
-                      print("Ver mas logs");
+                      print("añadir glucose log");
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
+                                      child: GlucoseFormPage()))));
                     },
                     icon: Icon(
-                      Icons.unfold_more_rounded,
+                      Icons.add_box_outlined,
                       color: Colors.black,
                     )),
               ],
@@ -118,12 +83,6 @@ class MinimizedLogsListHome extends StatelessWidget {
               final log = allLogs[index];
               if (log.type == "glucose") {
                 return GlucoseListTile(log: log);
-              } else if (log.type == "insulin") {
-                return InsulinListTile(log: log);
-              } else if (log.type == "diet") {
-                return DietListTile(log: log);
-              } else if (log.type == "exercice") {
-                return ExerciceListTile(log: log);
               } else {
                 return SizedBox.shrink(); // para evitar errores
               }

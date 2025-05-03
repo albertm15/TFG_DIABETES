@@ -1,4 +1,3 @@
-import 'package:diabetes_tfg_app/pages/DB_Testing.dart';
 import 'package:diabetes_tfg_app/pages/DietMainPage.dart';
 import 'package:diabetes_tfg_app/pages/ExerciceAndHealthMainPage.dart';
 import 'package:diabetes_tfg_app/pages/glucoseMainPage.dart';

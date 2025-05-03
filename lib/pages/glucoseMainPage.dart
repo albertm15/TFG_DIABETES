@@ -6,6 +6,7 @@ import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseCategoryRoundChart.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseEssentialInfoAmplified.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
+import 'package:diabetes_tfg_app/widgets/minimizedLogsListGlucose.dart';
 import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
@@ -126,6 +127,8 @@ class _GlucoseMainPageWidgetSate extends State<GlucoseMainPageWidget> {
         ),
         GlucoseCategoryRoundChart(
             high: highLevel, normal: normalLevel, low: lowLevel),
+        SizedBox(height: 16),
+        Expanded(child: MinimizedLogsListGlucose(glucoseLogs: glucoseWeeklogs))
       ],
     ));
   }
