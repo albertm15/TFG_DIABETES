@@ -142,4 +142,94 @@ class GlucoseLogDAOFB {
       return List.empty();
     }
   }
+
+  //getLast30DaysLogs
+  Future<List<GlucoseLogModel>> getLast30DaysLogs() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("glucoseLog")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo: DateFormat("yyyy-MM-dd")
+                    .format(DateTime.now().subtract(Duration(days: 30))))
+            .where("date",
+                isLessThanOrEqualTo:
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("glucoseLog")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo: DateFormat("yyyy-MM-dd")
+                    .format(DateTime.now().subtract(Duration(days: 30))))
+            .where("date",
+                isLessThanOrEqualTo:
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .orderBy("date")
+            .orderBy("time")
+            .get();
+      }
+
+      List<GlucoseLogModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(GlucoseLogModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
+
+  //getLast90DaysLogs
+  Future<List<GlucoseLogModel>> getLast90DaysLogs() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("glucoseLog")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo: DateFormat("yyyy-MM-dd")
+                    .format(DateTime.now().subtract(Duration(days: 90))))
+            .where("date",
+                isLessThanOrEqualTo:
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("glucoseLog")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo: DateFormat("yyyy-MM-dd")
+                    .format(DateTime.now().subtract(Duration(days: 90))))
+            .where("date",
+                isLessThanOrEqualTo:
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .orderBy("date")
+            .orderBy("time")
+            .get();
+      }
+
+      List<GlucoseLogModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(GlucoseLogModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
 }

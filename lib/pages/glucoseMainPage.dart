@@ -2,7 +2,9 @@ import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
+import 'package:diabetes_tfg_app/pages/allChartsPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseCategoryRoundChart.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseEssentialInfoAmplified.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
@@ -19,12 +21,14 @@ class GlucoseMainPage extends StatefulWidget {
 class _GlucoseMainPageState extends State<GlucoseMainPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DrawerScaffold(
+        child: BackgroundBase(
+            child: Scaffold(
       appBar: UpperNavBar(pageName: "Glucose"),
       body: BackgroundBase(child: Center(child: GlucoseMainPageWidget())),
       bottomNavigationBar: LowerNavBar(),
       backgroundColor: Colors.transparent,
-    );
+    )));
   }
 }
 
@@ -125,9 +129,27 @@ class _GlucoseMainPageWidgetSate extends State<GlucoseMainPageWidget> {
         SizedBox(
           height: 12,
         ),
-        GlucoseCategoryRoundChart(
-            high: highLevel, normal: normalLevel, low: lowLevel),
-        SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GlucoseCategoryRoundChart(
+                high: highLevel, normal: normalLevel, low: lowLevel),
+            IconButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DrawerScaffold(
+                              child: BackgroundBase(child: AllChartsPage()))));
+                },
+                icon: Icon(
+                  Icons.unfold_more_rounded,
+                  color: Colors.black,
+                )),
+          ],
+        ),
+        SizedBox(height: 8),
         Expanded(child: MinimizedLogsListGlucose(glucoseLogs: glucoseWeeklogs))
       ],
     ));

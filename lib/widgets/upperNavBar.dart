@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/pages/glucoseMainPage.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,17 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
   void goBack(BuildContext context) {
     switch (pageName) {
       case "Glucose" || "Insulin" || "Diet" || "Exercice & Health":
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => BackgroundBase(child: Homepage())));
+        break;
+      case "Añadir registro de glucosa" || "Graficos":
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    BackgroundBase(child: GlucoseMainPage())));
         break;
 
       default:

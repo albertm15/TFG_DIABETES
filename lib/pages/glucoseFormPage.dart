@@ -104,14 +104,6 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
                       ),
                       contentPadding: EdgeInsets.symmetric(vertical: 20),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Introduce un valor";
-                      }
-                      final intVal = int.tryParse(value);
-                      if (intVal == null) return "Debe ser un número";
-                      return null;
-                    },
                   ),
                   SizedBox(height: 24),
                   TextFormField(
@@ -127,13 +119,71 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
                   SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: () {
-                      saveLog();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DrawerScaffold(
-                                  child: BackgroundBase(
-                                      child: GlucoseMainPage()))));
+                      if (_glucoseController.text == "") {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Nivel de glucosa vacio',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                              "Introduzca un valor en el nivel de glucosa.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (int.parse(_glucoseController.text) < 0) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Nivel de glucosa no valido',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                              "Introduzca un valor valido en el nivel de glucosa.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        saveLog();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DrawerScaffold(
+                                    child: BackgroundBase(
+                                        child: GlucoseMainPage()))));
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 85, 42, 196),
