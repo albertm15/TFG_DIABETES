@@ -22,10 +22,10 @@ class _TrimesterChartsPageState extends State<TrimesterChartsPage> {
   Future<void> getTrimesterData() async {
     if (AuthServiceManager.checkIfLogged()) {
       GlucoseLogDAOFB dao = GlucoseLogDAOFB();
-      trimesterLogs = await dao.getLast7DaysLogs();
+      trimesterLogs = await dao.getLast90DaysLogs();
     } else {
       GlucoseLogDAO dao = GlucoseLogDAO();
-      trimesterLogs = await dao.getTodayLogs();
+      trimesterLogs = await dao.getLast90DaysLogs();
     }
   }
 

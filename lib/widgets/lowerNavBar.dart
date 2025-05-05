@@ -37,12 +37,12 @@ class LowerNavBar extends StatelessWidget {
                             child: BackgroundBase(child: GlucoseMainPage()))));
               },
               icon: Icon(Icons.water_drop_outlined, color: Colors.white),
-              iconSize: 40, // Ajusta el tamaño también aquí
+              iconSize: 40,
             ),
             IconButton(
                 onPressed: () {
                   print("Botón 'Insulin' presionado");
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => DrawerScaffold(
@@ -65,7 +65,7 @@ class LowerNavBar extends StatelessWidget {
                             child: BackgroundBase(child: Homepage()))));
               },
               icon: Icon(Icons.home_outlined, color: Colors.white),
-              iconSize: 40, // Ajusta el tamaño también aquí
+              iconSize: 40,
             ),
             IconButton(
               onPressed: () {
@@ -77,7 +77,7 @@ class LowerNavBar extends StatelessWidget {
                             child: BackgroundBase(child: DietMainPage()))));
               },
               icon: Icon(Icons.fastfood_outlined, color: Colors.white),
-              iconSize: 40, // Ajusta el tamaño también aquí
+              iconSize: 40,
             ),
             IconButton(
               onPressed: () {
@@ -91,7 +91,7 @@ class LowerNavBar extends StatelessWidget {
                 //child: DbTestingPage()))));
               },
               icon: Icon(Icons.directions_run_rounded, color: Colors.white),
-              iconSize: 40, // Ajusta el tamaño también aquí
+              iconSize: 40,
             ),
           ],
         ));

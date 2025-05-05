@@ -1,9 +1,7 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
-import 'package:diabetes_tfg_app/database/firebase/dietDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/dietLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/exerciceLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/dietLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/exerciceLogDAO.dart';

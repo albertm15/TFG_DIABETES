@@ -25,7 +25,7 @@ class _WeekChartsPageState extends State<WeekChartsPage> {
       weekLogs = await dao.getLast7DaysLogs();
     } else {
       GlucoseLogDAO dao = GlucoseLogDAO();
-      weekLogs = await dao.getTodayLogs();
+      weekLogs = await dao.getWeekLogs();
     }
     if (!weekLogs.isEmpty) {
       for (GlucoseLogModel log in weekLogs) {

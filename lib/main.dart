@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
+import 'package:diabetes_tfg_app/models/insulinModel.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/welcomePage.dart';
@@ -122,6 +124,11 @@ void main() async {
   final connectivity = await Connectivity().checkConnectivity();
   print(connectivity);
   print(await AuthServiceManager.getCurrentUserUID());
+
+  InsulinDAOFB insulinDAOFB = InsulinDAOFB();
+  InsulinModel insulinModel = InsulinModel.newEntity(
+      "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1", "12:00", "00:00", 125, 76);
+  //insulinDAOFB.insert(insulinModel);
   //---
   if (AuthServiceManager.checkIfLogged()) {
     runApp(MaterialApp(

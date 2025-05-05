@@ -45,7 +45,6 @@ class GlucoseEssentialInfoAmplified extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  // LADO IZQUIERDO
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -77,7 +76,6 @@ class GlucoseEssentialInfoAmplified extends StatelessWidget {
                     height: double.infinity,
                     color: Colors.white24,
                   ),
-                  // LADO DERECHO
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

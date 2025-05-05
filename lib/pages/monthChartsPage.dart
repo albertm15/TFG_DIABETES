@@ -25,7 +25,7 @@ class _MonthChartsPageState extends State<MonthChartsPage> {
       monthlogs = await dao.getLast30DaysLogs();
     } else {
       GlucoseLogDAO dao = GlucoseLogDAO();
-      monthlogs = await dao.getTodayLogs();
+      monthlogs = await dao.getLast30DaysLogs();
     }
     if (!monthlogs.isEmpty) {
       for (GlucoseLogModel log in monthlogs) {

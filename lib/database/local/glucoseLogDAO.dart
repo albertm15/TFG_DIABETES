@@ -80,4 +80,44 @@ class GlucoseLogDAO {
 
     return glucoseLogs;
   }
+
+  //getLast30DaysLogs
+  Future<List<GlucoseLogModel>> getLast30DaysLogs() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('GlucoseLogs',
+        orderBy: 'time DESC',
+        where: "date <= ? and date >= ?",
+        whereArgs: [
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          DateFormat("yyyy-MM-dd")
+              .format(DateTime.now().subtract(Duration(days: 30)))
+        ]);
+
+    List<GlucoseLogModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(GlucoseLogModel.fromMap(log));
+    }
+
+    return glucoseLogs;
+  }
+
+  //getLast30DaysLogs
+  Future<List<GlucoseLogModel>> getLast90DaysLogs() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('GlucoseLogs',
+        orderBy: 'time DESC',
+        where: "date <= ? and date >= ?",
+        whereArgs: [
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          DateFormat("yyyy-MM-dd")
+              .format(DateTime.now().subtract(Duration(days: 90)))
+        ]);
+
+    List<GlucoseLogModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(GlucoseLogModel.fromMap(log));
+    }
+
+    return glucoseLogs;
+  }
 }
