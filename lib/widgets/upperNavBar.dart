@@ -27,7 +27,7 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context) =>
                     BackgroundBase(child: GlucoseMainPage())));
         break;
-      case "Añadir Insulina" || "Añadir Inyección":
+      case "Añadir Insulina" || "Añadir Inyección" || "Horario Insulina":
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

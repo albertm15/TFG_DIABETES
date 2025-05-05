@@ -1,4 +1,5 @@
 import 'package:diabetes_tfg_app/pages/addInsulinForm.dart';
+import 'package:diabetes_tfg_app/pages/modifyInsulinSchedule.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class SlowActingInsulinScheduleInfo extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => DrawerScaffold(
                           child: BackgroundBase(
-                        child: AddInsulinFormPage(),
+                        child: ModifyInsulinSchedule(),
                       ))));
         },
         child: Container(

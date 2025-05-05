@@ -13,7 +13,7 @@ class InsulinEssentialInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => DrawerScaffold(
