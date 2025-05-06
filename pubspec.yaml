@@ -21,6 +21,7 @@ dependencies:
   fl_chart: ^0.71.0
   intl: ^0.20.2
   flutter_datetime_picker: ^1.5.1
+  model_viewer_plus: ^1.9.2
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +33,4 @@ flutter:
 
   assets: 
     - assets/images/
+    - assets/3dModels/

@@ -123,7 +123,7 @@ void main() async {
 
   final connectivity = await Connectivity().checkConnectivity();
   print(connectivity);
-  print(await AuthServiceManager.getCurrentUserUID());
+  //print(await AuthServiceManager.getCurrentUserUID());
 
   InsulinDAOFB insulinDAOFB = InsulinDAOFB();
   InsulinModel insulinModel = InsulinModel.newEntity(

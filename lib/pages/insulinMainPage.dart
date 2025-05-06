@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/local/insulinDAO.dart';
@@ -12,6 +11,7 @@ import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
 import 'package:diabetes_tfg_app/widgets/slowActingInsulinScheduleInfo.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:model_viewer_plus/model_viewer_plus.dart';
 
 class InsulinMainPage extends StatefulWidget {
   @override
@@ -99,7 +99,11 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
             ),
             AddPunctualInjection(),
           ],
-        )
+        ),
+        Expanded(
+            child: ModelViewer(
+          src: 'assets/3dModels/maleBody.glb',
+        ))
       ],
     ));
   }
