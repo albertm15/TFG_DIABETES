@@ -19,7 +19,7 @@ class MinimizedLogsListGlucose extends StatelessWidget {
   List<UndefinedTypeLog> sortAllLogs() {
     List<UndefinedTypeLog> allLogs = [];
     for (GlucoseLogModel log in this.glucoseLogs) {
-      String dateTime = join(log.date, log.time);
+      String dateTime = "${log.date} ${log.time}";
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,

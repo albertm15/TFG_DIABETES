@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/local/insulinDAO.dart';
@@ -11,7 +13,12 @@ import 'package:diabetes_tfg_app/widgets/slowActingInsulinScheduleInfo.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
 
-class InsulinMainPage extends StatelessWidget {
+class InsulinMainPage extends StatefulWidget {
+  @override
+  _InsulinMainPageState createState() => _InsulinMainPageState();
+}
+
+class _InsulinMainPageState extends State<InsulinMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +50,14 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
       InsulinDAO dao = InsulinDAO();
       log = await dao.getAll();
     }
-    if (!log.isEmpty) {
+
+    // 🔧 Reiniciar los valores ANTES de acumular
+    fastActingInsulin = 0;
+    slowActingInsulin = 0;
+    firstInjectionSchedule = "";
+    secondInjectionSchedule = "";
+
+    if (log.isNotEmpty) {
       for (InsulinModel insulin in log) {
         fastActingInsulin += insulin.totalFastActingInsulin;
         slowActingInsulin += insulin.totalSlowActingInsulin;
@@ -51,6 +65,7 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
         secondInjectionSchedule = insulin.secondInjectionSchedule;
       }
     }
+
     setState(() {});
   }
 
@@ -58,6 +73,8 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
   void initState() {
     super.initState();
     getData();
+    sleep(Duration(milliseconds: 50));
+    setState(() {});
   }
 
   @override
