@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/widgets/legendItem.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -60,24 +61,15 @@ class GlucoseCategoryRoundChart extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildLegendItem(Colors.black, "Elevadas: $high"),
+            LegendItem(color: Colors.black, label: "Elevadas: $high"),
             const SizedBox(width: 12),
-            _buildLegendItem(
-                Color.fromARGB(255, 85, 42, 196), "Normales: $normal"),
+            LegendItem(
+                color: Color.fromARGB(255, 85, 42, 196),
+                label: "Normales: $normal"),
             const SizedBox(width: 12),
-            _buildLegendItem(Color(0xFF3C37FF), "Bajas: $low"),
+            LegendItem(color: Color(0xFF3C37FF), label: "Bajas: $low"),
           ],
         ),
-      ],
-    );
-  }
-
-  Widget _buildLegendItem(Color color, String label) {
-    return Row(
-      children: [
-        Container(width: 12, height: 12, color: color),
-        const SizedBox(width: 4),
-        Text(label),
       ],
     );
   }

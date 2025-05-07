@@ -10,6 +10,7 @@ import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class PunctualInjectionFormPage extends StatefulWidget {
   @override
@@ -85,9 +86,9 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Añadir registro de glucosa",
+                    "Añadir inyección de insulina",
                     style: TextStyle(
-                        fontSize: 40,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 85, 42, 196)),
                     textAlign: TextAlign.center,
@@ -99,21 +100,45 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
-                      labelText: "Nivel de glucosa (mg/dl)",
+                      labelText: "Unidades de insulina a inyectar",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 20),
                     ),
                   ),
                   SizedBox(height: 24),
-                  TextFormField(
-                    controller: _sensationsController,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      labelText: "Sensaciones (opcional)",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  SizedBox(
+                    height: 80,
+                    child: ScrollConfiguration(
+                      behavior: LessSensitiveScrollBehavior(),
+                      child: ScrollSnapList(
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 2),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 70,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 85, 42, 196),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: Text(
+                                "Brazo izq.",
+                                style: TextStyle(
+                                    fontSize: 25, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: 7,
+                        itemSize: 80,
+                        duration: 200,
+                        dynamicItemSize: true,
+                        scrollDirection: Axis.horizontal,
+                        focusOnItemTap: true,
+                        onItemFocus: (index) {},
                       ),
                     ),
                   ),
@@ -207,5 +232,12 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
       bottomNavigationBar: LowerNavBar(),
       backgroundColor: Colors.transparent,
     );
+  }
+}
+
+class LessSensitiveScrollBehavior extends ScrollBehavior {
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const ClampingScrollPhysics();
   }
 }
