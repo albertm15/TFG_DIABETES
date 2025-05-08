@@ -51,19 +51,29 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
     String category = getCategory(glucoseValue);
     bool hyperglucemia = getHyperglucemia(glucoseValue);
     bool hypoglucemia = getHypoglucemia(glucoseValue);
-    GlucoseLogModel glucoseLog = GlucoseLogModel.newEntity(
-        AuthServiceManager.getCurrentUserUID(),
-        glucoseValue,
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
-        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-        category,
-        hyperglucemia,
-        hypoglucemia,
-        _sensationsController.text);
+
     if (AuthServiceManager.checkIfLogged()) {
+      GlucoseLogModel glucoseLog = GlucoseLogModel.newEntity(
+          AuthServiceManager.getCurrentUserUID(),
+          glucoseValue,
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+          category,
+          hyperglucemia,
+          hypoglucemia,
+          _sensationsController.text);
       GlucoseLogDAOFB dao = GlucoseLogDAOFB();
       dao.insert(glucoseLog);
     } else {
+      GlucoseLogModel glucoseLog = GlucoseLogModel.newEntity(
+          "localUser",
+          glucoseValue,
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+          category,
+          hyperglucemia,
+          hypoglucemia,
+          _sensationsController.text);
       GlucoseLogDAO dao = GlucoseLogDAO();
       dao.insert(glucoseLog);
     }

@@ -1,8 +1,8 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
-import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
-import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
-import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
-import 'package:diabetes_tfg_app/pages/glucoseMainPage.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/insulinLogDAO.dart';
+import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
+import 'package:diabetes_tfg_app/pages/insulinMainPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
@@ -19,54 +19,39 @@ class PunctualInjectionFormPage extends StatefulWidget {
 }
 
 class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
-  final TextEditingController _glucoseController = TextEditingController();
-  final TextEditingController _sensationsController = TextEditingController();
-
-  String getCategory(int glucoseValue) {
-    if (glucoseValue <= 70) {
-      return "Bajo";
-    } else if (glucoseValue > 70 && glucoseValue < 140) {
-      return "Normal";
-    } else {
-      return "Elevado";
-    }
-  }
-
-  bool getHypoglucemia(int glucoseValue) {
-    if (glucoseValue <= 70) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool getHyperglucemia(int glucoseValue) {
-    if (glucoseValue >= 140) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  final TextEditingController _insulinUnitsController = TextEditingController();
+  int selectedIndex = 0;
+  List<String> injectableLocations = [
+    "Brazo izq.",
+    "Brazo der.",
+    "Gluteo izq.",
+    "Gluteo der.",
+    "Muslo izq.",
+    "Muslo der.",
+    "Barriga",
+  ];
 
   void saveLog() async {
-    int glucoseValue = int.parse(_glucoseController.text);
-    String category = getCategory(glucoseValue);
-    bool hyperglucemia = getHyperglucemia(glucoseValue);
-    bool hypoglucemia = getHypoglucemia(glucoseValue);
-    GlucoseLogModel glucoseLog = GlucoseLogModel.newEntity(
-        AuthServiceManager.getCurrentUserUID(),
-        glucoseValue,
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
-        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-        category,
-        hyperglucemia,
-        hypoglucemia,
-        _sensationsController.text);
+    double insulinValue = double.parse(_insulinUnitsController.text);
+    String location = injectableLocations[selectedIndex];
+
     if (AuthServiceManager.checkIfLogged()) {
-      GlucoseLogDAOFB dao = GlucoseLogDAOFB();
+      InsulinLogModel glucoseLog = InsulinLogModel.newEntity(
+          AuthServiceManager.getCurrentUserUID(),
+          insulinValue,
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+          location);
+      InsulinLogDAOFB dao = InsulinLogDAOFB();
       dao.insert(glucoseLog);
     } else {
-      GlucoseLogDAO dao = GlucoseLogDAO();
+      InsulinLogModel glucoseLog = InsulinLogModel.newEntity(
+          "localUser",
+          insulinValue,
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+          location);
+      InsulinLogDAO dao = InsulinLogDAO();
       dao.insert(glucoseLog);
     }
   }
@@ -86,16 +71,17 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Añadir inyección de insulina",
+                    //"Añadir inyección de insulina",
+                    "Añadir inyección",
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 85, 42, 196)),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 24),
+                  SizedBox(height: 10),
                   TextFormField(
-                    controller: _glucoseController,
+                    controller: _insulinUnitsController,
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
@@ -106,7 +92,25 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 24),
+                  //SizedBox(height: 24),
+                  SizedBox(height: 10),
+                  Container(
+                    height: 200,
+                    color: Colors.black,
+                    child: Text(
+                      "${injectableLocations[selectedIndex]}",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    alignment: Alignment.center,
+                  ),
+                  Icon(
+                    Icons.arrow_drop_down_rounded,
+                    color: Color(0xFF3C37FF),
+                    size: 40,
+                  ),
                   SizedBox(
                     height: 80,
                     child: ScrollConfiguration(
@@ -117,47 +121,51 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                             padding: EdgeInsets.symmetric(horizontal: 2),
                             child: Container(
                               alignment: Alignment.center,
-                              height: 70,
-                              width: 70,
+                              height: 40,
+                              width: 85,
                               decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 85, 42, 196),
+                                  color: Color(0xFF3C37FF),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20))),
                               child: Text(
-                                "Brazo izq.",
+                                "${injectableLocations[index]}",
                                 style: TextStyle(
-                                    fontSize: 25, color: Colors.white),
+                                    fontSize: 20, color: Colors.white),
                                 textAlign: TextAlign.center,
                               ),
                             ),
                           );
                         },
-                        itemCount: 7,
-                        itemSize: 80,
+                        itemCount: injectableLocations.length,
+                        itemSize: 89,
                         duration: 200,
                         dynamicItemSize: true,
                         scrollDirection: Axis.horizontal,
                         focusOnItemTap: true,
-                        onItemFocus: (index) {},
+                        onItemFocus: (index) {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
                       ),
                     ),
                   ),
-                  SizedBox(height: 32),
+                  SizedBox(height: 25),
                   ElevatedButton(
                     onPressed: () {
-                      if (_glucoseController.text == "") {
+                      if (_insulinUnitsController.text == "") {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
                             backgroundColor: Color.fromARGB(255, 232, 80, 69),
                             title: Text(
-                              'Nivel de glucosa vacio',
+                              'Univades de insulina vacio',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                             content: Text(
-                              "Introduzca un valor en el nivel de glucosa.",
+                              "Introduzca un valor en las unidades de insulina.",
                               style:
                                   TextStyle(color: Colors.black, fontSize: 16),
                             ),
@@ -173,19 +181,19 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                             ],
                           ),
                         );
-                      } else if (int.parse(_glucoseController.text) < 0) {
+                      } else if (int.parse(_insulinUnitsController.text) < 0) {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
                             backgroundColor: Color.fromARGB(255, 232, 80, 69),
                             title: Text(
-                              'Nivel de glucosa no valido',
+                              'Unidades de insulina no validas',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                             content: Text(
-                              "Introduzca un valor valido en el nivel de glucosa.",
+                              "Introduzca un valor valido de unidades de insulina.",
                               style:
                                   TextStyle(color: Colors.black, fontSize: 16),
                             ),
@@ -208,7 +216,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                             MaterialPageRoute(
                                 builder: (context) => DrawerScaffold(
                                     child: BackgroundBase(
-                                        child: GlucoseMainPage()))));
+                                        child: InsulinMainPage()))));
                       }
                     },
                     style: ElevatedButton.styleFrom(

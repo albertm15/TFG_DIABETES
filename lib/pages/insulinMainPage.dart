@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/insulinDAO.dart';
+import 'package:diabetes_tfg_app/database/local/insulinLogDAO.dart';
+import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
 import 'package:diabetes_tfg_app/models/insulinModel.dart';
 import 'package:diabetes_tfg_app/widgets/addPunctualInjection.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
@@ -38,18 +41,24 @@ class InsulinMainPageWidget extends StatefulWidget {
 
 class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
   List<InsulinModel> log = [];
+  List<InsulinLogModel> log2 = [];
   double fastActingInsulin = 0;
   double slowActingInsulin = 0;
   String firstInjectionSchedule = "";
   String secondInjectionSchedule = "";
+  List<int> locationsCount = [0, 0, 0, 0, 0, 0, 0];
 
   void getData() async {
     if (AuthServiceManager.checkIfLogged()) {
       InsulinDAOFB dao = InsulinDAOFB();
       log = await dao.getAll();
+      InsulinLogDAOFB dao2 = InsulinLogDAOFB();
+      log2 = await dao2.getLast7DaysLogs();
     } else {
       InsulinDAO dao = InsulinDAO();
       log = await dao.getAll();
+      InsulinLogDAO dao2 = InsulinLogDAO();
+      log2 = await dao2.getWeekLogs();
     }
 
     fastActingInsulin = 0;
@@ -63,6 +72,28 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
         slowActingInsulin += insulin.totalSlowActingInsulin;
         firstInjectionSchedule = insulin.firstInjectionSchedule;
         secondInjectionSchedule = insulin.secondInjectionSchedule;
+      }
+    }
+
+    if (log2.isNotEmpty) {
+      for (InsulinLogModel insulinLog in log2) {
+        switch (insulinLog.location) {
+          case "Brazo izq.":
+            locationsCount[0] += 1;
+          case "Brazo der.":
+            locationsCount[1] += 1;
+          case "Gluteo izq.":
+            locationsCount[2] += 1;
+          case "Gluteo der.":
+            locationsCount[3] += 1;
+          case "Muslo izq.":
+            locationsCount[4] += 1;
+          case "Muslo der.":
+            locationsCount[5] += 1;
+          case "Barriga":
+            locationsCount[6] += 1;
+          default:
+        }
       }
     }
 
@@ -110,32 +141,42 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LegendItem(color: Colors.black, label: "Brazo izq.: "),
+                LegendItem(
+                    color: Colors.black,
+                    label: "Brazo izq.: ${locationsCount[0]}"),
                 const SizedBox(width: 8),
                 LegendItem(
                     color: Color.fromARGB(255, 85, 42, 196),
-                    label: "Brazo der.: "),
+                    label: "Brazo der.: ${locationsCount[1]}"),
                 const SizedBox(width: 8),
-                LegendItem(color: Color(0xFF3C37FF), label: "Gluteo izq.: "),
+                LegendItem(
+                    color: Color(0xFF3C37FF),
+                    label: "Gluteo izq.: ${locationsCount[2]}"),
                 const SizedBox(width: 8),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LegendItem(color: Colors.black, label: "Gluteo der.: "),
+                LegendItem(
+                    color: Colors.black,
+                    label: "Gluteo der.: ${locationsCount[3]}"),
                 const SizedBox(width: 8),
                 LegendItem(
                     color: Color.fromARGB(255, 85, 42, 196),
-                    label: "Muslo izq.: "),
+                    label: "Muslo izq.: ${locationsCount[4]}"),
                 const SizedBox(width: 8),
-                LegendItem(color: Color(0xFF3C37FF), label: "Muslo der.: "),
+                LegendItem(
+                    color: Color(0xFF3C37FF),
+                    label: "Muslo der.: ${locationsCount[5]}"),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LegendItem(color: Colors.black, label: "Barriga: "),
+                LegendItem(
+                    color: Colors.black,
+                    label: "Barriga: ${locationsCount[6]}"),
               ],
             ),
           ],
