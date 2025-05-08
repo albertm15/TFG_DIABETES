@@ -7,7 +7,6 @@ import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseListTile.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class MinimizedLogsListGlucose extends StatelessWidget {
   final List<GlucoseLogModel> glucoseLogs;

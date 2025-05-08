@@ -27,7 +27,7 @@ class MinimizedLogsListHome extends StatelessWidget {
   List<UndefinedTypeLog> sortAllLogs() {
     List<UndefinedTypeLog> allLogs = [];
     for (GlucoseLogModel log in this.glucoseLogs) {
-      String dateTime = join(log.date, log.time);
+      String dateTime = "${log.date} ${log.time}";
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,
@@ -38,7 +38,7 @@ class MinimizedLogsListHome extends StatelessWidget {
     }
 
     for (InsulinLogModel log in this.insulinLogs) {
-      String dateTime = join(log.date, log.time);
+      String dateTime = "${log.date} ${log.time}";
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,
@@ -49,7 +49,7 @@ class MinimizedLogsListHome extends StatelessWidget {
     }
 
     for (DietLogModel log in this.dietLogs) {
-      String dateTime = join(log.date, log.time);
+      String dateTime = "${log.date} ${log.time}";
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,
@@ -60,7 +60,7 @@ class MinimizedLogsListHome extends StatelessWidget {
     }
 
     for (ExerciceLogModel log in this.exerciceLogs) {
-      String dateTime = join(log.date, log.time);
+      String dateTime = "${log.date} ${log.time}";
       allLogs.add(UndefinedTypeLog(
           id: log.id,
           dateTime: dateTime,

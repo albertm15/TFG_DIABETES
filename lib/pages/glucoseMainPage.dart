@@ -118,40 +118,45 @@ class _GlucoseMainPageWidgetSate extends State<GlucoseMainPageWidget> {
   @override
   Widget build(BuildContext context) {
     return ScreenMargins(
-        child: Column(
-      children: [
-        GlucoseEssentialInfoAmplified(
-            hypoglucemies: hypoglucemies,
-            avgGlucose: avgGlucose,
-            hyperglucemies: hyperglucemies,
-            minGlucose: minGlucose,
-            maxGlucose: maxGlucose),
-        SizedBox(
-          height: 12,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GlucoseCategoryRoundChart(
-                high: highLevel, normal: normalLevel, low: lowLevel),
-            IconButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DrawerScaffold(
-                              child: BackgroundBase(child: AllChartsPage()))));
-                },
-                icon: Icon(
-                  Icons.unfold_more_rounded,
-                  color: Colors.black,
-                )),
-          ],
-        ),
-        SizedBox(height: 8),
-        Expanded(child: MinimizedLogsListGlucose(glucoseLogs: glucoseWeeklogs))
-      ],
+        child: SingleChildScrollView(
+      child: Column(
+        children: [
+          GlucoseEssentialInfoAmplified(
+              hypoglucemies: hypoglucemies,
+              avgGlucose: avgGlucose,
+              hyperglucemies: hyperglucemies,
+              minGlucose: minGlucose,
+              maxGlucose: maxGlucose),
+          SizedBox(
+            height: 12,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GlucoseCategoryRoundChart(
+                  high: highLevel, normal: normalLevel, low: lowLevel),
+              IconButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DrawerScaffold(
+                                child:
+                                    BackgroundBase(child: AllChartsPage()))));
+                  },
+                  icon: Icon(
+                    Icons.unfold_more_rounded,
+                    color: Colors.black,
+                  )),
+            ],
+          ),
+          SizedBox(height: 8),
+          Container(
+              height: 500,
+              child: MinimizedLogsListGlucose(glucoseLogs: glucoseWeeklogs))
+        ],
+      ),
     ));
   }
 }

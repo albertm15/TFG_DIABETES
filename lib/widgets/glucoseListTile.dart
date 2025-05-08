@@ -19,7 +19,7 @@ class GlucoseListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       color: const Color.fromARGB(255, 85, 42, 196),
       elevation: 3,
       shape: RoundedRectangleBorder(

@@ -135,26 +135,29 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   Widget build(BuildContext context) {
     return ScreenMargins(
-        child: Column(
-      children: [
-        GlucoseEssentialInfo(
-          hyperglucemies: hyperglucemies,
-          avgGlucose: avgGlucose,
-          hypoglucemies: hypoglucemies,
-        ),
-        SizedBox(height: 16),
-        Container(
-          height: 200,
-          child: DailyGlucoseEvolutionChart(glucoseData: daylogs),
-        ),
-        SizedBox(height: 16),
-        Expanded(
-            child: MinimizedLogsListHome(
-                glucoseLogs: glucoseWeeklogs,
-                insulinLogs: insulinWeeklogs,
-                dietLogs: dietWeeklogs,
-                exerciceLogs: exerciceWeeklogs))
-      ],
+        child: SingleChildScrollView(
+      child: Column(
+        children: [
+          GlucoseEssentialInfo(
+            hyperglucemies: hyperglucemies,
+            avgGlucose: avgGlucose,
+            hypoglucemies: hypoglucemies,
+          ),
+          SizedBox(height: 16),
+          Container(
+            height: 200,
+            child: DailyGlucoseEvolutionChart(glucoseData: daylogs),
+          ),
+          SizedBox(height: 16),
+          Container(
+              height: 500,
+              child: MinimizedLogsListHome(
+                  glucoseLogs: glucoseWeeklogs,
+                  insulinLogs: insulinWeeklogs,
+                  dietLogs: dietWeeklogs,
+                  exerciceLogs: exerciceWeeklogs))
+        ],
+      ),
     ));
   }
 }
