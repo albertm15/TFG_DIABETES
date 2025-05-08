@@ -131,6 +131,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                   height: 200,
                   child: ModelViewer(src: "assets/3dModels/maleBody.glb"),
                 ),*/
+                /*
                 Container(
                   height: 190,
                   child: ModelViewer(
@@ -142,6 +143,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                     cameraTarget: currentCameraTarget,
                   ),
                 ),
+                */
                 Icon(
                   Icons.arrow_drop_down_rounded,
                   color: Color(0xFF3C37FF),

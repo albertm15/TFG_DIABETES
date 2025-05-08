@@ -137,9 +137,4 @@ void main() async {
   } else {
     runApp(MaterialApp(home: Welcomepage(), debugShowCheckedModeBanner: false));
   }
-
-  //home: LogInPage(),
-  //home: SignUpPage(),
-  //home: Welcomepage(),
-  //debugShowCheckedModeBanner: false),
 }
