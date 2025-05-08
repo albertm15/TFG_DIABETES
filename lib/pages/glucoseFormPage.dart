@@ -86,7 +86,7 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
       body: ScreenMargins(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.only(top: 24, bottom: 24),
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 400),
               child: Column(
@@ -96,7 +96,7 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
                   Text(
                     "Añadir registro de glucosa",
                     style: TextStyle(
-                        fontSize: 40,
+                        fontSize: 35,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 85, 42, 196)),
                     textAlign: TextAlign.center,

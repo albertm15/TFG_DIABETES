@@ -36,7 +36,7 @@ class GlucoseEssentialInfoAmplified extends StatelessWidget {
             Text(
               'Resumen glucémico semanal',
               style: TextStyle(
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -54,19 +54,19 @@ class GlucoseEssentialInfoAmplified extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 15,
                             )),
                         Text("Media: ${avgGlucose.floor()} mg/dL",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 15,
                             )),
                         Text("Máxima: $maxGlucose mg/dL",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 15,
                             )),
                       ],
                     ),
@@ -85,14 +85,14 @@ class GlucoseEssentialInfoAmplified extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 15,
                             )),
                         const SizedBox(height: 16),
                         Text("Hiperglucemias: $hyperglucemies",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 15,
                             )),
                       ],
                     ),

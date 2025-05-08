@@ -35,3 +35,4 @@ flutter:
   assets: 
     - assets/images/
     - assets/3dModels/
+    - assets/3dModels/maleBody.glb

@@ -61,7 +61,7 @@ class _WeekChartsPageState extends State<WeekChartsPage> {
       children: [
         Text(
           "Graficos de glucosa semanal",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
         Expanded(

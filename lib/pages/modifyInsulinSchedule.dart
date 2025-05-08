@@ -119,7 +119,7 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
       appBar: UpperNavBar(pageName: "Horario Insulina"),
       body: ScreenMargins(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.only(top: 24, bottom: 24),
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 400),
             child: Column(

@@ -11,7 +11,10 @@ class LegendItem extends StatelessWidget {
       children: [
         Container(width: 12, height: 12, color: color),
         const SizedBox(width: 4),
-        Text(label),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12),
+        ),
       ],
     );
   }

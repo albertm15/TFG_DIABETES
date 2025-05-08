@@ -62,7 +62,7 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage> {
       appBar: UpperNavBar(pageName: "Añadir Insulina"),
       body: ScreenMargins(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.only(top: 24, bottom: 24),
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 400),
             child: Column(

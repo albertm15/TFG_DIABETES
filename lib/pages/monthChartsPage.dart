@@ -61,7 +61,7 @@ class _MonthChartsPageState extends State<MonthChartsPage> {
       children: [
         Text(
           "Graficos de glucosa mensual",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
         Expanded(

@@ -8,6 +8,7 @@ import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
 import 'package:diabetes_tfg_app/models/insulinModel.dart';
 import 'package:diabetes_tfg_app/widgets/addPunctualInjection.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/insulinEssentialInfo.dart';
 import 'package:diabetes_tfg_app/widgets/legendItem.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
@@ -25,12 +26,14 @@ class InsulinMainPage extends StatefulWidget {
 class _InsulinMainPageState extends State<InsulinMainPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DrawerScaffold(
+        child: BackgroundBase(
+            child: Scaffold(
       appBar: UpperNavBar(pageName: "Insulin"),
       body: BackgroundBase(child: Center(child: InsulinMainPageWidget())),
       bottomNavigationBar: LowerNavBar(),
       backgroundColor: Colors.transparent,
-    );
+    )));
   }
 }
 
@@ -131,55 +134,59 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
             AddPunctualInjection(),
           ],
         ),
-        /*Expanded(
+        Expanded(
             child: ModelViewer(
           src: 'assets/3dModels/maleBody.glb',
-        ))
-        */
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LegendItem(
-                    color: Colors.black,
-                    label: "Brazo izq.: ${locationsCount[0]}"),
-                const SizedBox(width: 8),
-                LegendItem(
-                    color: Color.fromARGB(255, 85, 42, 196),
-                    label: "Brazo der.: ${locationsCount[1]}"),
-                const SizedBox(width: 8),
-                LegendItem(
-                    color: Color(0xFF3C37FF),
-                    label: "Gluteo izq.: ${locationsCount[2]}"),
-                const SizedBox(width: 8),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LegendItem(
-                    color: Colors.black,
-                    label: "Gluteo der.: ${locationsCount[3]}"),
-                const SizedBox(width: 8),
-                LegendItem(
-                    color: Color.fromARGB(255, 85, 42, 196),
-                    label: "Muslo izq.: ${locationsCount[4]}"),
-                const SizedBox(width: 8),
-                LegendItem(
-                    color: Color(0xFF3C37FF),
-                    label: "Muslo der.: ${locationsCount[5]}"),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LegendItem(
-                    color: Colors.black,
-                    label: "Barriga: ${locationsCount[6]}"),
-              ],
-            ),
-          ],
+        )),
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Color.fromARGB(255, 255, 255, 255)),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LegendItem(
+                      color: Colors.black,
+                      label: "Brazo izq.: ${locationsCount[0]}"),
+                  const SizedBox(width: 8),
+                  LegendItem(
+                      color: Color.fromARGB(255, 85, 42, 196),
+                      label: "Brazo der.: ${locationsCount[1]}"),
+                  const SizedBox(width: 8),
+                  LegendItem(
+                      color: Color(0xFF3C37FF),
+                      label: "Gluteo izq.: ${locationsCount[2]}"),
+                  const SizedBox(width: 8),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LegendItem(
+                      color: Colors.black,
+                      label: "Gluteo der.: ${locationsCount[3]}"),
+                  const SizedBox(width: 8),
+                  LegendItem(
+                      color: Color.fromARGB(255, 85, 42, 196),
+                      label: "Muslo izq.: ${locationsCount[4]}"),
+                  const SizedBox(width: 8),
+                  LegendItem(
+                      color: Color(0xFF3C37FF),
+                      label: "Muslo der.: ${locationsCount[5]}"),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LegendItem(
+                      color: Colors.black,
+                      label: "Barriga: ${locationsCount[6]}"),
+                ],
+              ),
+            ],
+          ),
         )
       ],
     ));

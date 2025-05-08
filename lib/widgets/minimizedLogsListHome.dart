@@ -93,7 +93,7 @@ class MinimizedLogsListHome extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

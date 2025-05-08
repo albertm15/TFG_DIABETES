@@ -46,7 +46,7 @@ class SlowActingInsulinScheduleInfo extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
               const SizedBox(height: 6),
