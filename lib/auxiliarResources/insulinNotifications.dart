@@ -27,7 +27,6 @@ class InsulinNotifications {
 
     await flutterLocalNotificationsPlugin.initialize(initSettings);
 
-    // 🚨 Solicitar permisos explícitamente en iOS
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
