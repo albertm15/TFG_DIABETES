@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/pages/allLogsPage.dart';
 import 'package:diabetes_tfg_app/pages/glucoseMainPage.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/insulinMainPage.dart';
@@ -14,7 +15,11 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
   //actualizar cada vez que se añada una nueva pantalla, añadirla tambien aqui:)
   void goBack(BuildContext context) {
     switch (pageName) {
-      case "Glucose" || "Insulin" || "Diet" || "Exercice & Health":
+      case "Glucose" ||
+            "Insulin" ||
+            "Diet" ||
+            "Exercice & Health" ||
+            "Todos los registros":
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -33,6 +38,13 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
             MaterialPageRoute(
                 builder: (context) =>
                     BackgroundBase(child: InsulinMainPage())));
+        break;
+
+      case "Seleccionar tipo de registro":
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BackgroundBase(child: AllLogsPage())));
         break;
 
       default:

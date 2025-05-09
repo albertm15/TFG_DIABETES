@@ -1,16 +1,17 @@
 import 'dart:ui';
-
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
 import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
 import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
+import 'package:diabetes_tfg_app/pages/allLogsPage.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/dietListTile.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/exerciceListTile.dart';
 import 'package:diabetes_tfg_app/widgets/glucoseListTile.dart';
 import 'package:diabetes_tfg_app/widgets/insulinListTile.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class MinimizedLogsListHome extends StatelessWidget {
   final List<GlucoseLogModel> glucoseLogs;
@@ -104,6 +105,12 @@ class MinimizedLogsListHome extends StatelessWidget {
                 IconButton(
                     onPressed: () {
                       print("Ver mas logs");
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DrawerScaffold(
+                                  child:
+                                      BackgroundBase(child: AllLogsPage()))));
                     },
                     icon: Icon(
                       Icons.unfold_more_rounded,
