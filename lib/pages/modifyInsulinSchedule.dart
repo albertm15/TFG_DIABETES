@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/local/insulinDAO.dart';
@@ -111,6 +112,16 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
 
     _secondInjectionScheduleMinuteController.text =
         widget.secondInjectionSchedule.split(":")[1];
+  }
+
+  void setNewNotifications() async {
+    await InsulinNotifications.cancelAll();
+    await InsulinNotifications.scheduleInsulinNotification(
+        int.parse(_firstInjectionScheduleHourController.text),
+        int.parse(_firstInjectionScheduleMinuteController.text));
+    await InsulinNotifications.scheduleInsulinNotification(
+        int.parse(_secondInjectionScheduleHourController.text),
+        int.parse(_secondInjectionScheduleMinuteController.text));
   }
 
   @override
@@ -476,6 +487,7 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
                       setState(() {
                         checkAndReformat();
                         saveData();
+                        setNewNotifications();
                       });
                       Navigator.push(
                           context,

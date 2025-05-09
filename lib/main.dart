@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
@@ -17,6 +18,7 @@ import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +26,7 @@ void main() async {
   FirebaseFirestore.instance.settings =
       const Settings(persistenceEnabled: true);
 
+  //-----------------------------------------------------------------------------------------------------------------
   //--- testing DB
   print("insert");
   GlucoseLogModel logModel = GlucoseLogModel.newEntity(
@@ -129,12 +132,21 @@ void main() async {
   InsulinModel insulinModel = InsulinModel.newEntity(
       "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1", "12:00", "00:00", 125, 76);
   //insulinDAOFB.insert(insulinModel);
-  //---
+  //-----------------------------------------------------------------------------------------------------------------
+  await requestNotificationPermission();
+  await InsulinNotifications.initNotificationConfig();
+
   if (AuthServiceManager.checkIfLogged()) {
     runApp(MaterialApp(
         home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
         debugShowCheckedModeBanner: false));
   } else {
     runApp(MaterialApp(home: Welcomepage(), debugShowCheckedModeBanner: false));
+  }
+}
+
+Future<void> requestNotificationPermission() async {
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
   }
 }
