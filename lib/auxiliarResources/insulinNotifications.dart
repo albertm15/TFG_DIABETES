@@ -43,21 +43,15 @@ class InsulinNotifications {
     var scheduledDate =
         tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
 
-    var scheduledDate2 = tz.TZDateTime.now(tz.local).add(Duration(seconds: 10));
-    var scheduledDate3 = tz.TZDateTime.now(tz.local);
-
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    print(scheduledDate);
-    print(scheduledDate2);
-
     await flutterLocalNotificationsPlugin.zonedSchedule(
       nextId++,
       'Hora de insulina lenta',
-      'Es hora de ponerte la insulina de absorción lenta. $hour:$minute',
-      scheduledDate2,
+      'Es hora de ponerte la insulina de absorción lenta.',
+      scheduledDate,
       const NotificationDetails(
         android: AndroidNotificationDetails(
           'insulin_channel',
@@ -71,8 +65,6 @@ class InsulinNotifications {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
-
-    print("Notification scheduled for $scheduledDate");
   }
 
   static Future<void> cancelAll() async {
