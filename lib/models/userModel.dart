@@ -12,11 +12,21 @@ class UserModel {
   String? fullName;
   String? sex;
   String? country;
+  String? imagePathUrl;
 
   UserModel(this.id, this.email);
 
-  UserModel.withId(this.id, this.email, this.passwordHash, this.height,
-      this.weight, this.typeOfDiabetes, this.fullName, this.sex, this.country);
+  UserModel.withId(
+      this.id,
+      this.email,
+      this.passwordHash,
+      this.height,
+      this.weight,
+      this.typeOfDiabetes,
+      this.fullName,
+      this.sex,
+      this.country,
+      this.imagePathUrl);
 
   factory UserModel.rawPassword(
       String email,
@@ -26,23 +36,24 @@ class UserModel {
       int typeOfDiabetes,
       String fullName,
       String sex,
-      String country) {
+      String country,
+      String imagePathUrl) {
     return UserModel.withId(Uuid().v4(), email, encodePassword(rawPassword),
-        height, weight, typeOfDiabetes, fullName, sex, country);
+        height, weight, typeOfDiabetes, fullName, sex, country, imagePathUrl);
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel.withId(
-      map["id"],
-      map["email"],
-      map["passwordHash"],
-      map["height"],
-      map["weight"],
-      map["typeOfDiabetes"],
-      map["fullName"],
-      map["sex"],
-      map["country"],
-    );
+        map["id"],
+        map["email"],
+        map["passwordHash"],
+        map["height"],
+        map["weight"],
+        map["typeOfDiabetes"],
+        map["fullName"],
+        map["sex"],
+        map["country"],
+        map["imagePathUrl"]);
   }
 
   Map<String, dynamic> toMap() {
@@ -55,13 +66,14 @@ class UserModel {
       "typeOfDiabetes": this.typeOfDiabetes,
       "fullName": this.fullName,
       "sex": this.sex,
-      "country": this.country
+      "country": this.country,
+      "imagePathUrl": this.imagePathUrl
     };
   }
 
   @override
   String toString() {
-    return "Transactions(id: $id, email: $email, passwordHash: $passwordHash,height: $height, weight: $weight, typeOfDiabetes: $typeOfDiabetes, fullName: $fullName, sex: $sex, country: $country)";
+    return "Transactions(id: $id, email: $email, passwordHash: $passwordHash,height: $height, weight: $weight, typeOfDiabetes: $typeOfDiabetes, fullName: $fullName, sex: $sex, country: $country, imagePathUrl: $imagePathUrl)";
   }
 
   static String encodePassword(String password) {

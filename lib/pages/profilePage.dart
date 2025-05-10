@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/userDAO.dart';
@@ -9,6 +10,9 @@ import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
 import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -36,7 +40,11 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
-  //final TextEditingController diabetesTypeController = TextEditingController();
+
+  XFile? pickedImage;
+  String photoUrl = "";
+
+  final ImagePicker _picker = ImagePicker();
 
   String gender = "Hombre";
   int typeOfDiabetes = 1;
@@ -64,6 +72,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
       countryController.text = userList[0].country ?? '';
       typeOfDiabetes = userList[0].typeOfDiabetes ?? 1;
       gender = userList[0].sex ?? "Hombre";
+      photoUrl = userList[0].imagePathUrl ?? '';
     });
   }
 
@@ -77,7 +86,8 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
         typeOfDiabetes,
         nameController.text,
         gender,
-        countryController.text);
+        countryController.text,
+        photoUrl);
 
     if (AuthServiceManager.checkIfLogged()) {
       UserDAOFB dao = UserDAOFB();
@@ -86,6 +96,49 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
       UserDAO dao = UserDAO();
       await dao.update(userModelModified);
     }
+  }
+
+  Future<void> pickImage() async {
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        pickedImage = pickedFile;
+      });
+      await uploadImageAndSaveUrl(pickedFile);
+    }
+  }
+
+  Future<void> uploadImageAndSaveUrl(XFile image) async {
+    /*if (AuthServiceManager.checkIfLogged()) {
+      final ref = FirebaseStorage.instance.ref().child(
+          'profile_pictures/${AuthServiceManager.getCurrentUserUID()}.jpg');
+
+      await ref.putData(await image.readAsBytes());
+      final downloadUrl = await ref.getDownloadURL();
+
+      await AuthServiceManager.getCurrentUser().updatePhotoURL(downloadUrl);
+      await AuthServiceManager.getCurrentUser().reload();
+
+      setState(() {
+        photoUrl = downloadUrl;
+      });
+    } else {*/
+    final appDir = await getApplicationDocumentsDirectory();
+    final pfpDir = Directory('${appDir.path}/pfp');
+
+    if (!await pfpDir.exists()) {
+      await pfpDir.create(recursive: true);
+    }
+
+    final fileName = basename(image.path);
+    final savedPath = '${pfpDir.path}/$fileName';
+    final savedImage = await File(image.path).copy(savedPath);
+
+    setState(() {
+      photoUrl = savedImage.path;
+    });
+    // }
   }
 
   @override
@@ -113,20 +166,8 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
               ),
             ],
           ),
-          Stack(
-            alignment: Alignment.topRight,
-            children: [
-              CircleAvatar(
-                radius: 50,
-                child: Icon(
-                  Icons.person_add_alt_1,
-                  size: 50,
-                  color: const Color.fromARGB(255, 95, 95, 95),
-                ),
-                backgroundColor: Colors.grey,
-              ),
-            ],
-          ),
+          buildProfileImage(
+              photoUrl, /*AuthServiceManager.checkIfLogged()*/ false),
           SizedBox(height: 8),
           buildProfileField("Nombre completo", nameController),
           buildProfileEmailField(),
@@ -335,5 +376,45 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
         ],
       ),
     );
+  }
+
+  Widget buildProfileImage(String photoUrl, bool isLoggedIn) {
+    return GestureDetector(
+        onTap: () {
+          if (isEditing) {
+            pickImage();
+          }
+        },
+        child: (photoUrl.isEmpty)
+            ? CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.grey,
+                child: Icon(
+                  Icons.person_add_alt_1,
+                  size: 50,
+                  color: Color.fromARGB(255, 95, 95, 95),
+                ),
+              )
+            : (isLoggedIn
+                ? CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey,
+                    backgroundImage: NetworkImage(photoUrl),
+                  )
+                : File(photoUrl).existsSync()
+                    ? CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey,
+                        backgroundImage: FileImage(File(photoUrl)),
+                      )
+                    : CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey,
+                        child: Icon(
+                          Icons.person_add_alt_1,
+                          size: 50,
+                          color: Color.fromARGB(255, 95, 95, 95),
+                        ),
+                      )));
   }
 }

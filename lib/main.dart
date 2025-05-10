@@ -43,8 +43,8 @@ void main() async {
   Map<String, dynamic> map = logModel.toMap();
   await FirebaseFirestore.instance.collection("glucoseLog").add(map);
   */
-  UserModel userModel = UserModel.rawPassword(
-      "eamil1@gmail.com", "123", 187, 67.7, 1, "Victoooor", "male", "Spain");
+  UserModel userModel = UserModel.rawPassword("eamil1@gmail.com", "123", 187,
+      67.7, 1, "Victoooor", "male", "Spain", "");
   GlucoseLogDAOFB daofb = GlucoseLogDAOFB();
   UserDAOFB userDAO = UserDAOFB();
   //daofb.insert(logModel);

@@ -1,6 +1,5 @@
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
 import 'package:diabetes_tfg_app/pages/glucoseLogDetails.dart';
-import 'package:diabetes_tfg_app/pages/selectLogTypeToRegister.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';

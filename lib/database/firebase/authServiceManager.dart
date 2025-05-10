@@ -12,6 +12,10 @@ class AuthServiceManager {
     return FirebaseAuth.instance.currentUser!.uid;
   }
 
+  static User getCurrentUser() {
+    return FirebaseAuth.instance.currentUser!;
+  }
+
   static Future<bool> logIn(String email, String password) async {
     //mirar de aplicar el check de la conexion con try catch y la excepcion
     try {
