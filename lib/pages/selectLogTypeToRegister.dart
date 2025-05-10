@@ -5,7 +5,6 @@ import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
 import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
-
 import '../widgets/backgroundBase.dart';
 
 class SelectLogTypeToRegister extends StatelessWidget {

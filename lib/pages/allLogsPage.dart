@@ -181,8 +181,8 @@ class _AllLogsPageWidgetState extends State<_AllLogsPageWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                width: 85,
-                height: 85,
+                width: 75,
+                height: 75,
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -190,12 +190,15 @@ class _AllLogsPageWidgetState extends State<_AllLogsPageWidget> {
                       loadData();
                     });
                   },
-                  child: Icon(
-                    Icons.water_drop_outlined,
-                    color: Colors.white,
-                    size: 40,
+                  child: Center(
+                    child: Icon(
+                      Icons.water_drop_outlined,
+                      color: Colors.white,
+                      size: 40,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
                     backgroundColor: glucoseButtonChecked
                         ? Color(0xFF3C37FF)
                         : Color.fromARGB(255, 118, 118, 118),
@@ -208,8 +211,8 @@ class _AllLogsPageWidgetState extends State<_AllLogsPageWidget> {
               ),
               SizedBox(width: 8),
               SizedBox(
-                width: 85,
-                height: 85,
+                width: 75,
+                height: 75,
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -217,10 +220,15 @@ class _AllLogsPageWidgetState extends State<_AllLogsPageWidget> {
                       loadData();
                     });
                   },
-                  child: Image.asset(
-                    'assets/images/Insulin_image_white.png',
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/Insulin_image_white.png',
+                      width: 40,
+                      height: 40,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
                     backgroundColor: insulinButtonChecked
                         ? Color(0xFF3C37FF)
                         : Color.fromARGB(255, 118, 118, 118),
@@ -233,8 +241,8 @@ class _AllLogsPageWidgetState extends State<_AllLogsPageWidget> {
               ),
               SizedBox(width: 8),
               SizedBox(
-                width: 85,
-                height: 85,
+                width: 75,
+                height: 75,
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -242,12 +250,15 @@ class _AllLogsPageWidgetState extends State<_AllLogsPageWidget> {
                       loadData();
                     });
                   },
-                  child: Icon(
-                    Icons.fastfood_outlined,
-                    color: Colors.white,
-                    size: 40,
+                  child: Center(
+                    child: Icon(
+                      Icons.fastfood_outlined,
+                      color: Colors.white,
+                      size: 40,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
                     backgroundColor: foodButtonChecked
                         ? Color(0xFF3C37FF)
                         : Color.fromARGB(255, 118, 118, 118),
@@ -260,8 +271,8 @@ class _AllLogsPageWidgetState extends State<_AllLogsPageWidget> {
               ),
               SizedBox(width: 8),
               SizedBox(
-                width: 85,
-                height: 85,
+                width: 75,
+                height: 75,
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -269,12 +280,15 @@ class _AllLogsPageWidgetState extends State<_AllLogsPageWidget> {
                       loadData();
                     });
                   },
-                  child: Icon(
-                    Icons.directions_run_rounded,
-                    color: Colors.white,
-                    size: 40,
+                  child: Center(
+                    child: Icon(
+                      Icons.directions_run_rounded,
+                      color: Colors.white,
+                      size: 40,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
                     backgroundColor: exerciceButtonChecked
                         ? Color(0xFF3C37FF)
                         : Color.fromARGB(255, 118, 118, 118),

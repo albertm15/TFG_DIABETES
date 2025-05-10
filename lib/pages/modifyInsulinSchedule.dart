@@ -72,28 +72,28 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
         int.parse(_firstInjectionScheduleHourController.text) >= 0) {
       if (_firstInjectionScheduleHourController.text != "00") {
         _firstInjectionScheduleHourController.text =
-            "0${_firstInjectionScheduleHourController.text}";
+            "0${int.parse(_firstInjectionScheduleHourController.text)}";
       }
     }
     if (int.parse(_firstInjectionScheduleMinuteController.text) <= 9 &&
         int.parse(_firstInjectionScheduleMinuteController.text) >= 0) {
       if (_firstInjectionScheduleMinuteController.text != "00") {
         _firstInjectionScheduleMinuteController.text =
-            "0${_firstInjectionScheduleMinuteController.text}";
+            "0${int.parse(_firstInjectionScheduleMinuteController.text)}";
       }
     }
     if (int.parse(_secondInjectionScheduleHourController.text) <= 9 &&
         int.parse(_secondInjectionScheduleHourController.text) >= 0) {
       if (_secondInjectionScheduleHourController.text != "00") {
         _secondInjectionScheduleHourController.text =
-            "0${_secondInjectionScheduleHourController.text}";
+            "0${int.parse(_secondInjectionScheduleHourController.text)}";
       }
     }
     if (int.parse(_secondInjectionScheduleMinuteController.text) <= 9 &&
         int.parse(_secondInjectionScheduleMinuteController.text) >= 0) {
       if (_secondInjectionScheduleMinuteController.text != "00") {
         _secondInjectionScheduleMinuteController.text =
-            "0${_secondInjectionScheduleMinuteController.text}";
+            "0${int.parse(_secondInjectionScheduleMinuteController.text)}";
       }
     }
   }

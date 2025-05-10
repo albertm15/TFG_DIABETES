@@ -1,4 +1,8 @@
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
+import 'package:diabetes_tfg_app/pages/glucoseLogDetails.dart';
+import 'package:diabetes_tfg_app/pages/selectLogTypeToRegister.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';
 
 class GlucoseListTile extends StatelessWidget {
@@ -61,6 +65,15 @@ class GlucoseListTile extends StatelessWidget {
         ),
         onTap: () {
           print("ver detalles de ${log.id}");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DrawerScaffold(
+                          child: BackgroundBase(
+                        child: GlucoseLogDetails(
+                          id: log.id,
+                        ),
+                      ))));
         },
       ),
     );

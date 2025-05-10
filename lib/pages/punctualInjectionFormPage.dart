@@ -111,27 +111,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                     ),
                   ),
                 ),
-                //SizedBox(height: 24),
                 SizedBox(height: 10),
-                /*
-                  Container(
-                    height: 200,
-                    color: Colors.black,
-                    child: Text(
-                      "${injectableLocations[selectedIndex]}",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    alignment: Alignment.center,
-                  ),*/
-                /*
-                Container(
-                  height: 200,
-                  child: ModelViewer(src: "assets/3dModels/maleBody.glb"),
-                ),*/
-                /*
                 Container(
                   height: 190,
                   child: ModelViewer(
@@ -143,7 +123,6 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                     cameraTarget: currentCameraTarget,
                   ),
                 ),
-                */
                 Icon(
                   Icons.arrow_drop_down_rounded,
                   color: Color(0xFF3C37FF),

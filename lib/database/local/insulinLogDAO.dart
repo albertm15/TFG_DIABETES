@@ -64,4 +64,18 @@ class InsulinLogDAO {
 
     return glucoseLogs;
   }
+
+  //getById
+  Future<List<InsulinLogModel>> getById(String id) async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data =
+        await db.query('InsulinLogs', where: "id = ?", whereArgs: [id]);
+
+    List<InsulinLogModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(InsulinLogModel.fromMap(log));
+    }
+
+    return glucoseLogs;
+  }
 }

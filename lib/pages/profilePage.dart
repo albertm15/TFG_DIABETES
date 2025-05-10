@@ -127,7 +127,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 8),
           buildProfileField("Nombre completo", nameController),
           buildProfileEmailField(),
           buildProfileSexField(),
@@ -135,7 +135,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
           buildProfileNumberFields("Peso (kg)", weightController),
           buildProfileField("País", countryController),
           buildProfileTypeOfDiabetesField(),
-          SizedBox(height: 15),
+          SizedBox(height: 12),
           Container(
             width: 250,
             child: ElevatedButton(
@@ -183,7 +183,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
 
   Widget buildProfileField(String label, TextEditingController controller) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -208,7 +208,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
 
   Widget buildProfileEmailField() {
     return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -226,7 +226,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
 
   Widget buildProfileSexField() {
     return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -270,7 +270,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
   Widget buildProfileNumberFields(
       String label, TextEditingController controller) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -296,7 +296,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
 
   Widget buildProfileTypeOfDiabetesField() {
     return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
