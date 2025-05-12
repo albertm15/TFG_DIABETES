@@ -115,13 +115,15 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
   }
 
   void setNewNotifications() async {
-    await InsulinNotifications.cancelAll();
+    await InsulinNotifications.cancelInsulinNotifications();
     await InsulinNotifications.scheduleInsulinNotification(
         int.parse(_firstInjectionScheduleHourController.text),
-        int.parse(_firstInjectionScheduleMinuteController.text));
+        int.parse(_firstInjectionScheduleMinuteController.text),
+        "primera");
     await InsulinNotifications.scheduleInsulinNotification(
         int.parse(_secondInjectionScheduleHourController.text),
-        int.parse(_secondInjectionScheduleMinuteController.text));
+        int.parse(_secondInjectionScheduleMinuteController.text),
+        "segunda");
   }
 
   @override

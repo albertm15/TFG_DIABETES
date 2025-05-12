@@ -209,15 +209,27 @@ class _ModifyDietScheduleState extends State<ModifyDietSchedule> {
   }
 
   void setNewNotifications() async {
-    /*
-    await InsulinNotifications.cancelAll();
+    await InsulinNotifications.cancelDietNotifications();
     await InsulinNotifications.scheduleInsulinNotification(
-        int.parse(_firstInjectionScheduleHourController.text),
-        int.parse(_firstInjectionScheduleMinuteController.text));
+        int.parse(_breakfastScheduleHourController.text),
+        int.parse(_breakfastScheduleMinuteController.text),
+        "del desayuno");
     await InsulinNotifications.scheduleInsulinNotification(
-        int.parse(_secondInjectionScheduleHourController.text),
-        int.parse(_secondInjectionScheduleMinuteController.text));
-    */
+        int.parse(_snackScheduleHourController.text),
+        int.parse(_snackScheduleMinuteController.text),
+        "del tente en pié");
+    await InsulinNotifications.scheduleInsulinNotification(
+        int.parse(_lunchScheduleHourController.text),
+        int.parse(_lunchScheduleMinuteController.text),
+        "de la comida");
+    await InsulinNotifications.scheduleInsulinNotification(
+        int.parse(_afternoonSnackScheduleHourController.text),
+        int.parse(_afternoonSnackScheduleMinuteController.text),
+        "de la merienda");
+    await InsulinNotifications.scheduleInsulinNotification(
+        int.parse(_dinnerScheduleHourController.text),
+        int.parse(_dinnerScheduleMinuteController.text),
+        "de la cena");
   }
 
   @override
