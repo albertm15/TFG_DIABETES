@@ -1,4 +1,5 @@
 import 'package:diabetes_tfg_app/pages/allLogsPage.dart';
+import 'package:diabetes_tfg_app/pages/dietMainPage.dart';
 import 'package:diabetes_tfg_app/pages/glucoseMainPage.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/insulinMainPage.dart';
@@ -45,6 +46,13 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => BackgroundBase(child: AllLogsPage())));
+        break;
+
+      case "Horario dieta":
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BackgroundBase(child: DietMainPage())));
         break;
 
       default:

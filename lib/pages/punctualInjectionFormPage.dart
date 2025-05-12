@@ -112,6 +112,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                   ),
                 ),
                 SizedBox(height: 10),
+                /*
                 Container(
                   height: 190,
                   child: ModelViewer(
@@ -123,6 +124,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                     cameraTarget: currentCameraTarget,
                   ),
                 ),
+                */
                 Icon(
                   Icons.arrow_drop_down_rounded,
                   color: Color(0xFF3C37FF),

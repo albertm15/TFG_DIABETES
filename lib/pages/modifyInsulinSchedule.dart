@@ -198,7 +198,7 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
                 ),
                 SizedBox(height: 24),
                 Text(
-                  "Primera inyección",
+                  "Segunda inyección",
                   style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,

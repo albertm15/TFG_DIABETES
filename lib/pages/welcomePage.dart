@@ -54,7 +54,7 @@ class _WelcomepageState extends State<Welcomepage> {
                               Text(
                                 "Bienvenid@ a",
                                 style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
@@ -62,7 +62,7 @@ class _WelcomepageState extends State<Welcomepage> {
                               Text(
                                 "NOMBRE_APP",
                                 style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),

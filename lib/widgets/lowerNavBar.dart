@@ -90,7 +90,8 @@ class LowerNavBar extends StatelessWidget {
                                 child: ExerciceAndHealthMainPage()))));
                 //child: DbTestingPage()))));
               },
-              icon: Icon(Icons.directions_run_rounded, color: Colors.white),
+              //icon: Icon(Icons.directions_run_rounded, color: Colors.white),
+              icon: Icon(Icons.favorite_border_rounded, color: Colors.white),
               iconSize: 40,
             ),
           ],

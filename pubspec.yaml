@@ -28,6 +28,7 @@ dependencies:
   timezone: ^0.10.1
   flutter_native_timezone: ^2.0.0
   image_picker: ^1.0.4
+  flutter_vector_icons: ^2.0.0
 
 
 dev_dependencies:
