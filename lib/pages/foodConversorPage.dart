@@ -10,7 +10,9 @@ import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
 import 'package:diabetes_tfg_app/models/foodModel.dart';
 import 'package:diabetes_tfg_app/pages/addPunctualCarbs.dart';
+import 'package:diabetes_tfg_app/pages/createFood.dart';
 import 'package:diabetes_tfg_app/pages/dietMainPage.dart';
+import 'package:diabetes_tfg_app/pages/saveDietLogPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
@@ -306,7 +308,17 @@ class _FoodConversorPageStateWidgetState
                         width: 4,
                       ),
                       ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DrawerScaffold(
+                                          child: BackgroundBase(
+                                              child: CreateFood()))));
+                            });
+                            setState(() {});
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color.fromARGB(255, 85, 42, 196),
                             foregroundColor: Colors.white,
@@ -430,12 +442,18 @@ class _FoodConversorPageStateWidgetState
           ElevatedButton(
             onPressed: () {
               setState(() {
-                saveData();
+                //saveData();
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => DrawerScaffold(
-                            child: BackgroundBase(child: DietMainPage()))));
+                                //child: BackgroundBase(child: DietMainPage()))));
+                                child: BackgroundBase(
+                                    child: SaveDietLogPage(
+                              totalCarbs: unidadesTotales * 10,
+                              totalUnits: unidadesTotales,
+                              selectedFoods: selectedFoods,
+                            )))));
               });
             },
             style: ElevatedButton.styleFrom(

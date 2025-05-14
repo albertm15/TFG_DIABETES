@@ -75,6 +75,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
       InsulinLogDAO dao = InsulinLogDAO();
       dao.insert(glucoseLog);
     }
+    //RESTAR A LA INSULINA TOTAL, LA QUE TE ACABAS DE INYECTA, IMPORTANTISIMO
   }
 
   @override
