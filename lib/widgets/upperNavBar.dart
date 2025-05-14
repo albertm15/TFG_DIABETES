@@ -48,7 +48,7 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context) => BackgroundBase(child: AllLogsPage())));
         break;
 
-      case "Horario dieta":
+      case "Horario dieta" || "Conversor de comida":
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

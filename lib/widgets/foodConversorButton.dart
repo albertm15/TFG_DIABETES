@@ -1,4 +1,4 @@
-import 'package:diabetes_tfg_app/pages/homePage.dart';
+import 'package:diabetes_tfg_app/pages/foodConversorPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +12,8 @@ class FoodConversorButton extends StatelessWidget {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    DrawerScaffold(child: BackgroundBase(child: Homepage()))));
+                builder: (context) => DrawerScaffold(
+                    child: BackgroundBase(child: FoodConversorPage()))));
       },
       child: Container(
         height: 160,

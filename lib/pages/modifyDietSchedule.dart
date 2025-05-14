@@ -247,7 +247,7 @@ class _ModifyDietScheduleState extends State<ModifyDietSchedule> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Modificar horario de comidas",
+                  "Modificar horario",
                   style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,

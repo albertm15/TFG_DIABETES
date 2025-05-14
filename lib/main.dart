@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/foodDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
+import 'package:diabetes_tfg_app/models/foodModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:diabetes_tfg_app/models/insulinModel.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
@@ -132,6 +134,15 @@ void main() async {
   InsulinModel insulinModel = InsulinModel.newEntity(
       "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1", "12:00", "00:00", 125, 76);
   //insulinDAOFB.insert(insulinModel);
+
+  /*
+  FoodDAOFB foodDao = FoodDAOFB();
+  await foodDao.insert(FoodModel.newEntity("allDB", 100, "Carbohidratos"));
+  
+  await foodDao.insert(FoodModel.newEntity("allDB", 80, "Arroz"));
+  await foodDao.insert(FoodModel.newEntity("allDB", 32, "Platanos"));
+  await foodDao.insert(FoodModel.newEntity("allDB", 2, "Alcachofas"));
+  */
   //-----------------------------------------------------------------------------------------------------------------
   await requestNotificationPermission();
   await InsulinNotifications.initNotificationConfig();
