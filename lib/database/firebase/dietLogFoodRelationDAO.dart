@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/local/databaseManager.dart';
 import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
 
@@ -52,5 +53,37 @@ class DietLogFoodRelationDAOFB {
         .collection("DietFoodRelation")
         .doc(foodRelation.id)
         .delete();
+  }
+
+  //getById
+  Future<List<DietLogFoodRelationModel>> getById(String id) async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("DietFoodRelation")
+            .where("userId", isEqualTo: uid)
+            .where("id", isEqualTo: id)
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("DietFoodRelation")
+            .where("userId", isEqualTo: uid)
+            .where("id", isEqualTo: id)
+            .get();
+      }
+
+      List<DietLogFoodRelationModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(DietLogFoodRelationModel.fromMap(
+            doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
   }
 }

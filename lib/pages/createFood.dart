@@ -52,42 +52,49 @@ class _CreateFoodState extends State<CreateFood> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Nombre del alimento", style: TextStyle(fontSize: 18)),
+                  Text("Nombre del alimento",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
                   SizedBox(height: 8),
                   Container(
-                    width: 100,
-                    height: 50,
+                    width: 160,
+                    height: 70,
                     child: TextField(
                       controller: nameController,
+                      style: TextStyle(fontSize: 22),
                       decoration: InputDecoration(
-                        hintText: '',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 30),
                   Text("Carbohidratos cada 100 gramos",
-                      style: TextStyle(fontSize: 18)),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   SizedBox(height: 8),
                   Container(
-                    width: 100,
-                    height: 50,
+                    width: 160,
+                    height: 70,
                     child: TextField(
                       controller: carbsController,
                       keyboardType: TextInputType.number,
+                      style: TextStyle(fontSize: 22),
                       decoration: InputDecoration(
-                        hintText: 'g',
+                        suffixText: 'g',
+                        suffixStyle: TextStyle(fontSize: 20), // Tamaño del "g"
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 18),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 50),
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
@@ -97,10 +104,13 @@ class _CreateFoodState extends State<CreateFood> {
                     },
                     child: Text("Añadir"),
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 85, 42, 196),
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     ),
                   ),
                 ],

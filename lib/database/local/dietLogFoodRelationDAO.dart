@@ -44,4 +44,18 @@ class DietLogFoodRelationDAO {
 
     return id;
   }
+
+  //getById
+  Future<List<DietLogFoodRelationModel>> getById(String id) async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data =
+        await db.query('DietFoodRelation', where: "id = ?", whereArgs: [id]);
+
+    List<DietLogFoodRelationModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(DietLogFoodRelationModel.fromMap(log));
+    }
+
+    return glucoseLogs;
+  }
 }

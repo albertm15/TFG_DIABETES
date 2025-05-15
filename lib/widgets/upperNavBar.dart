@@ -55,9 +55,10 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context) => BackgroundBase(child: DietMainPage())));
         break;
 
+      case "Añadir carbohidratos":
       default:
         if (Navigator.canPop(context)) {
-          Navigator.pop(context);
+          Navigator.pop(context, 0);
         }
         break;
     }

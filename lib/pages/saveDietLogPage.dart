@@ -6,6 +6,7 @@ import 'package:diabetes_tfg_app/database/local/dietLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/dietLogFoodRelationDAO.dart';
 import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
+import 'package:diabetes_tfg_app/pages/punctualInjectionFormPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
@@ -38,8 +39,8 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
         AuthServiceManager.getCurrentUserUID(),
         widget.totalUnits,
         (widget.totalUnits * 10).toInt(),
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
         "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+        DateFormat("yyyy-MM-dd").format(DateTime.now()),
       );
       await dao.insert(dietLog);
 
@@ -57,8 +58,8 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
         "localUser",
         widget.totalUnits,
         (widget.totalUnits * 10).toInt(),
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
         "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+        DateFormat("yyyy-MM-dd").format(DateTime.now()),
       );
       await dao.insert(dietLog);
 
@@ -84,7 +85,11 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
               child: Center(
                 child: Column(
                   children: [
-                    Text("Carbohidratos a ingerir:"),
+                    Text(
+                      "Carbohidratos a ingerir:",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -103,10 +108,17 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
                       ),
                       child: Text(
                         "${widget.totalCarbs.toStringAsFixed(1)} g.",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text("Equivalente a:"),
+                    Text(
+                      "Equivalente a:",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -125,7 +137,10 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
                       ),
                       child: Text(
                         "${widget.totalUnits.toStringAsFixed(1)} U.",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -176,6 +191,34 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
                           }).toList(),
                         ),
                       ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          saveData();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DrawerScaffold(
+                                      //child: BackgroundBase(child: DietMainPage()))));
+                                      child: BackgroundBase(
+                                          child: PunctualInjectionFormPage
+                                              .withInitialUnits(
+                                                  widget.totalUnits)))));
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 85, 42, 196),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      ),
+                      child: Text("Confirmar y registrar insulina",
+                          style: TextStyle(fontSize: 18)),
                     ),
                   ],
                 ),

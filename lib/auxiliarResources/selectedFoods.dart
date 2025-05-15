@@ -5,4 +5,9 @@ class Selectedfood {
   FoodModel food;
 
   Selectedfood({required this.quantity, required this.food});
+
+  @override
+  String toString() {
+    return '${food.name}: $quantity g, ${(quantity * (food.carbsPer100 / 100)) / 10} U';
+  }
 }

@@ -1,17 +1,10 @@
 import 'package:diabetes_tfg_app/auxiliarResources/selectedFoods.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
-import 'package:diabetes_tfg_app/database/firebase/dietLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/dietLogFoodRelationDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/foodDAO.dart';
-import 'package:diabetes_tfg_app/database/local/dietLogDAO.dart';
-import 'package:diabetes_tfg_app/database/local/dietLogFoodRelationDAO.dart';
 import 'package:diabetes_tfg_app/database/local/foodDAO.dart';
-import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
-import 'package:diabetes_tfg_app/models/dietLogModel.dart';
 import 'package:diabetes_tfg_app/models/foodModel.dart';
 import 'package:diabetes_tfg_app/pages/addPunctualCarbs.dart';
 import 'package:diabetes_tfg_app/pages/createFood.dart';
-import 'package:diabetes_tfg_app/pages/dietMainPage.dart';
 import 'package:diabetes_tfg_app/pages/saveDietLogPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
@@ -19,7 +12,6 @@ import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
 import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class FoodConversorPage extends StatefulWidget {
   @override
@@ -83,48 +75,6 @@ class _FoodConversorPageStateWidgetState
     for (Selectedfood selectedfood in selectedFoods) {
       unidadesTotales +=
           (selectedfood.quantity * (selectedfood.food.carbsPer100 / 100)) / 10;
-    }
-  }
-
-  void saveData() async {
-    if (AuthServiceManager.checkIfLogged()) {
-      DietLogDAOFB dao = DietLogDAOFB();
-      DietLogModel dietLog = DietLogModel.newEntity(
-        AuthServiceManager.getCurrentUserUID(),
-        unidadesTotales,
-        (unidadesTotales * 10).toInt(),
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
-        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-      );
-      await dao.insert(dietLog);
-
-      DietLogFoodRelationDAOFB dao2 = DietLogFoodRelationDAOFB();
-      for (Selectedfood selFood in selectedFoods) {
-        await dao2.insert(DietLogFoodRelationModel.newEntity(
-            AuthServiceManager.getCurrentUserUID(),
-            dietLog.id,
-            selFood.food.id,
-            selFood.quantity.toDouble()));
-      }
-    } else {
-      DietLogDAO dao = DietLogDAO();
-      DietLogModel dietLog = DietLogModel.newEntity(
-        "localUser",
-        unidadesTotales,
-        (unidadesTotales * 10).toInt(),
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
-        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-      );
-      await dao.insert(dietLog);
-
-      DietLogFoodRelationDAO dao2 = DietLogFoodRelationDAO();
-      for (Selectedfood selFood in selectedFoods) {
-        await dao2.insert(DietLogFoodRelationModel.newEntity(
-            AuthServiceManager.getCurrentUserUID(),
-            dietLog.id,
-            selFood.food.id,
-            selFood.quantity.toDouble()));
-      }
     }
   }
 
@@ -258,20 +208,21 @@ class _FoodConversorPageStateWidgetState
                               break;
                             }
                           }
-
-                          if (existing != null) {
-                            existing.quantity = punctualCarbs;
-                          } else {
-                            selectedFoods.add(Selectedfood(
-                                quantity: punctualCarbs,
-                                food: foodList
-                                    .where(
-                                        (food) => food.name == "Carbohidratos")
-                                    .first));
-                          }
-                          if (punctualCarbs == 0) {
+                          if (carbsToAdd <= 0) {
                             selectedFoods.remove(existing);
+                          } else {
+                            if (existing != null) {
+                              existing.quantity = punctualCarbs;
+                            } else {
+                              selectedFoods.add(Selectedfood(
+                                  quantity: punctualCarbs,
+                                  food: foodList
+                                      .where((food) =>
+                                          food.name == "Carbohidratos")
+                                      .first));
+                            }
                           }
+
                           updateTotalUnits();
                         });
                       },

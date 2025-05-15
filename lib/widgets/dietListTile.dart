@@ -1,20 +1,12 @@
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
+import 'package:diabetes_tfg_app/pages/dietLogDetails.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';
 
 class DietListTile extends StatelessWidget {
   final UndefinedTypeLog log;
   const DietListTile({required this.log});
-
-  IconData getIconForCategory(String category) {
-    switch (category) {
-      case "Elevado":
-        return Icons.arrow_upward_rounded;
-      case "Bajo":
-        return Icons.arrow_downward_rounded;
-      default:
-        return Icons.arrow_forward_rounded;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +26,10 @@ class DietListTile extends StatelessWidget {
               color: Colors.white,
             ),
             SizedBox(width: 8), // Espaciado entre los íconos
-            Icon(
-              getIconForCategory(log.category),
-              color: Colors.white,
-            ),
           ],
         ),
         title: Text(
-          '${log.value}carbohidratos Comida',
+          '${log.value} Carbohidratos',
           style: TextStyle(color: Colors.white),
         ),
         subtitle: Text(
@@ -61,6 +49,15 @@ class DietListTile extends StatelessWidget {
         ),
         onTap: () {
           print("ver detalles de ${log.id}");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DrawerScaffold(
+                          child: BackgroundBase(
+                        child: DietLogDetails(
+                          id: log.id,
+                        ),
+                      ))));
         },
       ),
     );

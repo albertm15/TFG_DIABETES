@@ -6,6 +6,7 @@ import 'package:diabetes_tfg_app/database/local/dietDAO.dart';
 import 'package:diabetes_tfg_app/models/dietModel.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/dietScheduleBox.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/foodConversorButton.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
 import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
@@ -15,12 +16,14 @@ import 'package:flutter/material.dart';
 class DietMainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DrawerScaffold(
+        child: BackgroundBase(
+            child: Scaffold(
       appBar: UpperNavBar(pageName: "Diet"),
       body: BackgroundBase(child: Center(child: DietMainPageWidget())),
       bottomNavigationBar: LowerNavBar(),
       backgroundColor: Colors.transparent,
-    );
+    )));
   }
 }
 

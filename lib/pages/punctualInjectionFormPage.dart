@@ -1,7 +1,10 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/local/insulinLogDAO.dart';
 import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
+import 'package:diabetes_tfg_app/models/insulinModel.dart';
 import 'package:diabetes_tfg_app/pages/insulinMainPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
@@ -14,6 +17,9 @@ import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class PunctualInjectionFormPage extends StatefulWidget {
+  double initialUnits = 0;
+  PunctualInjectionFormPage.withInitialUnits(this.initialUnits);
+  PunctualInjectionFormPage();
   @override
   _PunctualInjectionFormPageState createState() =>
       _PunctualInjectionFormPageState();
@@ -22,6 +28,7 @@ class PunctualInjectionFormPage extends StatefulWidget {
 class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
   final TextEditingController _insulinUnitsController = TextEditingController();
   int selectedIndex = 0;
+  double fastInsulin = 0;
   List<String> injectableLocations = [
     "Brazo izq.",
     "Brazo der.",
@@ -52,6 +59,18 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
     '0m 1.0m 0m',
   ];
 
+  void loadData() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      InsulinDAOFB dao = InsulinDAOFB();
+      List<InsulinModel> l = await dao.getAll();
+      fastInsulin = l.first.totalFastActingInsulin;
+    } else {
+      InsulinDAO dao = InsulinDAO();
+      List<InsulinModel> l = await dao.getAll();
+      fastInsulin = l.first.totalFastActingInsulin;
+    }
+  }
+
   void saveLog() async {
     double insulinValue = double.parse(_insulinUnitsController.text);
     String location = injectableLocations[selectedIndex];
@@ -65,6 +84,14 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
           location);
       InsulinLogDAOFB dao = InsulinLogDAOFB();
       dao.insert(glucoseLog);
+
+      InsulinDAOFB dao2 = InsulinDAOFB();
+      List<InsulinModel> l = await dao2.getAll();
+      InsulinModel insulinModel = l.first;
+      insulinModel.totalFastActingInsulin =
+          insulinModel.totalFastActingInsulin -
+              double.parse(_insulinUnitsController.text);
+      await dao2.update(insulinModel);
     } else {
       InsulinLogModel glucoseLog = InsulinLogModel.newEntity(
           "localUser",
@@ -74,8 +101,22 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
           location);
       InsulinLogDAO dao = InsulinLogDAO();
       dao.insert(glucoseLog);
+
+      InsulinDAO dao2 = InsulinDAO();
+      List<InsulinModel> l = await dao2.getAll();
+      InsulinModel insulinModel = l.first;
+      insulinModel.totalFastActingInsulin =
+          insulinModel.totalFastActingInsulin -
+              double.parse(_insulinUnitsController.text);
+      await dao2.update(insulinModel);
     }
-    //RESTAR A LA INSULINA TOTAL, LA QUE TE ACABAS DE INYECTA, IMPORTANTISIMO
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _insulinUnitsController.text = widget.initialUnits.toString();
+    loadData();
   }
 
   @override
@@ -202,7 +243,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                           ],
                         ),
                       );
-                    } else if (int.parse(_insulinUnitsController.text) < 0) {
+                    } else if (double.parse(_insulinUnitsController.text) < 0) {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -215,6 +256,35 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                           ),
                           content: Text(
                             "Introduzca un valor valido de unidades de insulina.",
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text(
+                                'OK',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else if (fastInsulin -
+                            double.parse(_insulinUnitsController.text) <
+                        0) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                          title: Text(
+                            'Cantidad de unidades de insulina no valida',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          content: Text(
+                            "El numero de unidades ha inyectar supera las que tienes disponibles: $fastInsulin.",
                             style: TextStyle(color: Colors.black, fontSize: 16),
                           ),
                           actions: [
