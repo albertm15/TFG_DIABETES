@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/pages/foodConversorPage.dart';
 import 'package:diabetes_tfg_app/pages/glucoseFormPage.dart';
 import 'package:diabetes_tfg_app/pages/punctualInjectionFormPage.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
@@ -121,7 +122,7 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              BackgroundBase(child: GlucoseFormPage())));
+                              BackgroundBase(child: FoodConversorPage())));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

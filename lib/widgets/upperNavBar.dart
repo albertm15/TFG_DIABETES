@@ -1,5 +1,7 @@
 import 'package:diabetes_tfg_app/pages/allLogsPage.dart';
+import 'package:diabetes_tfg_app/pages/calendarPage.dart';
 import 'package:diabetes_tfg_app/pages/dietMainPage.dart';
+import 'package:diabetes_tfg_app/pages/exerciceAndHealthMainPage.dart';
 import 'package:diabetes_tfg_app/pages/glucoseMainPage.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/insulinMainPage.dart';
@@ -53,6 +55,21 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => BackgroundBase(child: DietMainPage())));
+        break;
+
+      case "Calendar" || "Añadir recordatorio":
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    BackgroundBase(child: ExerciceAndHealthMainPage())));
+        break;
+
+      case "Recordatorios del día":
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BackgroundBase(child: CalendarPage())));
         break;
 
       case "Añadir carbohidratos":

@@ -34,11 +34,11 @@ class ReminderModel {
     return {
       "id": this.id,
       "userId": this.userId,
-      "foodConsumed": this.title,
-      "totalInsulinUnits": this.time,
-      "totalCarbs": this.date,
-      "time": this.repeat,
-      "date": this.repeatConfig
+      "title": this.title,
+      "time": this.time,
+      "date": this.date,
+      "repeat": this.repeat,
+      "repeatConfig": this.repeatConfig
     };
   }
 
