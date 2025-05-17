@@ -57,7 +57,9 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context) => BackgroundBase(child: DietMainPage())));
         break;
 
-      case "Calendar" || "Añadir recordatorio":
+      case "Calendar" ||
+            "Añadir recordatorio" ||
+            "Añadir registro de ejercicio":
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

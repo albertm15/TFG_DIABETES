@@ -1,18 +1,21 @@
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ExerciceListTile extends StatelessWidget {
   final UndefinedTypeLog log;
   const ExerciceListTile({required this.log});
 
-  IconData getIconForCategory(String category) {
+  IconData getIcon(String category) {
     switch (category) {
-      case "Elevado":
-        return Icons.arrow_upward_rounded;
-      case "Bajo":
-        return Icons.arrow_downward_rounded;
+      case "Ciclismo":
+        return Icons.directions_bike;
+      case "Pesas":
+        return FontAwesomeIcons.dumbbell;
+      case "Correr":
+        return FontAwesomeIcons.personRunning;
       default:
-        return Icons.arrow_forward_rounded;
+        return Icons.directions_run_rounded;
     }
   }
 
@@ -30,18 +33,13 @@ class ExerciceListTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.directions_run_rounded,
-              color: Colors.white,
-            ),
-            SizedBox(width: 8), // Espaciado entre los íconos
-            Icon(
-              getIconForCategory(log.category),
+              getIcon(log.category),
               color: Colors.white,
             ),
           ],
         ),
         title: Text(
-          '${log.value}minutos ${log.category}',
+          '${log.category}   ${log.value.toInt()} minutos',
           style: TextStyle(color: Colors.white),
         ),
         subtitle: Text(

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/exerciceLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/foodDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
@@ -9,6 +10,7 @@ import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
+import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
 import 'package:diabetes_tfg_app/models/foodModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
 import 'package:diabetes_tfg_app/models/insulinModel.dart';
@@ -145,6 +147,17 @@ void main() async {
   await foodDao.insert(FoodModel.newEntity("allDB", 32, "Platanos"));
   await foodDao.insert(FoodModel.newEntity("allDB", 2, "Alcachofas"));
   */
+/*
+  ExerciceLogDAOFB exerciceLogDAOFB = ExerciceLogDAOFB();
+  await exerciceLogDAOFB.insert(ExerciceLogModel.newEntity(
+      AuthServiceManager.getCurrentUserUID(),
+      "Pesas",
+      60,
+      "",
+      "afterSensations",
+      DateFormat("yyyy-MM-dd").format(DateTime.now()),
+      "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}"));
+*/
   //-----------------------------------------------------------------------------------------------------------------
   await requestNotificationPermission();
   await InsulinNotifications.initNotificationConfig();
