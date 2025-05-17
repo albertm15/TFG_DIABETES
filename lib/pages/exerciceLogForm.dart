@@ -1,7 +1,16 @@
+import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/exerciceLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/exerciceLogDAO.dart';
+import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
+import 'package:diabetes_tfg_app/pages/exerciceAndHealthMainPage.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
 import 'package:diabetes_tfg_app/widgets/screenMargins.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 class ExerciseLogForm extends StatefulWidget {
   const ExerciseLogForm({super.key});
@@ -13,36 +22,42 @@ class ExerciseLogForm extends StatefulWidget {
 class _ExerciseLogFormState extends State<ExerciseLogForm> {
   final TextEditingController beforeController = TextEditingController();
   final TextEditingController afterController = TextEditingController();
-
-  Duration duration = Duration(minutes: 30);
+  final TextEditingController duration = TextEditingController();
   String selectedActivity = 'Caminar';
 
   final List<Map<String, dynamic>> activities = [
-    {'label': 'Caminar', 'icon': Icons.directions_walk},
+    {'label': 'Caminar', 'icon': FontAwesomeIcons.personRunning},
     {'label': 'Ciclismo', 'icon': Icons.directions_bike},
-    {'label': 'Pesas', 'icon': Icons.fitness_center},
+    {'label': 'Pesas', 'icon': FontAwesomeIcons.dumbbell},
     {'label': 'Otro', 'icon': Icons.more_horiz},
   ];
 
-  void pickDuration() async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime:
-          TimeOfDay(hour: duration.inHours, minute: duration.inMinutes % 60),
-    );
-    if (picked != null) {
-      setState(() {
-        duration = Duration(hours: picked.hour, minutes: picked.minute);
-      });
+  void saveData() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      ExerciceLogDAOFB dao = ExerciceLogDAOFB();
+      ExerciceLogModel log = ExerciceLogModel.newEntity(
+        AuthServiceManager.getCurrentUserUID(),
+        selectedActivity,
+        int.parse(duration.text),
+        beforeController.text,
+        afterController.text,
+        DateFormat("yyyy-MM-dd").format(DateTime.now()),
+        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+      );
+      await dao.insert(log);
+    } else {
+      ExerciceLogDAO dao = ExerciceLogDAO();
+      ExerciceLogModel log = ExerciceLogModel.newEntity(
+        "localUser",
+        selectedActivity,
+        int.parse(duration.text),
+        beforeController.text,
+        afterController.text,
+        DateFormat("yyyy-MM-dd").format(DateTime.now()),
+        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+      );
+      await dao.insert(log);
     }
-  }
-
-  void submitForm() {
-    print("Actividad: $selectedActivity");
-    print("Duración: ${duration.inHours}h ${duration.inMinutes % 60}min");
-    print("Antes: ${beforeController.text}");
-    print("Después: ${afterController.text}");
-    // Aquí podrías guardar el log o subirlo a base de datos
   }
 
   @override
@@ -54,6 +69,7 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Selección de actividad
                 Row(
@@ -64,8 +80,8 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
                       onTap: () =>
                           setState(() => selectedActivity = activity['label']),
                       child: Container(
-                        height: 70,
-                        width: 70,
+                        height: 80,
+                        width: 80,
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: isSelected
@@ -74,6 +90,8 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
                               activity['icon'],
@@ -97,20 +115,21 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
 
                 // Duración
                 Center(
-                  child: GestureDetector(
-                    onTap: pickDuration,
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black54),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        '${duration.inHours.toString().padLeft(2, '0')}h : ${(duration.inMinutes % 60).toString().padLeft(2, '0')}min',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w600),
-                      ),
+                  child: Container(
+                    height: 70,
+                    width: 200,
+                    child: TextFormField(
+                      controller: duration,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                      decoration: InputDecoration(
+                          labelText: "Minutos",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          counterText: ""),
                     ),
                   ),
                 ),
@@ -151,7 +170,15 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
 
                 // Botón añadir
                 ElevatedButton(
-                  onPressed: submitForm,
+                  onPressed: () {
+                    saveData();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DrawerScaffold(
+                                child: BackgroundBase(
+                                    child: ExerciceAndHealthMainPage()))));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 85, 42, 196),
                     foregroundColor: Colors.white,
