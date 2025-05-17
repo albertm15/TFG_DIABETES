@@ -7,7 +7,7 @@ import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:flutter/material.dart';
 
 class DrawerScaffold extends StatefulWidget {
-  Widget child;
+  final Widget child;
 
   DrawerScaffold({required this.child});
 
