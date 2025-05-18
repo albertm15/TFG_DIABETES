@@ -134,12 +134,10 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
             AddPunctualInjection(),
           ],
         ),
-        /*
         Expanded(
             child: ModelViewer(
           src: 'assets/3dModels/maleBody.glb',
         )),
-        */
         Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),

@@ -13,7 +13,10 @@ class FoodConversorButton extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => DrawerScaffold(
-                    child: BackgroundBase(child: FoodConversorPage()))));
+                        child: BackgroundBase(
+                            child: FoodConversorPage(
+                      initialId: "",
+                    )))));
       },
       child: Container(
         height: 160,

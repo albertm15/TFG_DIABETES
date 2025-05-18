@@ -13,7 +13,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 class ExerciseLogForm extends StatefulWidget {
-  const ExerciseLogForm({super.key});
+  final String initialId;
+  const ExerciseLogForm({super.key, required this.initialId});
 
   @override
   State<ExerciseLogForm> createState() => _ExerciseLogFormState();
@@ -32,31 +33,78 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
     {'label': 'Otro', 'icon': Icons.more_horiz},
   ];
 
-  void saveData() async {
+  void loadData() async {
     if (AuthServiceManager.checkIfLogged()) {
       ExerciceLogDAOFB dao = ExerciceLogDAOFB();
-      ExerciceLogModel log = ExerciceLogModel.newEntity(
-        AuthServiceManager.getCurrentUserUID(),
-        selectedActivity,
-        int.parse(duration.text),
-        beforeController.text,
-        afterController.text,
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
-        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-      );
-      await dao.insert(log);
+      List<ExerciceLogModel> log = await dao.getById(widget.initialId);
+      selectedActivity = log.first.category;
+      duration.text = log.first.duration.toString();
+      beforeController.text = log.first.beforeSensations;
+      afterController.text = log.first.afterSensations;
     } else {
       ExerciceLogDAO dao = ExerciceLogDAO();
-      ExerciceLogModel log = ExerciceLogModel.newEntity(
-        "localUser",
-        selectedActivity,
-        int.parse(duration.text),
-        beforeController.text,
-        afterController.text,
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
-        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-      );
-      await dao.insert(log);
+      List<ExerciceLogModel> log = await dao.getById(widget.initialId);
+      selectedActivity = log.first.category;
+      duration.text = log.first.duration.toString();
+      beforeController.text = log.first.beforeSensations;
+      afterController.text = log.first.afterSensations;
+    }
+    setState(() {});
+  }
+
+  void saveData() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      if (widget.initialId != "") {
+        ExerciceLogDAOFB dao = ExerciceLogDAOFB();
+        List<ExerciceLogModel> log = await dao.getById(widget.initialId);
+        log.first.category = selectedActivity;
+        log.first.duration = int.parse(duration.text);
+        log.first.beforeSensations = beforeController.text;
+        log.first.afterSensations = afterController.text;
+        await dao.update(log.first);
+      } else {
+        ExerciceLogDAOFB dao = ExerciceLogDAOFB();
+        ExerciceLogModel log = ExerciceLogModel.newEntity(
+          AuthServiceManager.getCurrentUserUID(),
+          selectedActivity,
+          int.parse(duration.text),
+          beforeController.text,
+          afterController.text,
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+        );
+        await dao.insert(log);
+      }
+    } else {
+      if (widget.initialId != "") {
+        ExerciceLogDAO dao = ExerciceLogDAO();
+        List<ExerciceLogModel> log = await dao.getById(widget.initialId);
+        log.first.category = selectedActivity;
+        log.first.duration = int.parse(duration.text);
+        log.first.beforeSensations = beforeController.text;
+        log.first.afterSensations = afterController.text;
+        await dao.update(log.first);
+      } else {
+        ExerciceLogDAO dao = ExerciceLogDAO();
+        ExerciceLogModel log = ExerciceLogModel.newEntity(
+          "localUser",
+          selectedActivity,
+          int.parse(duration.text),
+          beforeController.text,
+          afterController.text,
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+        );
+        await dao.insert(log);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialId != "") {
+      loadData();
     }
   }
 
@@ -187,7 +235,8 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   ),
-                  child: Text("Añadir", style: TextStyle(fontSize: 22)),
+                  child: Text(widget.initialId != "" ? "Modificar" : "Añadir",
+                      style: TextStyle(fontSize: 22)),
                 ),
               ],
             ),

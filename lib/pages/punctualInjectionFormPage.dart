@@ -17,18 +17,21 @@ import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class PunctualInjectionFormPage extends StatefulWidget {
+  final String initialId;
   double initialUnits = 0;
-  PunctualInjectionFormPage.withInitialUnits(this.initialUnits);
-  PunctualInjectionFormPage();
+  PunctualInjectionFormPage.withInitialUnits(this.initialUnits, this.initialId);
+  PunctualInjectionFormPage(this.initialId);
   @override
   _PunctualInjectionFormPageState createState() =>
       _PunctualInjectionFormPageState();
 }
 
 class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
-  final TextEditingController _insulinUnitsController = TextEditingController();
+  TextEditingController _insulinUnitsController = TextEditingController();
   int selectedIndex = 0;
   double fastInsulin = 0;
+  double preModifiedInsulin = 0;
+  bool isLoaded = false;
   List<String> injectableLocations = [
     "Brazo izq.",
     "Brazo der.",
@@ -59,16 +62,64 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
     '0m 1.0m 0m',
   ];
 
+  int getIndex(String bodyPart) {
+    switch (bodyPart) {
+      case "Brazo izq.":
+        return 0;
+      case "Brazo der.":
+        return 1;
+      case "Gluteo izq.":
+        return 2;
+      case "Gluteo der.":
+        return 3;
+      case "Muslo izq.":
+        return 4;
+      case "Muslo der.":
+        return 5;
+      case "Barriga":
+        return 6;
+      default:
+        return 0;
+    }
+  }
+
   void loadData() async {
     if (AuthServiceManager.checkIfLogged()) {
       InsulinDAOFB dao = InsulinDAOFB();
       List<InsulinModel> l = await dao.getAll();
       fastInsulin = l.first.totalFastActingInsulin;
+
+      if (widget.initialId != "") {
+        InsulinLogDAOFB dao2 = InsulinLogDAOFB();
+        List<InsulinLogModel> log = await dao2.getById(widget.initialId);
+
+        _insulinUnitsController.text =
+            log.first.fastActingInsulinConsumed.toString();
+        selectedIndex = getIndex(log.first.location);
+        currentCameraOrbit = allCameraOrbits[selectedIndex];
+        currentCameraTarget = allCameraTargets[selectedIndex];
+        preModifiedInsulin = log.first.fastActingInsulinConsumed;
+      }
     } else {
       InsulinDAO dao = InsulinDAO();
       List<InsulinModel> l = await dao.getAll();
       fastInsulin = l.first.totalFastActingInsulin;
+
+      if (widget.initialId != "") {
+        InsulinLogDAO dao2 = InsulinLogDAO();
+        List<InsulinLogModel> log = await dao2.getById(widget.initialId);
+
+        _insulinUnitsController.text =
+            log.first.fastActingInsulinConsumed.toString();
+        selectedIndex = getIndex(log.first.location);
+        currentCameraOrbit = allCameraOrbits[selectedIndex];
+        currentCameraTarget = allCameraTargets[selectedIndex];
+        preModifiedInsulin = log.first.fastActingInsulinConsumed;
+      }
     }
+    setState(() {
+      isLoaded = true;
+    });
   }
 
   void saveLog() async {
@@ -76,39 +127,73 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
     String location = injectableLocations[selectedIndex];
 
     if (AuthServiceManager.checkIfLogged()) {
-      InsulinLogModel glucoseLog = InsulinLogModel.newEntity(
-          AuthServiceManager.getCurrentUserUID(),
-          insulinValue,
-          DateFormat("yyyy-MM-dd").format(DateTime.now()),
-          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-          location);
-      InsulinLogDAOFB dao = InsulinLogDAOFB();
-      dao.insert(glucoseLog);
+      if (widget.initialId != "") {
+        InsulinLogDAOFB dao2 = InsulinLogDAOFB();
+        List<InsulinLogModel> log = await dao2.getById(widget.initialId);
+        log.first.fastActingInsulinConsumed = insulinValue;
+        log.first.location = location;
+        await dao2.update(log.first);
 
-      InsulinDAOFB dao2 = InsulinDAOFB();
-      List<InsulinModel> l = await dao2.getAll();
-      InsulinModel insulinModel = l.first;
-      insulinModel.totalFastActingInsulin =
-          insulinModel.totalFastActingInsulin -
-              double.parse(_insulinUnitsController.text);
-      await dao2.update(insulinModel);
+        InsulinDAOFB dao = InsulinDAOFB();
+        List<InsulinModel> l = await dao.getAll();
+        InsulinModel insulinModel = l.first;
+        insulinModel.totalFastActingInsulin =
+            insulinModel.totalFastActingInsulin +
+                preModifiedInsulin -
+                double.parse(_insulinUnitsController.text);
+        await dao.update(insulinModel);
+      } else {
+        InsulinLogModel glucoseLog = InsulinLogModel.newEntity(
+            AuthServiceManager.getCurrentUserUID(),
+            insulinValue,
+            DateFormat("yyyy-MM-dd").format(DateTime.now()),
+            "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+            location);
+        InsulinLogDAOFB dao = InsulinLogDAOFB();
+        dao.insert(glucoseLog);
+
+        InsulinDAOFB dao2 = InsulinDAOFB();
+        List<InsulinModel> l = await dao2.getAll();
+        InsulinModel insulinModel = l.first;
+        insulinModel.totalFastActingInsulin =
+            insulinModel.totalFastActingInsulin -
+                double.parse(_insulinUnitsController.text);
+        await dao2.update(insulinModel);
+      }
     } else {
-      InsulinLogModel glucoseLog = InsulinLogModel.newEntity(
-          "localUser",
-          insulinValue,
-          DateFormat("yyyy-MM-dd").format(DateTime.now()),
-          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-          location);
-      InsulinLogDAO dao = InsulinLogDAO();
-      dao.insert(glucoseLog);
+      if (widget.initialId != "") {
+        InsulinLogDAO dao2 = InsulinLogDAO();
+        List<InsulinLogModel> log = await dao2.getById(widget.initialId);
+        log.first.fastActingInsulinConsumed = insulinValue;
+        log.first.location = location;
+        dao2.update(log.first);
 
-      InsulinDAO dao2 = InsulinDAO();
-      List<InsulinModel> l = await dao2.getAll();
-      InsulinModel insulinModel = l.first;
-      insulinModel.totalFastActingInsulin =
-          insulinModel.totalFastActingInsulin -
-              double.parse(_insulinUnitsController.text);
-      await dao2.update(insulinModel);
+        InsulinDAO dao = InsulinDAO();
+        List<InsulinModel> l = await dao.getAll();
+        InsulinModel insulinModel = l.first;
+        insulinModel.totalFastActingInsulin =
+            insulinModel.totalFastActingInsulin +
+                preModifiedInsulin -
+                double.parse(_insulinUnitsController.text);
+        await dao.update(insulinModel);
+      } else {
+        InsulinLogModel glucoseLog = InsulinLogModel.newEntity(
+            "localUser",
+            insulinValue,
+            DateFormat("yyyy-MM-dd").format(DateTime.now()),
+            "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+            location);
+        InsulinLogDAO dao = InsulinLogDAO();
+        dao.insert(glucoseLog);
+
+        InsulinDAO dao2 = InsulinDAO();
+        List<InsulinModel> l = await dao2.getAll();
+        InsulinModel insulinModel = l.first;
+        insulinModel.totalFastActingInsulin =
+            insulinModel.totalFastActingInsulin -
+                double.parse(_insulinUnitsController.text);
+        await dao2.update(insulinModel);
+      }
     }
   }
 
@@ -154,65 +239,71 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                /*
-                Container(
-                  height: 190,
-                  child: ModelViewer(
-                    src: "assets/3dModels/maleBody.glb",
-                    key: ValueKey(currentCameraOrbit),
-                    cameraControls: true,
-                    cameraOrbit: currentCameraOrbit,
-                    fieldOfView: "15deg",
-                    cameraTarget: currentCameraTarget,
-                  ),
-                ),
-                */
+                isLoaded
+                    ? Container(
+                        height: 190,
+                        child: ModelViewer(
+                          src: "assets/3dModels/maleBody.glb",
+                          key: ValueKey(currentCameraOrbit),
+                          cameraControls: true,
+                          cameraOrbit: currentCameraOrbit,
+                          fieldOfView: "15deg",
+                          cameraTarget: currentCameraTarget,
+                        ),
+                      )
+                    : Center(child: CircularProgressIndicator()),
                 Icon(
                   Icons.arrow_drop_down_rounded,
                   color: Color(0xFF3C37FF),
                   size: 40,
                 ),
-                SizedBox(
-                  height: 80,
-                  child: ScrollConfiguration(
-                    behavior: LessSensitiveScrollBehavior(),
-                    child: ScrollSnapList(
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 2),
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 40,
-                            width: 85,
-                            decoration: BoxDecoration(
-                                color: Color(0xFF3C37FF),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: Text(
-                              "${injectableLocations[index]}",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
+                isLoaded
+                    ? SizedBox(
+                        height: 80,
+                        child: ScrollConfiguration(
+                          behavior: LessSensitiveScrollBehavior(),
+                          child: ScrollSnapList(
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 2),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 40,
+                                  width: 85,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF3C37FF),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                  ),
+                                  child: Text(
+                                    "${injectableLocations[index]}",
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            },
+                            initialIndex: selectedIndex.toDouble(),
+                            itemCount: injectableLocations.length,
+                            itemSize: 89,
+                            duration: 200,
+                            dynamicItemSize: true,
+                            scrollDirection: Axis.horizontal,
+                            focusOnItemTap: true,
+                            onItemFocus: (index) {
+                              setState(() {
+                                selectedIndex = index;
+                                currentCameraOrbit =
+                                    allCameraOrbits[selectedIndex];
+                                currentCameraTarget =
+                                    allCameraTargets[selectedIndex];
+                              });
+                            },
                           ),
-                        );
-                      },
-                      itemCount: injectableLocations.length,
-                      itemSize: 89,
-                      duration: 200,
-                      dynamicItemSize: true,
-                      scrollDirection: Axis.horizontal,
-                      focusOnItemTap: true,
-                      onItemFocus: (index) {
-                        setState(() {
-                          selectedIndex = index;
-                          currentCameraOrbit = allCameraOrbits[selectedIndex];
-                          currentCameraTarget = allCameraTargets[selectedIndex];
-                        });
-                      },
-                    ),
-                  ),
-                ),
+                        ),
+                      )
+                    : Center(child: CircularProgressIndicator()),
                 SizedBox(height: 25),
                 ElevatedButton(
                   onPressed: () {

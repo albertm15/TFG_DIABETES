@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class GlucoseFormPage extends StatefulWidget {
+  final String initialId;
+  const GlucoseFormPage({required this.initialId});
   @override
   _GlucoseFormPageState createState() => _GlucoseFormPageState();
 }
@@ -53,29 +55,73 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
     bool hypoglucemia = getHypoglucemia(glucoseValue);
 
     if (AuthServiceManager.checkIfLogged()) {
-      GlucoseLogModel glucoseLog = GlucoseLogModel.newEntity(
-          AuthServiceManager.getCurrentUserUID(),
-          glucoseValue,
-          DateFormat("yyyy-MM-dd").format(DateTime.now()),
-          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-          category,
-          hyperglucemia,
-          hypoglucemia,
-          _sensationsController.text);
-      GlucoseLogDAOFB dao = GlucoseLogDAOFB();
-      dao.insert(glucoseLog);
+      if (widget.initialId != "") {
+        GlucoseLogDAOFB dao = GlucoseLogDAOFB();
+        List<GlucoseLogModel> log = await dao.getById(widget.initialId);
+        log.first.glucoseValue = glucoseValue;
+        log.first.category = category;
+        log.first.hyperglucemia = hypoglucemia;
+        log.first.hypoglucemia = hypoglucemia;
+        log.first.sensations = _sensationsController.text;
+        dao.update(log.first);
+      } else {
+        GlucoseLogModel glucoseLog = GlucoseLogModel.newEntity(
+            AuthServiceManager.getCurrentUserUID(),
+            glucoseValue,
+            DateFormat("yyyy-MM-dd").format(DateTime.now()),
+            "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+            category,
+            hyperglucemia,
+            hypoglucemia,
+            _sensationsController.text);
+        GlucoseLogDAOFB dao = GlucoseLogDAOFB();
+        dao.insert(glucoseLog);
+      }
     } else {
-      GlucoseLogModel glucoseLog = GlucoseLogModel.newEntity(
-          "localUser",
-          glucoseValue,
-          DateFormat("yyyy-MM-dd").format(DateTime.now()),
-          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-          category,
-          hyperglucemia,
-          hypoglucemia,
-          _sensationsController.text);
+      if (widget.initialId != "") {
+        GlucoseLogDAO dao = GlucoseLogDAO();
+        List<GlucoseLogModel> log = await dao.getById(widget.initialId);
+        log.first.glucoseValue = glucoseValue;
+        log.first.category = category;
+        log.first.hyperglucemia = hypoglucemia;
+        log.first.hypoglucemia = hypoglucemia;
+        log.first.sensations = _sensationsController.text;
+        dao.update(log.first);
+      } else {
+        GlucoseLogModel glucoseLog = GlucoseLogModel.newEntity(
+            "localUser",
+            glucoseValue,
+            DateFormat("yyyy-MM-dd").format(DateTime.now()),
+            "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+            category,
+            hyperglucemia,
+            hypoglucemia,
+            _sensationsController.text);
+        GlucoseLogDAO dao = GlucoseLogDAO();
+        dao.insert(glucoseLog);
+      }
+    }
+  }
+
+  void loadData() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      GlucoseLogDAOFB dao = GlucoseLogDAOFB();
+      List<GlucoseLogModel> log = await dao.getById(widget.initialId);
+      _glucoseController.text = log.first.glucoseValue.toString();
+      _sensationsController.text = log.first.sensations;
+    } else {
       GlucoseLogDAO dao = GlucoseLogDAO();
-      dao.insert(glucoseLog);
+      List<GlucoseLogModel> log = await dao.getById(widget.initialId);
+      _glucoseController.text = log.first.glucoseValue.toString();
+      _sensationsController.text = log.first.sensations;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialId != "") {
+      loadData();
     }
   }
 
@@ -204,8 +250,11 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
                       padding:
                           EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     ),
-                    child:
-                        Text("Añadir registro", style: TextStyle(fontSize: 18)),
+                    child: Text(
+                        widget.initialId == ""
+                            ? "Añadir registro"
+                            : "Confirmar modificación",
+                        style: TextStyle(fontSize: 18)),
                   ),
                 ],
               ),

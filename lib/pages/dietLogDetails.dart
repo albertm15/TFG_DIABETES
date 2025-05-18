@@ -9,6 +9,7 @@ import 'package:diabetes_tfg_app/database/local/foodDAO.dart';
 import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
 import 'package:diabetes_tfg_app/models/foodModel.dart';
+import 'package:diabetes_tfg_app/pages/foodConversorPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
@@ -114,6 +115,27 @@ class _DietLogDetailsWidgetState extends State<_DietLogDetailsWidget> {
       child: Center(
         child: Column(
           children: [
+            GestureDetector(
+              onTap: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text("Modificar"),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BackgroundBase(
+                                      child: FoodConversorPage(
+                                    initialId: log.first.id,
+                                  ))));
+                    },
+                  ),
+                ],
+              ),
+            ),
             Text(
               "Carbohidratos a ingerir:",
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),

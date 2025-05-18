@@ -1,7 +1,13 @@
 import 'package:diabetes_tfg_app/auxiliarResources/selectedFoods.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/dietLogDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/dietLogFoodRelationDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/foodDAO.dart';
+import 'package:diabetes_tfg_app/database/local/dietLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/dietLogFoodRelationDAO.dart';
 import 'package:diabetes_tfg_app/database/local/foodDAO.dart';
+import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
+import 'package:diabetes_tfg_app/models/dietLogModel.dart';
 import 'package:diabetes_tfg_app/models/foodModel.dart';
 import 'package:diabetes_tfg_app/pages/addPunctualCarbs.dart';
 import 'package:diabetes_tfg_app/pages/createFood.dart';
@@ -14,6 +20,8 @@ import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
 
 class FoodConversorPage extends StatefulWidget {
+  final String initialId;
+  const FoodConversorPage({required this.initialId});
   @override
   _FoodConversorPageState createState() => _FoodConversorPageState();
 }
@@ -25,8 +33,10 @@ class _FoodConversorPageState extends State<FoodConversorPage> {
         child: BackgroundBase(
             child: Scaffold(
       appBar: UpperNavBar(pageName: "Conversor de comida"),
-      body:
-          BackgroundBase(child: Center(child: _FoodConversorPageStateWidget())),
+      body: BackgroundBase(
+          child: Center(
+              child:
+                  _FoodConversorPageStateWidget(initialId: widget.initialId))),
       bottomNavigationBar: LowerNavBar(selectedSection: "food"),
       backgroundColor: Colors.transparent,
     )));
@@ -34,6 +44,8 @@ class _FoodConversorPageState extends State<FoodConversorPage> {
 }
 
 class _FoodConversorPageStateWidget extends StatefulWidget {
+  final String initialId;
+  const _FoodConversorPageStateWidget({required this.initialId});
   @override
   _FoodConversorPageStateWidgetState createState() =>
       _FoodConversorPageStateWidgetState();
@@ -54,9 +66,74 @@ class _FoodConversorPageStateWidgetState
     if (AuthServiceManager.checkIfLogged()) {
       FoodDAOFB dao = FoodDAOFB();
       foodList = await dao.getAll();
+
+      if (widget.initialId != "") {
+        DietLogDAOFB dao2 = DietLogDAOFB();
+        List<DietLogModel> log = await dao2.getById(widget.initialId);
+        unidadesTotales = log.first.totalInsulinUnits;
+        await loadSelectedFoods();
+        loadControllers();
+      }
     } else {
       FoodDAO dao = FoodDAO();
       foodList = await dao.getAll();
+
+      if (widget.initialId != "") {
+        DietLogDAO dao2 = DietLogDAO();
+        List<DietLogModel> log = await dao2.getById(widget.initialId);
+        unidadesTotales = log.first.totalInsulinUnits;
+        await loadSelectedFoods();
+        loadControllers();
+      }
+    }
+    setState(() {});
+  }
+
+  void loadControllers() {
+    for (Selectedfood food in selectedFoods) {
+      controllers[food.food.name]?.text = food.quantity.toString();
+    }
+  }
+
+  Future<void> loadSelectedFoods() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      List<DietLogFoodRelationModel> rel;
+      DietLogFoodRelationDAOFB dao2 = DietLogFoodRelationDAOFB();
+      FoodDAOFB dao3 = FoodDAOFB();
+      rel = await dao2.getAll();
+      rel = rel
+          .where((relation) => relation.dietLogId == widget.initialId)
+          .toList();
+      List<FoodModel> foodList = [];
+      for (DietLogFoodRelationModel relation in rel) {
+        String id = relation.foodId;
+        foodList = await dao3.getById(id);
+        print(id);
+        if (foodList.isNotEmpty) {
+          selectedFoods.add(Selectedfood(
+              quantity: relation.grams.toInt(), food: foodList[0]));
+          print(foodList[0]);
+        }
+      }
+    } else {
+      List<DietLogFoodRelationModel> rel;
+      DietLogFoodRelationDAO dao2 = DietLogFoodRelationDAO();
+      FoodDAO dao3 = FoodDAO();
+      rel = await dao2.getAll();
+      rel = rel
+          .where((relation) => relation.dietLogId == widget.initialId)
+          .toList();
+      List<FoodModel> foodList = [];
+      for (DietLogFoodRelationModel relation in rel) {
+        String id = relation.foodId;
+        foodList = await dao3.getById(id);
+        print(id);
+        if (foodList.isNotEmpty) {
+          selectedFoods.add(Selectedfood(
+              quantity: relation.grams.toInt(), food: foodList[0]));
+          print(foodList[0]);
+        }
+      }
     }
     setState(() {});
   }
@@ -404,6 +481,7 @@ class _FoodConversorPageStateWidgetState
                               totalCarbs: unidadesTotales * 10,
                               totalUnits: unidadesTotales,
                               selectedFoods: selectedFoods,
+                              initialId: widget.initialId,
                             )))));
               });
             },
@@ -415,7 +493,11 @@ class _FoodConversorPageStateWidgetState
               ),
               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
             ),
-            child: Text("Añadir registro", style: TextStyle(fontSize: 18)),
+            child: Text(
+                widget.initialId == ""
+                    ? "Añadir registro"
+                    : "Modificar registro",
+                style: TextStyle(fontSize: 18)),
           ),
         ],
       ),

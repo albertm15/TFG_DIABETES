@@ -65,8 +65,10 @@ class MinimizedLogsListExercice extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => DrawerScaffold(
-                                  child: BackgroundBase(
-                                      child: ExerciseLogForm()))));
+                                      child: BackgroundBase(
+                                          child: ExerciseLogForm(
+                                    initialId: "",
+                                  )))));
                     },
                     icon: Icon(
                       Icons.add_box_outlined,

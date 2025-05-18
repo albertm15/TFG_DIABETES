@@ -15,15 +15,13 @@ class FoodDAOFB {
 
     if (!connectivity.contains(ConnectivityResult.wifi) &&
         !connectivity.contains(ConnectivityResult.mobile)) {
-      snapshot = await FirebaseFirestore.instance
-          .collection("Food")
-          .where("userId", isEqualTo: uid)
-          .get(GetOptions(source: Source.cache));
+      snapshot = await FirebaseFirestore.instance.collection("Food").where(
+          "userId",
+          whereIn: [uid, "allDB"]).get(GetOptions(source: Source.cache));
     } else {
       snapshot = await FirebaseFirestore.instance
           .collection("Food")
-          .where("userId", isEqualTo: uid)
-          .get();
+          .where("userId", whereIn: [uid, "allDB"]).get();
     }
 
     List<FoodModel> logs = [];

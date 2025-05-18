@@ -66,8 +66,10 @@ class MinimizedLogsListGlucose extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => DrawerScaffold(
-                                  child: BackgroundBase(
-                                      child: GlucoseFormPage()))));
+                                      child: BackgroundBase(
+                                          child: GlucoseFormPage(
+                                    initialId: "",
+                                  )))));
                     },
                     icon: Icon(
                       Icons.add_box_outlined,

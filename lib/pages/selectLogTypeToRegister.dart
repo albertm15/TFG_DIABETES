@@ -42,8 +42,10 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              BackgroundBase(child: GlucoseFormPage())));
+                          builder: (context) => BackgroundBase(
+                                  child: GlucoseFormPage(
+                                initialId: "",
+                              ))));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -81,7 +83,7 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => BackgroundBase(
-                              child: PunctualInjectionFormPage())));
+                              child: PunctualInjectionFormPage(""))));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -122,8 +124,10 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              BackgroundBase(child: FoodConversorPage())));
+                          builder: (context) => BackgroundBase(
+                                  child: FoodConversorPage(
+                                initialId: "",
+                              ))));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -160,8 +164,10 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              BackgroundBase(child: ExerciseLogForm())));
+                          builder: (context) => BackgroundBase(
+                                  child: ExerciseLogForm(
+                                initialId: "",
+                              ))));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -90,4 +90,36 @@ class DietLogFoodRelationDAOFB {
       return List.empty();
     }
   }
+
+  //getByDietLogId
+  Future<List<DietLogFoodRelationModel>> getByDietLogId(String id) async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("DietFoodRelation")
+            .where("userId", isEqualTo: uid)
+            .where("dietLogId", isEqualTo: id)
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("DietFoodRelation")
+            .where("userId", isEqualTo: uid)
+            .where("dietLogId", isEqualTo: id)
+            .get();
+      }
+
+      List<DietLogFoodRelationModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(DietLogFoodRelationModel.fromMap(
+            doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
 }

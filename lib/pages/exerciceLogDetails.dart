@@ -2,6 +2,7 @@ import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/exerciceLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/exerciceLogDAO.dart';
 import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
+import 'package:diabetes_tfg_app/pages/exerciceLogForm.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
@@ -87,6 +88,27 @@ class _ExerciceLogDetailsWidgetState extends State<_ExerciceLogDetailsWidget> {
       child: Center(
         child: Column(
           children: [
+            GestureDetector(
+              onTap: () {},
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text("Modificar"),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BackgroundBase(
+                                      child: ExerciseLogForm(
+                                    initialId: log.first.id,
+                                  ))));
+                    },
+                  ),
+                ],
+              ),
+            ),
             Text(
               'Ejercicio realizado:',
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),

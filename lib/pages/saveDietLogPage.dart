@@ -6,6 +6,7 @@ import 'package:diabetes_tfg_app/database/local/dietLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/dietLogFoodRelationDAO.dart';
 import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
+import 'package:diabetes_tfg_app/pages/DietMainPage.dart';
 import 'package:diabetes_tfg_app/pages/punctualInjectionFormPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
@@ -19,11 +20,13 @@ class SaveDietLogPage extends StatefulWidget {
   final double totalCarbs;
   final double totalUnits;
   final List<Selectedfood> selectedFoods;
+  final String initialId;
 
   const SaveDietLogPage(
       {required this.totalCarbs,
       required this.totalUnits,
-      required this.selectedFoods});
+      required this.selectedFoods,
+      required this.initialId});
 
   @override
   _SaveDietLogPageState createState() => _SaveDietLogPageState();
@@ -34,42 +37,88 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
 
   void saveData() async {
     if (AuthServiceManager.checkIfLogged()) {
-      DietLogDAOFB dao = DietLogDAOFB();
-      DietLogModel dietLog = DietLogModel.newEntity(
-        AuthServiceManager.getCurrentUserUID(),
-        widget.totalUnits,
-        (widget.totalUnits * 10).toInt(),
-        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
-      );
-      await dao.insert(dietLog);
+      if (widget.initialId != "") {
+        DietLogDAOFB dao = DietLogDAOFB();
+        List<DietLogModel> log = await dao.getById(widget.initialId);
+        log.first.totalInsulinUnits = widget.totalUnits;
+        log.first.totalCarbs = (widget.totalUnits * 10).toInt();
+        await dao.update(log.first);
 
-      DietLogFoodRelationDAOFB dao2 = DietLogFoodRelationDAOFB();
-      for (Selectedfood selFood in widget.selectedFoods) {
-        await dao2.insert(DietLogFoodRelationModel.newEntity(
-            AuthServiceManager.getCurrentUserUID(),
-            dietLog.id,
-            selFood.food.id,
-            selFood.quantity.toDouble()));
+        DietLogFoodRelationDAOFB dao2 = DietLogFoodRelationDAOFB();
+        List<DietLogFoodRelationModel> rels =
+            await dao2.getByDietLogId(log.first.id);
+
+        for (DietLogFoodRelationModel rel in rels) {
+          await dao2.delete(rel);
+        }
+        for (Selectedfood selFood in widget.selectedFoods) {
+          await dao2.insert(DietLogFoodRelationModel.newEntity(
+              AuthServiceManager.getCurrentUserUID(),
+              log.first.id,
+              selFood.food.id,
+              selFood.quantity.toDouble()));
+        }
+      } else {
+        DietLogDAOFB dao = DietLogDAOFB();
+        DietLogModel dietLog = DietLogModel.newEntity(
+          AuthServiceManager.getCurrentUserUID(),
+          widget.totalUnits,
+          (widget.totalUnits * 10).toInt(),
+          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+        );
+        await dao.insert(dietLog);
+
+        DietLogFoodRelationDAOFB dao2 = DietLogFoodRelationDAOFB();
+        for (Selectedfood selFood in widget.selectedFoods) {
+          await dao2.insert(DietLogFoodRelationModel.newEntity(
+              AuthServiceManager.getCurrentUserUID(),
+              dietLog.id,
+              selFood.food.id,
+              selFood.quantity.toDouble()));
+        }
       }
     } else {
-      DietLogDAO dao = DietLogDAO();
-      DietLogModel dietLog = DietLogModel.newEntity(
-        "localUser",
-        widget.totalUnits,
-        (widget.totalUnits * 10).toInt(),
-        "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
-        DateFormat("yyyy-MM-dd").format(DateTime.now()),
-      );
-      await dao.insert(dietLog);
+      if (widget.initialId != "") {
+        DietLogDAO dao = DietLogDAO();
+        List<DietLogModel> log = await dao.getById(widget.initialId);
+        log.first.totalInsulinUnits = widget.totalUnits;
+        log.first.totalCarbs = (widget.totalUnits * 10).toInt();
+        await dao.update(log.first);
 
-      DietLogFoodRelationDAO dao2 = DietLogFoodRelationDAO();
-      for (Selectedfood selFood in widget.selectedFoods) {
-        await dao2.insert(DietLogFoodRelationModel.newEntity(
-            AuthServiceManager.getCurrentUserUID(),
-            dietLog.id,
-            selFood.food.id,
-            selFood.quantity.toDouble()));
+        DietLogFoodRelationDAO dao2 = DietLogFoodRelationDAO();
+        List<DietLogFoodRelationModel> rels =
+            await dao2.getByDietLogId(log.first.id);
+
+        for (DietLogFoodRelationModel rel in rels) {
+          await dao2.delete(rel);
+        }
+        for (Selectedfood selFood in widget.selectedFoods) {
+          await dao2.insert(DietLogFoodRelationModel.newEntity(
+              AuthServiceManager.getCurrentUserUID(),
+              log.first.id,
+              selFood.food.id,
+              selFood.quantity.toDouble()));
+        }
+      } else {
+        DietLogDAO dao = DietLogDAO();
+        DietLogModel dietLog = DietLogModel.newEntity(
+          "localUser",
+          widget.totalUnits,
+          (widget.totalUnits * 10).toInt(),
+          "${DateTime.now().hour.toString().padLeft(2, "0")}:${DateTime.now().minute.toString().padLeft(2, "0")}:${DateTime.now().second.toString().padLeft(2, "0")}",
+          DateFormat("yyyy-MM-dd").format(DateTime.now()),
+        );
+        await dao.insert(dietLog);
+
+        DietLogFoodRelationDAO dao2 = DietLogFoodRelationDAO();
+        for (Selectedfood selFood in widget.selectedFoods) {
+          await dao2.insert(DietLogFoodRelationModel.newEntity(
+              AuthServiceManager.getCurrentUserUID(),
+              dietLog.id,
+              selFood.food.id,
+              selFood.quantity.toDouble()));
+        }
       }
     }
   }
@@ -197,15 +246,25 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
                       onPressed: () {
                         setState(() {
                           saveData();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DrawerScaffold(
-                                      //child: BackgroundBase(child: DietMainPage()))));
-                                      child: BackgroundBase(
-                                          child: PunctualInjectionFormPage
-                                              .withInitialUnits(
-                                                  widget.totalUnits)))));
+                          if (widget.initialId == "") {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DrawerScaffold(
+                                        //child: BackgroundBase(child: DietMainPage()))));
+                                        child: BackgroundBase(
+                                            child: PunctualInjectionFormPage
+                                                .withInitialUnits(
+                                                    widget.totalUnits, "")))));
+                          } else {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DrawerScaffold(
+                                        //child: BackgroundBase(child: DietMainPage()))));
+                                        child: BackgroundBase(
+                                            child: DietMainPage()))));
+                          }
                         });
                       },
                       style: ElevatedButton.styleFrom(
@@ -217,7 +276,10 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
                         padding:
                             EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                       ),
-                      child: Text("Confirmar y registrar insulina",
+                      child: Text(
+                          widget.initialId != ""
+                              ? "Confirmar modificación"
+                              : "Confirmar y registrar insulina",
                           style: TextStyle(fontSize: 18)),
                     ),
                   ],
