@@ -21,7 +21,7 @@ class InsulinLogDetails extends StatelessWidget {
       appBar: UpperNavBar(pageName: "Detalles de insulina"),
       body: BackgroundBase(
           child: Center(child: _InsulinLogDetailsWidget(id: this.id))),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,
     )));
   }

@@ -24,7 +24,7 @@ class ExerciceAndHealthMainPage extends StatelessWidget {
       appBar: UpperNavBar(pageName: "Exercice & Health"),
       body: BackgroundBase(
           child: Center(child: _ExerciceAndHealthMainPageWidget())),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "exercice"),
       backgroundColor: Colors.transparent,
     )));
   }

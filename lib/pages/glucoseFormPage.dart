@@ -213,7 +213,7 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "glucose"),
       backgroundColor: Colors.transparent,
     );
   }

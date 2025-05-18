@@ -7,7 +7,14 @@ import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';
 
-class LowerNavBar extends StatelessWidget {
+class LowerNavBar extends StatefulWidget {
+  final selectedSection;
+  const LowerNavBar({required this.selectedSection});
+  @override
+  _LowerNavBarState createState() => _LowerNavBarState();
+}
+
+class _LowerNavBarState extends State<LowerNavBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +43,10 @@ class LowerNavBar extends StatelessWidget {
                         builder: (context) => DrawerScaffold(
                             child: BackgroundBase(child: GlucoseMainPage()))));
               },
-              icon: Icon(Icons.water_drop_outlined, color: Colors.white),
+              icon: Icon(Icons.water_drop_outlined,
+                  color: widget.selectedSection == "glucose"
+                      ? Colors.white
+                      : const Color.fromARGB(255, 148, 147, 147)),
               iconSize: 40,
             ),
             IconButton(
@@ -54,6 +64,9 @@ class LowerNavBar extends StatelessWidget {
                   'assets/images/Insulin_image_white.png',
                   width: 40,
                   height: 40,
+                  color: widget.selectedSection == "insulin"
+                      ? Colors.white
+                      : const Color.fromARGB(255, 148, 147, 147),
                 )),
             IconButton(
               onPressed: () {
@@ -64,7 +77,10 @@ class LowerNavBar extends StatelessWidget {
                         builder: (context) => DrawerScaffold(
                             child: BackgroundBase(child: Homepage()))));
               },
-              icon: Icon(Icons.home_outlined, color: Colors.white),
+              icon: Icon(Icons.home_outlined,
+                  color: widget.selectedSection == "home"
+                      ? Colors.white
+                      : const Color.fromARGB(255, 148, 147, 147)),
               iconSize: 40,
             ),
             IconButton(
@@ -76,7 +92,10 @@ class LowerNavBar extends StatelessWidget {
                         builder: (context) => DrawerScaffold(
                             child: BackgroundBase(child: DietMainPage()))));
               },
-              icon: Icon(Icons.fastfood_outlined, color: Colors.white),
+              icon: Icon(Icons.fastfood_outlined,
+                  color: widget.selectedSection == "diet"
+                      ? Colors.white
+                      : const Color.fromARGB(255, 148, 147, 147)),
               iconSize: 40,
             ),
             IconButton(
@@ -91,13 +110,13 @@ class LowerNavBar extends StatelessWidget {
                 //child: DbTestingPage()))));
               },
               //icon: Icon(Icons.directions_run_rounded, color: Colors.white),
-              icon: Icon(Icons.favorite_border_rounded, color: Colors.white),
+              icon: Icon(Icons.favorite_border_rounded,
+                  color: widget.selectedSection == "exercice"
+                      ? Colors.white
+                      : const Color.fromARGB(255, 148, 147, 147)),
               iconSize: 40,
             ),
           ],
         ));
   }
 }
-
-//Añadir que en los icono ahaya un hover del color morado a destacar para que
-//se se vea em cual de las paginas principales esta

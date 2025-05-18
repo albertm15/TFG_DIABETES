@@ -37,7 +37,7 @@ class _AllLogsPageState extends State<AllLogsPage> {
             child: Scaffold(
       appBar: UpperNavBar(pageName: "Todos los registros"),
       body: BackgroundBase(child: Center(child: _AllLogsPageWidget())),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "home"),
       backgroundColor: Colors.transparent,
     )));
   }

@@ -225,7 +225,7 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
               ),
             ),
           ),
-          bottomNavigationBar: LowerNavBar(),
+          bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
           backgroundColor: Colors.transparent,
         ),
       ),

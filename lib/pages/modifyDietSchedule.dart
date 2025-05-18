@@ -1155,7 +1155,7 @@ class _ModifyDietScheduleState extends State<ModifyDietSchedule> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
       backgroundColor: Colors.transparent,
     );
   }

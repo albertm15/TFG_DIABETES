@@ -18,7 +18,7 @@ class CalendarPage extends StatelessWidget {
     return Scaffold(
       appBar: UpperNavBar(pageName: "Calendar"),
       body: BackgroundBase(child: Center(child: _CalendarPageWidget())),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "exercice"),
     );
   }
 }

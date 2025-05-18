@@ -45,7 +45,7 @@ class _AllChartsPageState extends State<AllChartsPage> {
           PageIndicator(selectedPage: currentIndex)
         ],
       )),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "glucose"),
       backgroundColor: Colors.transparent,
     );
   }

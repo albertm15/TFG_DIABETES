@@ -100,7 +100,7 @@ class _DayDetailsPageState extends State<DayDetails> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "exercice"),
       backgroundColor: Colors.transparent,
     );
   }

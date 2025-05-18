@@ -24,10 +24,10 @@ class DietLogDetails extends StatelessWidget {
     return DrawerScaffold(
         child: BackgroundBase(
             child: Scaffold(
-      appBar: UpperNavBar(pageName: "Detalles de glucosa"),
+      appBar: UpperNavBar(pageName: "Detalles de comida"),
       body: BackgroundBase(
           child: Center(child: _DietLogDetailsWidget(id: this.id))),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
       backgroundColor: Colors.transparent,
     )));
   }

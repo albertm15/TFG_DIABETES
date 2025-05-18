@@ -12,14 +12,19 @@ class ReminderDAOFB {
   Future<List<ReminderModel>> getAll() async {
     QuerySnapshot snapshot;
     final connectivity = await Connectivity().checkConnectivity();
+    String uid = AuthServiceManager.getCurrentUserUID();
 
     if (!connectivity.contains(ConnectivityResult.wifi) &&
         !connectivity.contains(ConnectivityResult.mobile)) {
       snapshot = await FirebaseFirestore.instance
           .collection("Reminder")
+          .where("userId", isEqualTo: uid)
           .get(GetOptions(source: Source.cache));
     } else {
-      snapshot = await FirebaseFirestore.instance.collection("Reminder").get();
+      snapshot = await FirebaseFirestore.instance
+          .collection("Reminder")
+          .where("userId", isEqualTo: uid)
+          .get();
     }
 
     List<ReminderModel> logs = [];

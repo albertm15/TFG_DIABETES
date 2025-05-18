@@ -12,15 +12,19 @@ class ExerciceLogDAOFB {
   Future<List<ExerciceLogModel>> getAll() async {
     QuerySnapshot snapshot;
     final connectivity = await Connectivity().checkConnectivity();
+    String uid = AuthServiceManager.getCurrentUserUID();
 
     if (!connectivity.contains(ConnectivityResult.wifi) &&
         !connectivity.contains(ConnectivityResult.mobile)) {
       snapshot = await FirebaseFirestore.instance
           .collection("ExerciceLog")
+          .where("userId", isEqualTo: uid)
           .get(GetOptions(source: Source.cache));
     } else {
-      snapshot =
-          await FirebaseFirestore.instance.collection("ExerciceLog").get();
+      snapshot = await FirebaseFirestore.instance
+          .collection("ExerciceLog")
+          .where("userId", isEqualTo: uid)
+          .get();
     }
 
     List<ExerciceLogModel> logs = [];

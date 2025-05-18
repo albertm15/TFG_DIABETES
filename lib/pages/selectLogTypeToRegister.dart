@@ -18,7 +18,7 @@ class SelectLogTypeToRegister extends StatelessWidget {
       appBar: UpperNavBar(pageName: "Seleccionar tipo de registro"),
       body:
           BackgroundBase(child: Center(child: SelectLogTypeToRegisterWidget())),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "home"),
       backgroundColor: Colors.transparent,
     )));
   }

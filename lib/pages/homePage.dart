@@ -35,7 +35,7 @@ class _HomePageState extends State<Homepage> {
       appBar: UpperNavBar(pageName: "Home Page"),
       //body: Container(child: Center(child: Text("Hello"))),
       body: Container(child: Center(child: HomePageWidget())),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "home"),
       backgroundColor: Colors.transparent,
     )));
   }
@@ -144,9 +144,16 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             hypoglucemies: hypoglucemies,
           ),
           SizedBox(height: 16),
-          Container(
-            height: 200,
-            child: DailyGlucoseEvolutionChart(glucoseData: daylogs),
+          Row(
+            children: [
+              SizedBox(width: 3),
+              Expanded(
+                child: Container(
+                  height: 200,
+                  child: DailyGlucoseEvolutionChart(glucoseData: daylogs),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
           Container(

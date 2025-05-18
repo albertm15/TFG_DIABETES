@@ -200,7 +200,7 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,
     );
   }

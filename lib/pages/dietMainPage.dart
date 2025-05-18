@@ -21,7 +21,7 @@ class DietMainPage extends StatelessWidget {
             child: Scaffold(
       appBar: UpperNavBar(pageName: "Diet"),
       body: BackgroundBase(child: Center(child: DietMainPageWidget())),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
       backgroundColor: Colors.transparent,
     )));
   }

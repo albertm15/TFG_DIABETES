@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
       appBar: UpperNavBar(pageName: "Profile"),
       body: DrawerScaffold(
           child: BackgroundBase(child: Center(child: ProfilePageWidget()))),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: ""),
       backgroundColor: Colors.transparent,
     );
   }

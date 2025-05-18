@@ -13,6 +13,7 @@ class GlucoseLogDAOFB {
     QuerySnapshot snapshot;
     print("check connection");
     final connectivity = await Connectivity().checkConnectivity();
+    String uid = AuthServiceManager.getCurrentUserUID();
     print("connection checked");
     print(connectivity);
     if (!connectivity.contains(ConnectivityResult.wifi) &&
@@ -20,11 +21,14 @@ class GlucoseLogDAOFB {
       print("NO connection");
       snapshot = await FirebaseFirestore.instance
           .collection("glucoseLog")
+          .where("userId", isEqualTo: uid)
           .get(const GetOptions(source: Source.cache));
     } else {
       print("OK connection");
-      snapshot =
-          await FirebaseFirestore.instance.collection("glucoseLog").get();
+      snapshot = await FirebaseFirestore.instance
+          .collection("glucoseLog")
+          .where("userId", isEqualTo: uid)
+          .get();
     }
     /*QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection("glucoseLog").get();*/

@@ -117,7 +117,7 @@ class _AddPunctualCarbsState extends State<AddPunctualCarbs> {
               ),
             ),
           ),
-          bottomNavigationBar: LowerNavBar(),
+          bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
           backgroundColor: Colors.transparent,
         ),
       ),

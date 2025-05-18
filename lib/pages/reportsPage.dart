@@ -12,7 +12,7 @@ class ReportsPage extends StatelessWidget {
       appBar: UpperNavBar(pageName: "Reports"),
       body: DrawerScaffold(
           child: BackgroundBase(child: Center(child: ReportsPageWidget()))),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: ""),
       backgroundColor: Colors.transparent,
     );
   }

@@ -1,4 +1,7 @@
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
+import 'package:diabetes_tfg_app/pages/exerciceLogDetails.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -59,6 +62,15 @@ class ExerciceListTile extends StatelessWidget {
         ),
         onTap: () {
           print("ver detalles de ${log.id}");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DrawerScaffold(
+                          child: BackgroundBase(
+                        child: ExerciceLogDetails(
+                          id: log.id,
+                        ),
+                      ))));
         },
       ),
     );

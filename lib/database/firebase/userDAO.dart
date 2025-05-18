@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/local/databaseManager.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
 
@@ -11,14 +12,19 @@ class UserDAOFB {
   Future<List<UserModel>> getAll() async {
     QuerySnapshot snapshot;
     final connectivity = await Connectivity().checkConnectivity();
+    String uid = AuthServiceManager.getCurrentUserUID();
 
     if (!connectivity.contains(ConnectivityResult.wifi) &&
         !connectivity.contains(ConnectivityResult.mobile)) {
       snapshot = await FirebaseFirestore.instance
           .collection("User")
+          .where("userId", isEqualTo: uid)
           .get(GetOptions(source: Source.cache));
     } else {
-      snapshot = await FirebaseFirestore.instance.collection("User").get();
+      snapshot = await FirebaseFirestore.instance
+          .collection("User")
+          .where("userId", isEqualTo: uid)
+          .get();
     }
 
     List<UserModel> logs = [];

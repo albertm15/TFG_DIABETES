@@ -27,7 +27,7 @@ class _FoodConversorPageState extends State<FoodConversorPage> {
       appBar: UpperNavBar(pageName: "Conversor de comida"),
       body:
           BackgroundBase(child: Center(child: _FoodConversorPageStateWidget())),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "food"),
       backgroundColor: Colors.transparent,
     )));
   }

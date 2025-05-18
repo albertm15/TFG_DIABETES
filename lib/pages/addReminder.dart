@@ -352,7 +352,7 @@ class _AddReminderState extends State<AddReminder> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "exercice"),
       backgroundColor: Colors.transparent,
     );
   }

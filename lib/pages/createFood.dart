@@ -117,7 +117,7 @@ class _CreateFoodState extends State<CreateFood> {
               ),
             ),
           ),
-          bottomNavigationBar: LowerNavBar(),
+          bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
           backgroundColor: Colors.transparent,
         ),
       ),

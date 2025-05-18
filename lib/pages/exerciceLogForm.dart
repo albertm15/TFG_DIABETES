@@ -194,7 +194,7 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "exercice"),
       backgroundColor: Colors.transparent,
     );
   }

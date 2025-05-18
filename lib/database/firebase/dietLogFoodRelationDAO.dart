@@ -11,15 +11,19 @@ class DietLogFoodRelationDAOFB {
   Future<List<DietLogFoodRelationModel>> getAll() async {
     QuerySnapshot snapshot;
     final connectivity = await Connectivity().checkConnectivity();
+    String uid = AuthServiceManager.getCurrentUserUID();
 
     if (!connectivity.contains(ConnectivityResult.wifi) &&
         !connectivity.contains(ConnectivityResult.mobile)) {
       snapshot = await FirebaseFirestore.instance
           .collection("DietFoodRelation")
+          .where("userId", isEqualTo: uid)
           .get(GetOptions(source: Source.cache));
     } else {
-      snapshot =
-          await FirebaseFirestore.instance.collection("DietFoodRelation").get();
+      snapshot = await FirebaseFirestore.instance
+          .collection("DietFoodRelation")
+          .where("userId", isEqualTo: uid)
+          .get();
     }
 
     List<DietLogFoodRelationModel> logs = [];

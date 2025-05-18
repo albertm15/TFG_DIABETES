@@ -13,7 +13,7 @@ class ConfigurationPage extends StatelessWidget {
       body: DrawerScaffold(
           child:
               BackgroundBase(child: Center(child: ConfigurationPageWidget()))),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: ""),
       backgroundColor: Colors.transparent,
     );
   }

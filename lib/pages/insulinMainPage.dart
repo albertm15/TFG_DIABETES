@@ -31,7 +31,7 @@ class _InsulinMainPageState extends State<InsulinMainPage> {
             child: Scaffold(
       appBar: UpperNavBar(pageName: "Insulin"),
       body: BackgroundBase(child: Center(child: InsulinMainPageWidget())),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,
     )));
   }

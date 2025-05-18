@@ -325,7 +325,7 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,
     );
   }

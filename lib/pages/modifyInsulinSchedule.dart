@@ -514,7 +514,7 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,
     );
   }

@@ -20,7 +20,7 @@ class GlucoseLogDetails extends StatelessWidget {
       appBar: UpperNavBar(pageName: "Detalles de glucosa"),
       body: BackgroundBase(
           child: Center(child: _GlucoseLogDetailsWidget(id: this.id))),
-      bottomNavigationBar: LowerNavBar(),
+      bottomNavigationBar: LowerNavBar(selectedSection: "glucose"),
       backgroundColor: Colors.transparent,
     )));
   }
