@@ -90,6 +90,28 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     }
   }
 
+  Future<void> getLastDayLogs() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      GlucoseLogDAOFB dao = GlucoseLogDAOFB();
+      InsulinLogDAOFB dao2 = InsulinLogDAOFB();
+      DietLogDAOFB dao3 = DietLogDAOFB();
+      ExerciceLogDAOFB dao4 = ExerciceLogDAOFB();
+      glucoseWeeklogs = await dao.getTodayLogs();
+      insulinWeeklogs = await dao2.getTodayLogs();
+      dietWeeklogs = await dao3.getTodayLogs();
+      exerciceWeeklogs = await dao4.getTodayLogs();
+    } else {
+      GlucoseLogDAO dao = GlucoseLogDAO();
+      InsulinLogDAO dao2 = InsulinLogDAO();
+      DietLogDAO dao3 = DietLogDAO();
+      ExerciceLogDAO dao4 = ExerciceLogDAO();
+      glucoseWeeklogs = await dao.getTodayLogs();
+      insulinWeeklogs = await dao2.getTodayLogs();
+      dietWeeklogs = await dao3.getTodayLogs();
+      exerciceWeeklogs = await dao4.getTodayLogs();
+    }
+  }
+
   void loadHypoHyper() {
     if (!glucoseWeeklogs.isEmpty) {
       for (GlucoseLogModel log in glucoseWeeklogs) {
@@ -120,7 +142,8 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   }
 
   Future<void> getHomeData() async {
-    await Future.wait([getTodaysData(), getLast7DaysData()]);
+    await Future.wait(
+        [getTodaysData(), /*getLast7DaysData(),*/ getLastDayLogs()]);
     loadMinMaxAvgGlucose();
     loadHypoHyper();
     setState(() {});

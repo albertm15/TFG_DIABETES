@@ -143,83 +143,88 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenMargins(
-        child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(isEditing ? "Confirmar modificación" : "Modificar"),
-              IconButton(
-                icon: Icon(Icons.edit),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: ScreenMargins(
+          child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(isEditing ? "Confirmar modificación" : "Modificar"),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      isEditing = !isEditing;
+                      if (!isEditing) {
+                        saveLog();
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+            buildProfileImage(
+                photoUrl, /*AuthServiceManager.checkIfLogged()*/ false),
+            SizedBox(height: 8),
+            buildProfileField("Nombre completo", nameController),
+            buildProfileEmailField(),
+            buildProfileSexField(),
+            buildProfileNumberFields("Altura (cm)", heightController),
+            buildProfileNumberFields("Peso (kg)", weightController),
+            buildProfileField("País", countryController),
+            buildProfileTypeOfDiabetesField(),
+            SizedBox(height: 12),
+            Container(
+              width: 250,
+              child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    isEditing = !isEditing;
-                    if (!isEditing) {
-                      saveLog();
-                    }
+                    AuthServiceManager.logOut();
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Welcomepage(),
+                        ));
                   });
                 },
-              ),
-            ],
-          ),
-          buildProfileImage(
-              photoUrl, /*AuthServiceManager.checkIfLogged()*/ false),
-          SizedBox(height: 8),
-          buildProfileField("Nombre completo", nameController),
-          buildProfileEmailField(),
-          buildProfileSexField(),
-          buildProfileNumberFields("Altura (cm)", heightController),
-          buildProfileNumberFields("Peso (kg)", weightController),
-          buildProfileField("País", countryController),
-          buildProfileTypeOfDiabetesField(),
-          SizedBox(height: 12),
-          Container(
-            width: 250,
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  AuthServiceManager.logOut();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Welcomepage(),
-                      ));
-                });
-              },
-              child: Text("Cerrar Sesión", style: TextStyle(fontSize: 18)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 85, 42, 196),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                child: Text("Cerrar Sesión", style: TextStyle(fontSize: 18)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 85, 42, 196),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               ),
             ),
-          ),
-          SizedBox(height: 20),
-          Container(
-            width: 250,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: Text("Eliminar cuenta", style: TextStyle(fontSize: 18)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            SizedBox(height: 20),
+            Container(
+              width: 250,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text("Eliminar cuenta", style: TextStyle(fontSize: 18)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               ),
-            ),
-          )
-        ],
-      ),
-    ));
+            )
+          ],
+        ),
+      )),
+    );
   }
 
   Widget buildProfileField(String label, TextEditingController controller) {

@@ -78,4 +78,18 @@ class ReminderDAO {
 
     return logs;
   }
+
+  //getWeekLogs
+  Future<List<ReminderModel>> getById(String id) async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('Reminders',
+        orderBy: 'time DESC', where: "id = ?", whereArgs: [id]);
+
+    List<ReminderModel> logs = [];
+    for (Map<String, dynamic> log in data) {
+      logs.add(ReminderModel.fromMap(log));
+    }
+
+    return logs;
+  }
 }

@@ -1,4 +1,7 @@
 import 'package:diabetes_tfg_app/auxiliarResources/undefinedTypeLog.dart';
+import 'package:diabetes_tfg_app/pages/reminderDetails.dart';
+import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
+import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:flutter/material.dart';
 
 class ReminderListTile extends StatelessWidget {
@@ -39,6 +42,15 @@ class ReminderListTile extends StatelessWidget {
         ),
         onTap: () {
           print("ver detalles de ${log.id}");
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DrawerScaffold(
+                          child: BackgroundBase(
+                        child: ReminderDetails(
+                          id: log.id,
+                        ),
+                      ))));
         },
       ),
     );

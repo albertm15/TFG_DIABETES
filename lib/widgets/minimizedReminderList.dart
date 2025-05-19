@@ -65,8 +65,8 @@ class MinimizedReminderList extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => DrawerScaffold(
-                                  child:
-                                      BackgroundBase(child: AddReminder()))));
+                                  child: BackgroundBase(
+                                      child: AddReminder(initialId: "")))));
                     },
                     icon: Icon(
                       Icons.add_box_outlined,

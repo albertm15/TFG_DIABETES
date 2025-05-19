@@ -78,4 +78,20 @@ class DietLogDAO {
 
     return glucoseLogs;
   }
+
+  //getTodayLogs
+  Future<List<DietLogModel>> getTodayLogs() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('DietLogs',
+        orderBy: 'time DESC',
+        where: "date = ?",
+        whereArgs: [DateFormat("yyyy-MM-dd").format(DateTime.now())]);
+
+    List<DietLogModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(DietLogModel.fromMap(log));
+    }
+
+    return glucoseLogs;
+  }
 }

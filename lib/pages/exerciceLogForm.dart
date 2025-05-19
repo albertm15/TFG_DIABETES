@@ -52,6 +52,18 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
     setState(() {});
   }
 
+  void deleteLog() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      ExerciceLogDAOFB dao = ExerciceLogDAOFB();
+      List<ExerciceLogModel> log = await dao.getById(widget.initialId);
+      dao.delete(log.first);
+    } else {
+      ExerciceLogDAO dao = ExerciceLogDAO();
+      List<ExerciceLogModel> log = await dao.getById(widget.initialId);
+      dao.delete(log.first);
+    }
+  }
+
   void saveData() async {
     if (AuthServiceManager.checkIfLogged()) {
       if (widget.initialId != "") {
@@ -112,133 +124,165 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: UpperNavBar(pageName: "Añadir registro de ejercicio"),
-      body: ScreenMargins(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Selección de actividad
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: activities.map((activity) {
-                    final isSelected = selectedActivity == activity['label'];
-                    return GestureDetector(
-                      onTap: () =>
-                          setState(() => selectedActivity = activity['label']),
-                      child: Container(
-                        height: 80,
-                        width: 80,
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Color(0xFF3C37FF)
-                              : Color.fromARGB(255, 118, 118, 118),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              activity['icon'],
-                              size: 32,
-                              color: Colors.white,
-                            ),
-                            SizedBox(height: 4),
-                            Text(activity['label'],
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                )),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-
-                SizedBox(height: 24),
-
-                // Duración
-                Center(
-                  child: Container(
-                    height: 70,
-                    width: 200,
-                    child: TextFormField(
-                      controller: duration,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                      decoration: InputDecoration(
-                          labelText: "Minutos",
-                          border: OutlineInputBorder(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: ScreenMargins(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Selección de actividad
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: activities.map((activity) {
+                      final isSelected = selectedActivity == activity['label'];
+                      return GestureDetector(
+                        onTap: () => setState(
+                            () => selectedActivity = activity['label']),
+                        child: Container(
+                          height: 80,
+                          width: 80,
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? Color(0xFF3C37FF)
+                                : Color.fromARGB(255, 118, 118, 118),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          counterText: ""),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                activity['icon'],
+                                size: 32,
+                                color: Colors.white,
+                              ),
+                              SizedBox(height: 4),
+                              Text(activity['label'],
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  )),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  SizedBox(height: 24),
+
+                  // Duración
+                  Center(
+                    child: Container(
+                      height: 70,
+                      width: 200,
+                      child: TextFormField(
+                        controller: duration,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 36, fontWeight: FontWeight.bold),
+                        decoration: InputDecoration(
+                            labelText: "Minutos",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            counterText: ""),
+                      ),
                     ),
                   ),
-                ),
 
-                SizedBox(height: 24),
+                  SizedBox(height: 24),
 
-                // Sensaciones antes
-                Text("Sensaciones antes del ejercicio",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                TextField(
-                  controller: beforeController,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    hintText: "Me he sentido...",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
-
-                SizedBox(height: 24),
-
-                // Sensaciones después
-                Text("Sensaciones después del ejercicio",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                TextField(
-                  controller: afterController,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    hintText: "Me he sentido...",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
-
-                SizedBox(height: 24),
-
-                // Botón añadir
-                ElevatedButton(
-                  onPressed: () {
-                    saveData();
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DrawerScaffold(
-                                child: BackgroundBase(
-                                    child: ExerciceAndHealthMainPage()))));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 85, 42, 196),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  // Sensaciones antes
+                  Text("Sensaciones antes del ejercicio",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  TextField(
+                    controller: beforeController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: "Me he sentido...",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                   ),
-                  child: Text(widget.initialId != "" ? "Modificar" : "Añadir",
-                      style: TextStyle(fontSize: 22)),
-                ),
-              ],
+
+                  SizedBox(height: 24),
+
+                  // Sensaciones después
+                  Text("Sensaciones después del ejercicio",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  TextField(
+                    controller: afterController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: "Me he sentido...",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+
+                  SizedBox(height: 24),
+
+                  // Botón añadir
+                  ElevatedButton(
+                    onPressed: () {
+                      saveData();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
+                                      child: ExerciceAndHealthMainPage()))));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 85, 42, 196),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    ),
+                    child: Text(widget.initialId != "" ? "Modificar" : "Añadir",
+                        style: TextStyle(fontSize: 22)),
+                  ),
+                  SizedBox(height: 16),
+                  widget.initialId != ""
+                      ? ElevatedButton(
+                          onPressed: () {
+                            deleteLog();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DrawerScaffold(
+                                        child: BackgroundBase(
+                                            child:
+                                                ExerciceAndHealthMainPage()))));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                          ),
+                          child:
+                              Text("Eliminar", style: TextStyle(fontSize: 18)),
+                        )
+                      : SizedBox()
+                ],
+              ),
             ),
           ),
         ),

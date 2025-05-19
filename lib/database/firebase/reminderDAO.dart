@@ -138,4 +138,39 @@ class ReminderDAOFB {
       return List.empty();
     }
   }
+
+  //getById
+  Future<List<ReminderModel>> getById(String id) async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("Reminder")
+            .where("userId", isEqualTo: uid)
+            .where("id", isEqualTo: id)
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("Reminder")
+            .where("userId", isEqualTo: uid)
+            .where("id", isEqualTo: id)
+            .orderBy("date")
+            .orderBy("time")
+            .get();
+      }
+
+      List<ReminderModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(ReminderModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
 }

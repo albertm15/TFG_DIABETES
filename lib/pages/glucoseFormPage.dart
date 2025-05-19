@@ -18,7 +18,8 @@ class GlucoseFormPage extends StatefulWidget {
   _GlucoseFormPageState createState() => _GlucoseFormPageState();
 }
 
-class _GlucoseFormPageState extends State<GlucoseFormPage> {
+class _GlucoseFormPageState extends State<GlucoseFormPage>
+    with WidgetsBindingObserver {
   final TextEditingController _glucoseController = TextEditingController();
   final TextEditingController _sensationsController = TextEditingController();
 
@@ -45,6 +46,18 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
       return true;
     } else {
       return false;
+    }
+  }
+
+  void deleteLog() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      GlucoseLogDAOFB dao = GlucoseLogDAOFB();
+      List<GlucoseLogModel> log = await dao.getById(widget.initialId);
+      dao.delete(log.first);
+    } else {
+      GlucoseLogDAO dao = GlucoseLogDAO();
+      List<GlucoseLogModel> log = await dao.getById(widget.initialId);
+      dao.delete(log.first);
     }
   }
 
@@ -123,146 +136,201 @@ class _GlucoseFormPageState extends State<GlucoseFormPage> {
     if (widget.initialId != "") {
       loadData();
     }
+    //
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: UpperNavBar(pageName: "Añadir registro de glucosa"),
-      body: ScreenMargins(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 24, bottom: 24),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 400),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    "Añadir registro de glucosa",
-                    style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 85, 42, 196)),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 24),
-                  TextFormField(
-                    controller: _glucoseController,
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                      labelText: "Nivel de glucosa (mg/dl)",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 20),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: ScreenMargins(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 24, bottom: 24),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 400),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      "Añadir registro de glucosa",
+                      style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 85, 42, 196)),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  SizedBox(height: 24),
-                  TextFormField(
-                    controller: _sensationsController,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      labelText: "Sensaciones (opcional)",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    SizedBox(height: 24),
+                    TextFormField(
+                      controller: _glucoseController,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                      decoration: InputDecoration(
+                        labelText: "Nivel de glucosa (mg/dl)",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 20),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_glucoseController.text == "") {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
-                            title: Text(
-                              'Nivel de glucosa vacio',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            content: Text(
-                              "Introduzca un valor en el nivel de glucosa.",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 16),
-                            ),
-                            actions: [
-                              TextButton(
-                                child: Text(
-                                  'OK',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                onPressed: () => Navigator.of(context).pop(),
+                    SizedBox(height: 24),
+                    TextFormField(
+                      controller: _sensationsController,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        labelText: "Sensaciones (opcional)",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_glucoseController.text == "") {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                              title: Text(
+                                'Nivel de glucosa vacio',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ],
-                          ),
-                        );
-                      } else if (int.parse(_glucoseController.text) < 0) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
-                            title: Text(
-                              'Nivel de glucosa no valido',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            content: Text(
-                              "Introduzca un valor valido en el nivel de glucosa.",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 16),
-                            ),
-                            actions: [
-                              TextButton(
-                                child: Text(
-                                  'OK',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                onPressed: () => Navigator.of(context).pop(),
+                              content: Text(
+                                "Introduzca un valor en el nivel de glucosa.",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
                               ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        saveLog();
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DrawerScaffold(
-                                    child: BackgroundBase(
-                                        child: GlucoseMainPage()))));
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 85, 42, 196),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                              actions: [
+                                TextButton(
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else if (int.parse(_glucoseController.text) < 0) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                              title: Text(
+                                'Nivel de glucosa no valido',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              content: Text(
+                                "Introduzca un valor valido en el nivel de glucosa.",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          saveLog();
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DrawerScaffold(
+                                      child: BackgroundBase(
+                                          child: GlucoseMainPage()))));
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 85, 42, 196),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                       ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      child: Text(
+                          widget.initialId == ""
+                              ? "Añadir registro"
+                              : "Confirmar modificación",
+                          style: TextStyle(fontSize: 18)),
                     ),
-                    child: Text(
-                        widget.initialId == ""
-                            ? "Añadir registro"
-                            : "Confirmar modificación",
-                        style: TextStyle(fontSize: 18)),
-                  ),
-                ],
+                    SizedBox(height: 16),
+                    widget.initialId != ""
+                        ? ElevatedButton(
+                            onPressed: () {
+                              deleteLog();
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DrawerScaffold(
+                                          child: BackgroundBase(
+                                              child: GlucoseMainPage()))));
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 15),
+                            ),
+                            child: Text("Eliminar",
+                                style: TextStyle(fontSize: 18)),
+                          )
+                        : SizedBox()
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(selectedSection: "glucose"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "glucose"),
       backgroundColor: Colors.transparent,
     );
   }

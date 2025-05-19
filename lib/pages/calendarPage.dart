@@ -170,7 +170,8 @@ class _CalendarPageWidgetState extends State<_CalendarPageWidget> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => DrawerScaffold(
-                          child: BackgroundBase(child: AddReminder()))));
+                          child: BackgroundBase(
+                              child: AddReminder(initialId: "")))));
             });
           },
           style: ElevatedButton.styleFrom(

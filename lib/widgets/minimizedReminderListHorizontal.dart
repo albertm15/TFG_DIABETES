@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/pages/reminderDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -66,7 +67,10 @@ class MinimizedReminderListHorizontal extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => DrawerScaffold(
-                        child: BackgroundBase(child: AddReminder()),
+                        child: BackgroundBase(
+                            child: AddReminder(
+                          initialId: "",
+                        )),
                       ),
                     ),
                   );
@@ -86,54 +90,66 @@ class MinimizedReminderListHorizontal extends StatelessWidget {
               final reminder = log.log as ReminderModel;
 
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Container(
-                  width: 140,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 95, 33, 153),
-                        Color.fromARGB(255, 85, 42, 196),
-                      ],
-                      stops: [0, 1.0],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DrawerScaffold(
+                                      child: BackgroundBase(
+                                    child: ReminderDetails(
+                                      id: log.id,
+                                    ),
+                                  ))));
+                    },
+                    child: Container(
+                      width: 140,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromARGB(255, 95, 33, 153),
+                            Color.fromARGB(255, 85, 42, 196),
+                          ],
+                          stops: [0, 1.0],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                        ),
+                        border: Border.all(color: Colors.grey.shade300),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(1, 1),
+                              blurRadius: 4)
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(Icons.notifications,
+                                size: 30, color: Colors.white),
+                            Text(reminder.title,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center),
+                            Text(reminder.time,
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white)),
+                            Text(formatDay(reminder.date),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: const Color.fromARGB(
+                                        255, 207, 207, 207))),
+                          ],
+                        ),
+                      ),
                     ),
-                    border: Border.all(color: Colors.grey.shade300),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.white,
-                          offset: Offset(1, 1),
-                          blurRadius: 4)
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(Icons.notifications,
-                            size: 30, color: Colors.white),
-                        Text(reminder.title,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.white),
-                            textAlign: TextAlign.center),
-                        Text(reminder.time,
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
-                        Text(formatDay(reminder.date),
-                            style: TextStyle(
-                                fontSize: 14,
-                                color:
-                                    const Color.fromARGB(255, 207, 207, 207))),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+                  ));
             },
           ),
         ),

@@ -26,97 +26,134 @@ class _ResetForgottenPasswordPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF3C37FF),
-            Color(0xFF242199),
-          ],
-          stops: [0.4, 1.0],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+          body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF3C37FF),
+              Color(0xFF242199),
+            ],
+            stops: [0.4, 1.0],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
         ),
-      ),
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7),
-                    color: Colors.white,
-                  ),
-                  child: Text(
-                    "Logo",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black, fontSize: 25),
-                  )),
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Container(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(7),
+                      color: Colors.white,
+                    ),
+                    child: Text(
+                      "Logo",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black, fontSize: 25),
+                    )),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
                   padding: const EdgeInsets.all(24.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white, // Fondo del recuadro
-                    borderRadius:
-                        BorderRadius.circular(20), // Bordes redondeados
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "Restablecer Contraseña",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 85, 42, 196),
+                  child: Container(
+                    padding: const EdgeInsets.all(24.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white, // Fondo del recuadro
+                      borderRadius:
+                          BorderRadius.circular(20), // Bordes redondeados
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
                         ),
-                      ),
-                      Text(
-                        "Escriba la dirección de correo electrónico en la que recivirá el correo para restablecer la contraseña.",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      TextField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: "Email",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Restablecer Contraseña",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 85, 42, 196),
                           ),
                         ),
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            bool resetPasswordSuccess =
-                                await AuthServiceManager.resetForgottenPassword(
-                                    _emailController.text);
-                            if (resetPasswordSuccess) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LogInPage()),
-                              );
-                            } else {
+                        Text(
+                          "Escriba la dirección de correo electrónico en la que recivirá el correo para restablecer la contraseña.",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: "Email",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              bool resetPasswordSuccess =
+                                  await AuthServiceManager
+                                      .resetForgottenPassword(
+                                          _emailController.text);
+                              if (resetPasswordSuccess) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LogInPage()),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    backgroundColor:
+                                        Color.fromARGB(255, 232, 80, 69),
+                                    title: Text(
+                                      'No se pudo enviar el correo',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    content: Text(
+                                      'Verifica tu conexión a internet e inténtalo de nuevo.',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: Text(
+                                          'OK',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            } catch (error) {
                               showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
@@ -129,7 +166,7 @@ class _ResetForgottenPasswordPageState
                                         fontWeight: FontWeight.bold),
                                   ),
                                   content: Text(
-                                    'Verifica tu conexión a internet e inténtalo de nuevo.',
+                                    transformErrorMessage(error.toString()),
                                     style: TextStyle(
                                         color: Colors.black, fontSize: 16),
                                   ),
@@ -147,98 +184,68 @@ class _ResetForgottenPasswordPageState
                                 ),
                               );
                             }
-                          } catch (error) {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                backgroundColor:
-                                    Color.fromARGB(255, 232, 80, 69),
-                                title: Text(
-                                  'No se pudo enviar el correo',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                content: Text(
-                                  transformErrorMessage(error.toString()),
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 16),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    child: Text(
-                                      'OK',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Color.fromARGB(255, 85, 42, 196), // Botón lila
-                          foregroundColor: Colors.white, // Texto blanco
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Color.fromARGB(255, 85, 42, 196), // Botón lila
+                            foregroundColor: Colors.white, // Texto blanco
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
                           ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 15),
+                          child: Text(
+                            "Enviar",
+                            style: TextStyle(fontSize: 20),
+                          ),
                         ),
-                        child: Text(
-                          "Enviar",
-                          style: TextStyle(fontSize: 20),
+                        SizedBox(height: 15),
+                        TextButton(
+                          onPressed: () {
+                            // Acción para recuperar contraseña
+                            print("button pressed: CONTRASEÑA OLVIDADA");
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LogInPage(),
+                                ));
+                          },
+                          child: Text(
+                            "¿No olvidaste tu contraseña? Iniciar Sesión",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 85, 42, 196),
+                                decoration: TextDecoration.underline,
+                                fontSize: 13),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 15),
-                      TextButton(
-                        onPressed: () {
-                          // Acción para recuperar contraseña
-                          print("button pressed: CONTRASEÑA OLVIDADA");
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LogInPage(),
-                              ));
-                        },
-                        child: Text(
-                          "¿No olvidaste tu contraseña? Iniciar Sesión",
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 85, 42, 196),
-                              decoration: TextDecoration.underline,
-                              fontSize: 13),
+                        TextButton(
+                          onPressed: () {
+                            // Acción para ir a registro
+                            print("button pressed: REGISTRARSE");
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUpPage(),
+                                ));
+                          },
+                          child: Text(
+                            "¿No tienes cuenta? Regístrate",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 85, 42, 196),
+                                decoration: TextDecoration.underline,
+                                fontSize: 13),
+                          ),
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Acción para ir a registro
-                          print("button pressed: REGISTRARSE");
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SignUpPage(),
-                              ));
-                        },
-                        child: Text(
-                          "¿No tienes cuenta? Regístrate",
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 85, 42, 196),
-                              decoration: TextDecoration.underline,
-                              fontSize: 13),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 }

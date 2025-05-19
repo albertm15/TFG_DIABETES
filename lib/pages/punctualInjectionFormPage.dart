@@ -17,7 +17,7 @@ import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class PunctualInjectionFormPage extends StatefulWidget {
-  final String initialId;
+  String initialId;
   double initialUnits = 0;
   PunctualInjectionFormPage.withInitialUnits(this.initialUnits, this.initialId);
   PunctualInjectionFormPage(this.initialId);
@@ -122,6 +122,18 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
     });
   }
 
+  void deleteLog() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      InsulinLogDAOFB dao = InsulinLogDAOFB();
+      List<InsulinLogModel> log = await dao.getById(widget.initialId);
+      dao.delete(log.first);
+    } else {
+      InsulinLogDAO dao = InsulinLogDAO();
+      List<InsulinLogModel> log = await dao.getById(widget.initialId);
+      dao.delete(log.first);
+    }
+  }
+
   void saveLog() async {
     double insulinValue = double.parse(_insulinUnitsController.text);
     String location = injectableLocations[selectedIndex];
@@ -208,210 +220,245 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: UpperNavBar(pageName: "Añadir Inyección"),
-      body: ScreenMargins(
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 400),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  //"Añadir inyección de insulina",
-                  "Añadir inyección",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 85, 42, 196)),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 8),
-                TextFormField(
-                  controller: _insulinUnitsController,
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                  decoration: InputDecoration(
-                    labelText: "Unidades de insulina a inyectar",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: ScreenMargins(
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 400),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    //"Añadir inyección de insulina",
+                    "Añadir inyección",
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 85, 42, 196)),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    controller: _insulinUnitsController,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                      labelText: "Unidades de insulina a inyectar",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 10),
-                isLoaded
-                    ? Container(
-                        height: 190,
-                        child: ModelViewer(
-                          src: "assets/3dModels/maleBody.glb",
-                          key: ValueKey(currentCameraOrbit),
-                          cameraControls: true,
-                          cameraOrbit: currentCameraOrbit,
-                          fieldOfView: "15deg",
-                          cameraTarget: currentCameraTarget,
-                        ),
-                      )
-                    : Center(child: CircularProgressIndicator()),
-                Icon(
-                  Icons.arrow_drop_down_rounded,
-                  color: Color(0xFF3C37FF),
-                  size: 40,
-                ),
-                isLoaded
-                    ? SizedBox(
-                        height: 80,
-                        child: ScrollConfiguration(
-                          behavior: LessSensitiveScrollBehavior(),
-                          child: ScrollSnapList(
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 2),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: 40,
-                                  width: 85,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF3C37FF),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                  SizedBox(height: 10),
+                  isLoaded
+                      ? Container(
+                          height: 190,
+                          child: ModelViewer(
+                            src: "assets/3dModels/maleBody.glb",
+                            key: ValueKey(currentCameraOrbit),
+                            cameraControls: true,
+                            cameraOrbit: currentCameraOrbit,
+                            fieldOfView: "15deg",
+                            cameraTarget: currentCameraTarget,
+                          ),
+                        )
+                      : Center(child: CircularProgressIndicator()),
+                  Icon(
+                    Icons.arrow_drop_down_rounded,
+                    color: Color(0xFF3C37FF),
+                    size: 40,
+                  ),
+                  isLoaded
+                      ? SizedBox(
+                          height: 80,
+                          child: ScrollConfiguration(
+                            behavior: LessSensitiveScrollBehavior(),
+                            child: ScrollSnapList(
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 2),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: 40,
+                                    width: 85,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF3C37FF),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(20)),
+                                    ),
+                                    child: Text(
+                                      "${injectableLocations[index]}",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.white),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                  child: Text(
-                                    "${injectableLocations[index]}",
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.white),
-                                    textAlign: TextAlign.center,
-                                  ),
+                                );
+                              },
+                              initialIndex: selectedIndex.toDouble(),
+                              itemCount: injectableLocations.length,
+                              itemSize: 89,
+                              duration: 200,
+                              dynamicItemSize: true,
+                              scrollDirection: Axis.horizontal,
+                              focusOnItemTap: true,
+                              onItemFocus: (index) {
+                                setState(() {
+                                  selectedIndex = index;
+                                  currentCameraOrbit =
+                                      allCameraOrbits[selectedIndex];
+                                  currentCameraTarget =
+                                      allCameraTargets[selectedIndex];
+                                });
+                              },
+                            ),
+                          ),
+                        )
+                      : Center(child: CircularProgressIndicator()),
+                  SizedBox(height: 25),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_insulinUnitsController.text == "") {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Univades de insulina vacio',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                              "Introduzca un valor en las unidades de insulina.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
                                 ),
-                              );
-                            },
-                            initialIndex: selectedIndex.toDouble(),
-                            itemCount: injectableLocations.length,
-                            itemSize: 89,
-                            duration: 200,
-                            dynamicItemSize: true,
-                            scrollDirection: Axis.horizontal,
-                            focusOnItemTap: true,
-                            onItemFocus: (index) {
-                              setState(() {
-                                selectedIndex = index;
-                                currentCameraOrbit =
-                                    allCameraOrbits[selectedIndex];
-                                currentCameraTarget =
-                                    allCameraTargets[selectedIndex];
-                              });
-                            },
-                          ),
-                        ),
-                      )
-                    : Center(child: CircularProgressIndicator()),
-                SizedBox(height: 25),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_insulinUnitsController.text == "") {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Color.fromARGB(255, 232, 80, 69),
-                          title: Text(
-                            'Univades de insulina vacio',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          content: Text(
-                            "Introduzca un valor en las unidades de insulina.",
-                            style: TextStyle(color: Colors.black, fontSize: 16),
-                          ),
-                          actions: [
-                            TextButton(
-                              child: Text(
-                                'OK',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+                                onPressed: () => Navigator.of(context).pop(),
                               ),
-                              onPressed: () => Navigator.of(context).pop(),
+                            ],
+                          ),
+                        );
+                      } else if (double.parse(_insulinUnitsController.text) <
+                          0) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Unidades de insulina no validas',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          ],
-                        ),
-                      );
-                    } else if (double.parse(_insulinUnitsController.text) < 0) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Color.fromARGB(255, 232, 80, 69),
-                          title: Text(
-                            'Unidades de insulina no validas',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          content: Text(
-                            "Introduzca un valor valido de unidades de insulina.",
-                            style: TextStyle(color: Colors.black, fontSize: 16),
-                          ),
-                          actions: [
-                            TextButton(
-                              child: Text(
-                                'OK',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+                            content: Text(
+                              "Introduzca un valor valido de unidades de insulina.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
                               ),
-                              onPressed: () => Navigator.of(context).pop(),
+                            ],
+                          ),
+                        );
+                      } else if (fastInsulin -
+                              double.parse(_insulinUnitsController.text) <
+                          0) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Cantidad de unidades de insulina no valida',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          ],
-                        ),
-                      );
-                    } else if (fastInsulin -
-                            double.parse(_insulinUnitsController.text) <
-                        0) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Color.fromARGB(255, 232, 80, 69),
-                          title: Text(
-                            'Cantidad de unidades de insulina no valida',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          content: Text(
-                            "El numero de unidades ha inyectar supera las que tienes disponibles: $fastInsulin.",
-                            style: TextStyle(color: Colors.black, fontSize: 16),
-                          ),
-                          actions: [
-                            TextButton(
-                              child: Text(
-                                'OK',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+                            content: Text(
+                              "El numero de unidades ha inyectar supera las que tienes disponibles: $fastInsulin.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
                               ),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      saveLog();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DrawerScaffold(
-                                  child: BackgroundBase(
-                                      child: InsulinMainPage()))));
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 85, 42, 196),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                            ],
+                          ),
+                        );
+                      } else {
+                        saveLog();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DrawerScaffold(
+                                    child: BackgroundBase(
+                                        child: InsulinMainPage()))));
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 85, 42, 196),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    child:
+                        Text("Añadir registro", style: TextStyle(fontSize: 18)),
                   ),
-                  child:
-                      Text("Añadir registro", style: TextStyle(fontSize: 18)),
-                ),
-              ],
+                  SizedBox(height: 16),
+                  widget.initialId != ""
+                      ? ElevatedButton(
+                          onPressed: () {
+                            deleteLog();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DrawerScaffold(
+                                        child: BackgroundBase(
+                                            child: InsulinMainPage()))));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                          ),
+                          child:
+                              Text("Eliminar", style: TextStyle(fontSize: 18)),
+                        )
+                      : SizedBox()
+                ],
+              ),
             ),
           ),
         ),

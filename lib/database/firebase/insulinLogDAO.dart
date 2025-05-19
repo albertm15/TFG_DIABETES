@@ -134,4 +134,39 @@ class InsulinLogDAOFB {
       return List.empty();
     }
   }
+
+  //getTodayLogs
+  Future<List<InsulinLogModel>> getTodayLogs() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("InsulinLog")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isEqualTo: DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("InsulinLog")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isEqualTo: DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .orderBy("time")
+            .get();
+      }
+
+      List<InsulinLogModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(InsulinLogModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
 }
