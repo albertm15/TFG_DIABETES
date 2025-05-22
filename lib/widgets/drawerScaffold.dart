@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/pages/configurationPage.dart';
 import 'package:diabetes_tfg_app/pages/profilePage.dart';
@@ -151,6 +152,7 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
                       //Añadir un redirect a la pantalla de bienvenida despues de que se cierre la sesion
                       setState(() {
                         AuthServiceManager.logOut();
+                        InsulinNotifications.cancelAll();
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

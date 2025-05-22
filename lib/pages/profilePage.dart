@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/userDAO.dart';
@@ -187,6 +188,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                 onPressed: () {
                   setState(() {
                     AuthServiceManager.logOut();
+                    InsulinNotifications.cancelAll();
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -209,7 +211,9 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
             Container(
               width: 250,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  InsulinNotifications.cancelAll();
+                },
                 child: Text("Eliminar cuenta", style: TextStyle(fontSize: 18)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,

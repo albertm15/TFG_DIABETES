@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/database/firebase/reminderDAO.dart';
 import 'package:diabetes_tfg_app/database/local/reminderDAO.dart';
@@ -32,8 +33,6 @@ class _AddReminderState extends State<AddReminder> {
     'Cada día',
     'Cada semana',
     'Cada mes',
-    'Cada 3 meses',
-    'Personalizado'
   ];
 
   String getTime() {
@@ -105,6 +104,47 @@ class _AddReminderState extends State<AddReminder> {
             repeatFrequency);
         ReminderDAOFB dao = ReminderDAOFB();
         dao.insert(reminder);
+      }
+    }
+    if (widget.initialId != "") {
+      //borrar la notificación actual
+      InsulinNotifications.cancelRemindersNotifications();
+      //añadir todas
+      InsulinNotifications.scheduleAllReminders();
+    } else {
+      switch (repeatFrequency) {
+        case 'Cada día':
+          InsulinNotifications.scheduleDailyReminderNotification(
+              selectedDate.day,
+              selectedDate.month,
+              selectedDate.year,
+              int.parse(hourController.text),
+              int.parse(minuteController.text),
+              "Recordatorio: ${titleController.text}");
+        case 'Cada semana':
+          InsulinNotifications.scheduleWeeklyReminderNotification(
+              selectedDate.day,
+              selectedDate.month,
+              selectedDate.year,
+              int.parse(hourController.text),
+              int.parse(minuteController.text),
+              "Recordatorio: ${titleController.text}");
+        case 'Cada mes':
+          InsulinNotifications.scheduleMonthlyReminderNotification(
+              selectedDate.day,
+              selectedDate.month,
+              selectedDate.year,
+              int.parse(hourController.text),
+              int.parse(minuteController.text),
+              "Recordatorio: ${titleController.text}");
+        default:
+          InsulinNotifications.schedulePuctualReminderNotification(
+              selectedDate.day,
+              selectedDate.month,
+              selectedDate.year,
+              int.parse(hourController.text),
+              int.parse(minuteController.text),
+              "Recordatorio: ${titleController.text}");
       }
     }
   }

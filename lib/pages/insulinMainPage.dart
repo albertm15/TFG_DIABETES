@@ -71,8 +71,10 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
 
     if (log.isNotEmpty) {
       for (InsulinModel insulin in log) {
-        fastActingInsulin += insulin.totalFastActingInsulin;
-        slowActingInsulin += insulin.totalSlowActingInsulin;
+        fastActingInsulin +=
+            double.parse(insulin.totalFastActingInsulin.toStringAsFixed(2));
+        slowActingInsulin +=
+            double.parse(insulin.totalSlowActingInsulin.toStringAsFixed(2));
         firstInjectionSchedule = insulin.firstInjectionSchedule;
         secondInjectionSchedule = insulin.secondInjectionSchedule;
       }

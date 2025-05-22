@@ -92,4 +92,20 @@ class ReminderDAO {
 
     return logs;
   }
+
+  //getAllSinceToday
+  Future<List<ReminderModel>> getAllSinceToday() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('Reminders',
+        orderBy: 'time DESC',
+        where: "date >= ?",
+        whereArgs: [DateFormat("yyyy-MM-dd").format(DateTime.now())]);
+
+    List<ReminderModel> logs = [];
+    for (Map<String, dynamic> log in data) {
+      logs.add(ReminderModel.fromMap(log));
+    }
+
+    return logs;
+  }
 }

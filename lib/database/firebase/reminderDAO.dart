@@ -173,4 +173,43 @@ class ReminderDAOFB {
       return List.empty();
     }
   }
+
+  //getAllSinceToday
+  Future<List<ReminderModel>> getAllSinceToday() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("Reminder")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo:
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("Reminder")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo:
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .orderBy("date")
+            .orderBy("time")
+            .get();
+      }
+
+      List<ReminderModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(ReminderModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
 }
