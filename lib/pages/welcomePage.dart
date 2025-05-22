@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/logIngPage.dart';
@@ -137,6 +138,7 @@ class _WelcomepageState extends State<Welcomepage> {
                       if (AuthServiceManager.checkIfLogged()) {
                         AuthServiceManager.logOut();
                       }
+                      InsulinNotifications.scheduleAll();
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

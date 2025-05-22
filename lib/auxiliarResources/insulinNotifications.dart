@@ -1,6 +1,12 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/dietDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/reminderDAO.dart';
+import 'package:diabetes_tfg_app/database/local/dietDAO.dart';
+import 'package:diabetes_tfg_app/database/local/insulinDAO.dart';
 import 'package:diabetes_tfg_app/database/local/reminderDAO.dart';
+import 'package:diabetes_tfg_app/models/dietModel.dart';
+import 'package:diabetes_tfg_app/models/insulinModel.dart';
 import 'package:diabetes_tfg_app/models/reminderModel.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -258,8 +264,62 @@ class InsulinNotifications {
     }
   }
 
-  static Future<void> scheduleAll() async {
-    //TODO
+  static Future<void> scheduleAllInsulinNotifications() async {
+    List<InsulinModel> notifications;
+
+    if (AuthServiceManager.checkIfLogged()) {
+      InsulinDAOFB dao = InsulinDAOFB();
+      notifications = await dao.getAll();
+    } else {
+      InsulinDAO dao = InsulinDAO();
+      notifications = await dao.getAll();
+    }
+    scheduleInsulinNotification(
+        int.parse(notifications[0].firstInjectionSchedule.split(":")[0]),
+        int.parse(notifications[0].firstInjectionSchedule.split(":")[1]),
+        "primera");
+    scheduleInsulinNotification(
+        int.parse(notifications[0].secondInjectionSchedule.split(":")[0]),
+        int.parse(notifications[0].secondInjectionSchedule.split(":")[1]),
+        "segunda");
+  }
+
+  static Future<void> scheduleAllDietNotifications() async {
+    List<DietModel> notifications;
+
+    if (AuthServiceManager.checkIfLogged()) {
+      DietDAOFB dao = DietDAOFB();
+      notifications = await dao.getAll();
+    } else {
+      DietDAO dao = DietDAO();
+      notifications = await dao.getAll();
+    }
+    scheduleInsulinNotification(
+        int.parse(notifications[0].breakfastSchedule.split(":")[0]),
+        int.parse(notifications[0].breakfastSchedule.split(":")[1]),
+        "del desayuno");
+    scheduleInsulinNotification(
+        int.parse(notifications[0].snackSchedule.split(":")[0]),
+        int.parse(notifications[0].snackSchedule.split(":")[1]),
+        "del tente en pié");
+    scheduleInsulinNotification(
+        int.parse(notifications[0].lunchSchedule.split(":")[0]),
+        int.parse(notifications[0].lunchSchedule.split(":")[1]),
+        "de la comida");
+    scheduleInsulinNotification(
+        int.parse(notifications[0].afternoonSnackSchedule.split(":")[0]),
+        int.parse(notifications[0].afternoonSnackSchedule.split(":")[1]),
+        "de la merienda");
+    scheduleInsulinNotification(
+        int.parse(notifications[0].dinnerSchedule.split(":")[0]),
+        int.parse(notifications[0].dinnerSchedule.split(":")[1]),
+        "de la cena");
+  }
+
+  static void scheduleAll() {
+    scheduleAllInsulinNotifications();
+    scheduleAllDietNotifications();
+    scheduleAllReminders();
   }
 
   static Future<void> cancelAll() async {

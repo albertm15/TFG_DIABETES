@@ -1,3 +1,4 @@
+import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/resetForgottenPasswordPage.dart';
@@ -123,6 +124,8 @@ class _LogInPageState extends State<LogInPage> {
                                 _passwordController.text,
                               );
                               if (logInSuccess) {
+                                InsulinNotifications.cancelAll();
+                                InsulinNotifications.scheduleAll();
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
