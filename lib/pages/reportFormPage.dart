@@ -22,6 +22,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pdf/pdf.dart';
 
 class ReportFormPage extends StatefulWidget {
   @override
@@ -49,16 +50,134 @@ class _ReportFormPageState extends State<ReportFormPage> {
   Future<File> createPDF(String fileName) async {
     final pdf = pw.Document();
 
+    pw.TableRow _tableRow(String col1, String col2, String col3, String col4) {
+      return pw.TableRow(
+        children: [
+          pw.Padding(
+            padding: const pw.EdgeInsets.all(4),
+            child: pw.Text(col1,
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          ),
+          pw.Padding(
+            padding: const pw.EdgeInsets.all(4),
+            child: pw.Text(col2),
+          ),
+          pw.Padding(
+            padding: const pw.EdgeInsets.all(4),
+            child: pw.Text(col3,
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          ),
+          pw.Padding(
+            padding: const pw.EdgeInsets.all(4),
+            child: pw.Text(col4),
+          ),
+        ],
+      );
+    }
+
     pdf.addPage(
       pw.Page(
-        build: (pw.Context context) => pw.Center(
-          child: pw.Column(children: [
-            pw.Text('Report juanjoooo', style: pw.TextStyle(fontSize: 40)),
-            pw.Text('${avgGlucose.toStringAsFixed(2)}')
-          ]),
-        ),
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(32),
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              // Título del Reporte
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("Diabetes Report",
+                      style: pw.TextStyle(
+                          fontSize: 26, fontWeight: pw.FontWeight.bold)),
+                  pw.Text("1–15 May 2025", style: pw.TextStyle(fontSize: 12)),
+                ],
+              ),
+              pw.SizedBox(height: 8),
+              // Nombre y médico
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text("John Smith\nBorn: February 5, 1870",
+                      style: pw.TextStyle(fontSize: 12)),
+                  pw.Text("Dr. A. Williams", style: pw.TextStyle(fontSize: 12)),
+                ],
+              ),
+              pw.Divider(),
+
+              // Summary
+              pw.Text("Summary",
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 8),
+              pw.Table(
+                border: pw.TableBorder.all(),
+                children: [
+                  _tableRow("Average Glucose", "145 mg/dL", "Hypoglycemia",
+                      "(<70 mg/dL)"),
+                  _tableRow("Most frequent range", "70–180 mg/dL",
+                      "Hyperglycemia", "(>180 mg/dL)"),
+                  _tableRow("Total Insulin units", "35", "Physical activity",
+                      "210 min"),
+                  _tableRow("Hypoglycemia (< 70 mg)", "3",
+                      "Average daily carbohydrates", "195 g"),
+                  _tableRow(
+                      "Observation", "Frequent nocturnal hypoglycemia", "", ""),
+                ],
+              ),
+              pw.SizedBox(height: 20),
+
+              // Placeholder para gráficos
+              pw.Text("Daily Glucose Levels",
+                  style: pw.TextStyle(
+                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
+              pw.Container(
+                height: 100,
+                color: PdfColors.grey300,
+                child: pw.Center(child: pw.Text("Graph Placeholder")),
+              ),
+              pw.SizedBox(height: 10),
+
+              pw.Text("Hypoglycemia and Hyperglycemia",
+                  style: pw.TextStyle(
+                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
+              pw.Container(
+                height: 100,
+                color: PdfColors.grey300,
+                child: pw.Center(child: pw.Text("Bar Chart Placeholder")),
+              ),
+              pw.SizedBox(height: 10),
+
+              pw.Text("Injection Sites",
+                  style: pw.TextStyle(
+                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
+              pw.Container(
+                height: 100,
+                color: PdfColors.grey300,
+                child: pw.Center(child: pw.Text("Body Diagram Placeholder")),
+              ),
+              pw.SizedBox(height: 10),
+
+              pw.Text("Glucose vs. Carbohydrates",
+                  style: pw.TextStyle(
+                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
+              pw.Container(
+                height: 100,
+                color: PdfColors.grey300,
+                child: pw.Center(child: pw.Text("Scatter Plot Placeholder")),
+              ),
+            ],
+          );
+        },
       ),
     );
+
+    pdf.addPage(pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(32),
+        build: (pw.Context context) {
+          return pw.Column(children: []);
+        }));
 
     if (Platform.isAndroid) {
       var status = await Permission.storage.request();
@@ -140,7 +259,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
     }
     avgGlucose = avgGlucose / glucoseLogs.length;
 
-    await createPDF("patriiiii");
+    await createPDF("nuevo_estilo2");
   }
 
   @override
