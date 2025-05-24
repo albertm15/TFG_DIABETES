@@ -31,6 +31,8 @@ dependencies:
   flutter_vector_icons: ^2.0.0
   table_calendar: ^3.2.0
   font_awesome_flutter: ^10.8.0
+  pdf: ^3.11.3
+  open_filex: ^4.7.0
 
 
 dev_dependencies:

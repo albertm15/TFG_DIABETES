@@ -1,5 +1,8 @@
 import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
+import 'package:diabetes_tfg_app/database/local/userDAO.dart';
+import 'package:diabetes_tfg_app/models/userModel.dart';
 import 'package:diabetes_tfg_app/pages/configurationPage.dart';
 import 'package:diabetes_tfg_app/pages/profilePage.dart';
 import 'package:diabetes_tfg_app/pages/reportsPage.dart';
@@ -21,6 +24,7 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
   double xOffset = 0;
   double yOffset = 0;
   double scaleFactor = 1;
+  String userName = "usuario desconocido";
 
   void changeDrawerState() {
     setState(() {
@@ -36,6 +40,30 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
         scaleFactor = 0.75;
       }
     });
+  }
+
+  Future<void> getUserName() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      UserDAOFB dao = UserDAOFB();
+      List<UserModel> users =
+          await dao.getById(AuthServiceManager.getCurrentUserUID());
+      if (!users.isEmpty) {
+        userName = users.first.fullName!;
+      }
+    } else {
+      UserDAO dao = UserDAO();
+      List<UserModel> users = await dao.getAll();
+      if (!users.isEmpty) {
+        userName = users.first.fullName!;
+      }
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserName();
   }
 
   @override
@@ -65,7 +93,7 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
                       title: Text(
                           //CAMBIAR ESTO POR EL NOMBRE
                           //"Hola, ${AuthServiceManager.getCurrentUserUID()}!",
-                          "Hola, usuario desconocido!",
+                          "Hola, $userName!",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

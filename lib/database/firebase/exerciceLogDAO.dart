@@ -169,4 +169,42 @@ class ExerciceLogDAOFB {
       return List.empty();
     }
   }
+
+  //getCustomDateRangeLogs
+  Future<List<ExerciceLogModel>> getCustomDateRangeLogs(
+      String initial, String end) async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("ExerciceLog")
+            .where("userId", isEqualTo: uid)
+            .where("date", isGreaterThanOrEqualTo: initial)
+            .where("date", isLessThanOrEqualTo: end)
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("ExerciceLog")
+            .where("userId", isEqualTo: uid)
+            .where("date", isGreaterThanOrEqualTo: initial)
+            .where("date", isLessThanOrEqualTo: end)
+            .orderBy("date")
+            .orderBy("time")
+            .get();
+      }
+
+      List<ExerciceLogModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(ExerciceLogModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
 }

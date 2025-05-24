@@ -94,4 +94,21 @@ class DietLogDAO {
 
     return glucoseLogs;
   }
+
+  //getCustomDateRangeLogs
+  Future<List<DietLogModel>> getCustomDateRangeLogs(
+      String initial, String end) async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('DietLogs',
+        orderBy: 'time DESC',
+        where: "date >= ? and date <= ?",
+        whereArgs: [initial, end]);
+
+    List<DietLogModel> glucoseLogs = [];
+    for (Map<String, dynamic> log in data) {
+      glucoseLogs.add(DietLogModel.fromMap(log));
+    }
+
+    return glucoseLogs;
+  }
 }

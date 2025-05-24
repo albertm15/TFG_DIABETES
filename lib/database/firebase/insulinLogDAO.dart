@@ -169,4 +169,42 @@ class InsulinLogDAOFB {
       return List.empty();
     }
   }
+
+  //getCustomDateRangeLogs
+  Future<List<InsulinLogModel>> getCustomDateRangeLogs(
+      String initial, String end) async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("InsulinLog")
+            .where("userId", isEqualTo: uid)
+            .where("date", isGreaterThanOrEqualTo: initial)
+            .where("date", isLessThanOrEqualTo: end)
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("InsulinLog")
+            .where("userId", isEqualTo: uid)
+            .where("date", isGreaterThanOrEqualTo: initial)
+            .where("date", isLessThanOrEqualTo: end)
+            .orderBy("date")
+            .orderBy("time")
+            .get();
+      }
+
+      List<InsulinLogModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(InsulinLogModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
 }

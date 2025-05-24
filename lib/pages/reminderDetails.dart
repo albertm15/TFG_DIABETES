@@ -3,7 +3,6 @@ import 'package:diabetes_tfg_app/database/firebase/reminderDAO.dart';
 import 'package:diabetes_tfg_app/database/local/reminderDAO.dart';
 import 'package:diabetes_tfg_app/models/reminderModel.dart';
 import 'package:diabetes_tfg_app/pages/addReminder.dart';
-import 'package:diabetes_tfg_app/pages/exerciceLogForm.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';

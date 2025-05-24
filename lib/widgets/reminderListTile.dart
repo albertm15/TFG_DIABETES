@@ -31,12 +31,12 @@ class ReminderListTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '${log.category}     ',
+              '${log.category} ',
               style: TextStyle(color: Colors.white),
             ),
             Text(
               "${log.dateTime}",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ],
         ),
