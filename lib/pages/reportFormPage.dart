@@ -4,24 +4,27 @@ import 'package:diabetes_tfg_app/database/firebase/dietLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/exerciceLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
+import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/dietLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/exerciceLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
 import 'package:diabetes_tfg_app/database/local/insulinLogDAO.dart';
+import 'package:diabetes_tfg_app/database/local/userDAO.dart';
 import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
 import 'package:diabetes_tfg_app/models/dietLogModel.dart';
 import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
 import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
+import 'package:diabetes_tfg_app/models/userModel.dart';
 import 'package:diabetes_tfg_app/pages/reportsPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:diabetes_tfg_app/widgets/lowerNavBar.dart';
 import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pdf/pdf.dart';
 
 class ReportFormPage extends StatefulWidget {
@@ -38,6 +41,23 @@ class _ReportFormPageState extends State<ReportFormPage> {
   List<DietLogModel> dietLogs = [];
   List<ExerciceLogModel> exerciceLogs = [];
   double avgGlucose = 0;
+  int minGlucose = 0;
+  int maxGlucose = 0;
+  int numHypoglucemias = 0;
+  int numHyperglucemias = 0;
+  int numInjections = 0;
+  double insulinUnitsConsumed = 0;
+  int physicalActivity = 0;
+  double avgDailyCarbs = 0;
+  double avgDailyInsulinUnits = 0;
+  String userName = "";
+  String height = "";
+  String weight = "";
+  String typoOfDiabetes = "";
+  int numHigh = 0;
+  int numNormal = 0;
+  int numLow = 0;
+  List<int> locationsCount = [0, 0, 0, 0, 0, 0, 0];
 
   final List<String> _opciones = [
     '1 semana',
@@ -48,6 +68,27 @@ class _ReportFormPageState extends State<ReportFormPage> {
   ];
 
   Future<File> createPDF(String fileName) async {
+    final Uint8List imageBytes = await rootBundle
+        .load('assets/images/Diet_Image.png')
+        .then((data) => data.buffer.asUint8List());
+    final pw.ImageProvider imageProvider = pw.MemoryImage(imageBytes);
+    final Uint8List imageBytes2 = await rootBundle
+        .load('assets/images/arrow_upwards.png')
+        .then((data) => data.buffer.asUint8List());
+    final pw.ImageProvider imageProvider2 = pw.MemoryImage(imageBytes2);
+    final Uint8List imageBytes3 = await rootBundle
+        .load('assets/images/arrow_right.png')
+        .then((data) => data.buffer.asUint8List());
+    final pw.ImageProvider imageProvider3 = pw.MemoryImage(imageBytes3);
+    final Uint8List imageBytes4 = await rootBundle
+        .load('assets/images/arrow_downwards.png')
+        .then((data) => data.buffer.asUint8List());
+    final pw.ImageProvider imageProvider4 = pw.MemoryImage(imageBytes4);
+    final Uint8List imageBytes5 = await rootBundle
+        .load('assets/images/human_body_coloured.png')
+        .then((data) => data.buffer.asUint8List());
+    final pw.ImageProvider imageProvider5 = pw.MemoryImage(imageBytes5);
+
     final pdf = pw.Document();
 
     pw.TableRow _tableRow(String col1, String col2, String col3, String col4) {
@@ -56,20 +97,33 @@ class _ReportFormPageState extends State<ReportFormPage> {
           pw.Padding(
             padding: const pw.EdgeInsets.all(4),
             child: pw.Text(col1,
-                style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                style:
+                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 15)),
           ),
-          pw.Padding(
+
+          /// col2 con línea derecha
+          pw.Container(
+            decoration: pw.BoxDecoration(
+              border: pw.Border(
+                right: pw.BorderSide(color: PdfColors.grey, width: 0.5),
+              ),
+            ),
             padding: const pw.EdgeInsets.all(4),
-            child: pw.Text(col2),
+            child: pw.Text(col2, style: pw.TextStyle(fontSize: 15)),
           ),
+
+          /// col3
           pw.Padding(
             padding: const pw.EdgeInsets.all(4),
             child: pw.Text(col3,
-                style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                style:
+                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 15)),
           ),
+
+          /// col4
           pw.Padding(
             padding: const pw.EdgeInsets.all(4),
-            child: pw.Text(col4),
+            child: pw.Text(col4, style: pw.TextStyle(fontSize: 15)),
           ),
         ],
       );
@@ -90,7 +144,14 @@ class _ReportFormPageState extends State<ReportFormPage> {
                   pw.Text("Diabetes Report",
                       style: pw.TextStyle(
                           fontSize: 26, fontWeight: pw.FontWeight.bold)),
-                  pw.Text("1–15 May 2025", style: pw.TextStyle(fontSize: 12)),
+                  pw.Image(
+                    imageProvider,
+                    width: 40,
+                    height: 40,
+                  ),
+                  pw.Text(
+                      "${DateFormat('yyyy/MM/dd').format(_fechaInicio)} - ${DateFormat('yyyy/MM/dd').format(_fechaFin)}",
+                      style: pw.TextStyle(fontSize: 12)),
                 ],
               ),
               pw.SizedBox(height: 8),
@@ -98,9 +159,14 @@ class _ReportFormPageState extends State<ReportFormPage> {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("John Smith\nBorn: February 5, 1870",
-                      style: pw.TextStyle(fontSize: 12)),
-                  pw.Text("Dr. A. Williams", style: pw.TextStyle(fontSize: 12)),
+                  pw.Text("Patient: $userName",
+                      style: pw.TextStyle(fontSize: 15)),
+                  pw.Text("Type of diabetes: $typoOfDiabetes",
+                      style: pw.TextStyle(fontSize: 15)),
+                  pw.Text("Weight: $weight Kg",
+                      style: pw.TextStyle(fontSize: 15)),
+                  pw.Text("Height: $height cm",
+                      style: pw.TextStyle(fontSize: 15)),
                 ],
               ),
               pw.Divider(),
@@ -108,83 +174,311 @@ class _ReportFormPageState extends State<ReportFormPage> {
               // Summary
               pw.Text("Summary",
                   style: pw.TextStyle(
-                      fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                      fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 8),
               pw.Table(
-                border: pw.TableBorder.all(),
+                border: pw.TableBorder(
+                  horizontalInside:
+                      pw.BorderSide(color: PdfColors.grey, width: 0.5),
+                  top: pw.BorderSide.none,
+                  bottom: pw.BorderSide.none,
+                  left: pw.BorderSide.none,
+                  right: pw.BorderSide.none,
+                  verticalInside: pw.BorderSide.none,
+                ),
                 children: [
-                  _tableRow("Average Glucose", "145 mg/dL", "Hypoglycemia",
-                      "(<70 mg/dL)"),
-                  _tableRow("Most frequent range", "70–180 mg/dL",
-                      "Hyperglycemia", "(>180 mg/dL)"),
-                  _tableRow("Total Insulin units", "35", "Physical activity",
-                      "210 min"),
-                  _tableRow("Hypoglycemia (< 70 mg)", "3",
-                      "Average daily carbohydrates", "195 g"),
                   _tableRow(
-                      "Observation", "Frequent nocturnal hypoglycemia", "", ""),
+                      "Average Glucose",
+                      "${avgGlucose.toStringAsFixed(2)} mg/dL",
+                      "Minimum Glucose",
+                      "${minGlucose} mg/dL"),
+                  _tableRow("Maximum Glucose", "${maxGlucose} mg/dL",
+                      "Physical activity", "${physicalActivity} mins."),
+                  _tableRow(
+                      "Total Insulin units",
+                      "${insulinUnitsConsumed.toStringAsFixed(2)} U.",
+                      "Numeber of injections",
+                      "${numInjections}"),
+                  _tableRow("Hypoglycemias", "${numHypoglucemias}",
+                      "Hyperglycemias", "${numHyperglucemias}"),
+                  _tableRow(
+                      "Average daily carbs",
+                      "${avgDailyCarbs.toStringAsFixed(2)}",
+                      "Average daily insulin units",
+                      "${avgDailyInsulinUnits.toStringAsFixed(2)}"),
                 ],
               ),
               pw.SizedBox(height: 20),
 
               // Placeholder para gráficos
-              pw.Text("Daily Glucose Levels",
+              pw.Text("Glucose category",
                   style: pw.TextStyle(
-                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
-              pw.Container(
-                height: 100,
-                color: PdfColors.grey300,
-                child: pw.Center(child: pw.Text("Graph Placeholder")),
-              ),
+                      fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 10),
-
-              pw.Text("Hypoglycemia and Hyperglycemia",
+              pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                  children: [
+                    pw.Column(children: [
+                      pw.Text("Elevado",
+                          style: pw.TextStyle(
+                              fontSize: 30, fontWeight: pw.FontWeight.bold)),
+                      pw.SizedBox(height: 5),
+                      pw.Image(imageProvider2, width: 60, height: 60),
+                      pw.SizedBox(height: 5),
+                      pw.Text(
+                          "${((numHigh / (numHigh + numNormal + numLow)) * 100).toStringAsFixed(2)}%",
+                          style: pw.TextStyle(fontSize: 28)),
+                      pw.SizedBox(height: 5),
+                      pw.Text("${numHigh}", style: pw.TextStyle(fontSize: 24)),
+                    ]),
+                    pw.Column(children: [
+                      pw.Text("Normal",
+                          style: pw.TextStyle(
+                              fontSize: 30, fontWeight: pw.FontWeight.bold)),
+                      pw.SizedBox(height: 5),
+                      pw.Image(imageProvider3, width: 60, height: 60),
+                      pw.SizedBox(height: 5),
+                      pw.Text(
+                          "${((numNormal / (numHigh + numNormal + numLow)) * 100).toStringAsFixed(2)}%",
+                          style: pw.TextStyle(fontSize: 28)),
+                      pw.SizedBox(height: 5),
+                      pw.Text("${numNormal}",
+                          style: pw.TextStyle(fontSize: 24)),
+                    ]),
+                    pw.Column(children: [
+                      pw.Text("Bajo",
+                          style: pw.TextStyle(
+                              fontSize: 30, fontWeight: pw.FontWeight.bold)),
+                      pw.SizedBox(height: 5),
+                      pw.Image(imageProvider4, width: 60, height: 60),
+                      pw.SizedBox(height: 5),
+                      pw.Text(
+                          "${((numLow / (numHigh + numNormal + numLow)) * 100).toStringAsFixed(2)}%",
+                          style: pw.TextStyle(fontSize: 28)),
+                      pw.SizedBox(height: 5),
+                      pw.Text("${numLow}", style: pw.TextStyle(fontSize: 24)),
+                    ]),
+                  ]),
+              pw.SizedBox(height: 20),
+              pw.Text("Zonas inyectadas",
                   style: pw.TextStyle(
-                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
-              pw.Container(
-                height: 100,
-                color: PdfColors.grey300,
-                child: pw.Center(child: pw.Text("Bar Chart Placeholder")),
-              ),
+                      fontSize: 18, fontWeight: pw.FontWeight.bold)),
+              pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+                  children: [
+                    pw.Image(imageProvider5, height: 270, width: 200),
+                    pw.SizedBox(width: 10),
+                    pw.Column(children: [
+                      pw.Container(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border(
+                            bottom: pw.BorderSide(
+                                color: PdfColors.grey, width: 0.5),
+                          ),
+                        ),
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.center,
+                            children: [
+                              pw.Container(
+                                  height: 10,
+                                  width: 10,
+                                  color: PdfColors.greenAccent),
+                              pw.SizedBox(width: 8),
+                              pw.Text("Brazo izquierdo: ",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                              pw.Text("${locationsCount[0]}",
+                                  style: pw.TextStyle(fontSize: 16)),
+                              pw.SizedBox(width: 12),
+                              pw.Text(
+                                  "${((locationsCount[0] / numInjections) * 100).toStringAsFixed(2)}%",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ]),
+                      ),
+                      pw.Container(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border(
+                            bottom: pw.BorderSide(
+                                color: PdfColors.grey, width: 0.5),
+                          ),
+                        ),
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.center,
+                            children: [
+                              pw.Container(
+                                  height: 10,
+                                  width: 10,
+                                  color: PdfColors.amberAccent),
+                              pw.SizedBox(width: 8),
+                              pw.Text("Brazo derecho: ",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                              pw.Text("${locationsCount[1]}",
+                                  style: pw.TextStyle(fontSize: 16)),
+                              pw.SizedBox(width: 12),
+                              pw.Text(
+                                  "${((locationsCount[1] / numInjections) * 100).toStringAsFixed(2)}%",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ]),
+                      ),
+                      pw.Container(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border(
+                            bottom: pw.BorderSide(
+                                color: PdfColors.grey, width: 0.5),
+                          ),
+                        ),
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.center,
+                            children: [
+                              pw.Container(
+                                  height: 10,
+                                  width: 10,
+                                  color: PdfColors.blueAccent),
+                              pw.SizedBox(width: 8),
+                              pw.Text("Gluteo izquierdo: ",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                              pw.Text("${locationsCount[2]}",
+                                  style: pw.TextStyle(fontSize: 16)),
+                              pw.SizedBox(width: 12),
+                              pw.Text(
+                                  "${((locationsCount[2] / numInjections) * 100).toStringAsFixed(2)}%",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ]),
+                      ),
+                      pw.Container(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border(
+                            bottom: pw.BorderSide(
+                                color: PdfColors.grey, width: 0.5),
+                          ),
+                        ),
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.center,
+                            children: [
+                              pw.Container(
+                                  height: 10,
+                                  width: 10,
+                                  color: PdfColors.purple),
+                              pw.SizedBox(width: 8),
+                              pw.Text("Gluteo derecho: ",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                              pw.Text("${locationsCount[3]}",
+                                  style: pw.TextStyle(fontSize: 16)),
+                              pw.SizedBox(width: 12),
+                              pw.Text(
+                                  "${((locationsCount[3] / numInjections) * 100).toStringAsFixed(2)}%",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ]),
+                      ),
+                      pw.Container(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border(
+                            bottom: pw.BorderSide(
+                                color: PdfColors.grey, width: 0.5),
+                          ),
+                        ),
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.center,
+                            children: [
+                              pw.Container(
+                                  height: 10,
+                                  width: 10,
+                                  color: PdfColors.cyanAccent),
+                              pw.SizedBox(width: 8),
+                              pw.Text("Muslo izquierdo: ",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                              pw.Text("${locationsCount[4]}",
+                                  style: pw.TextStyle(fontSize: 16)),
+                              pw.SizedBox(width: 12),
+                              pw.Text(
+                                  "${((locationsCount[4] / numInjections) * 100).toStringAsFixed(2)}%",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ]),
+                      ),
+                      pw.Container(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border(
+                            bottom: pw.BorderSide(
+                                color: PdfColors.grey, width: 0.5),
+                          ),
+                        ),
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.center,
+                            children: [
+                              pw.Container(
+                                  height: 10,
+                                  width: 10,
+                                  color: PdfColors.deepOrangeAccent),
+                              pw.SizedBox(width: 8),
+                              pw.Text("Muslo derecho: ",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                              pw.Text("${locationsCount[5]}",
+                                  style: pw.TextStyle(fontSize: 16)),
+                              pw.SizedBox(width: 12),
+                              pw.Text(
+                                  "${((locationsCount[5] / numInjections) * 100).toStringAsFixed(2)}%",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ]),
+                      ),
+                      pw.Container(
+                        padding: const pw.EdgeInsets.all(4),
+                        child: pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.center,
+                            children: [
+                              pw.Container(
+                                  height: 10, width: 10, color: PdfColors.red),
+                              pw.SizedBox(width: 8),
+                              pw.Text("Barriga: ",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                              pw.Text("${locationsCount[6]}",
+                                  style: pw.TextStyle(fontSize: 16)),
+                              pw.SizedBox(width: 12),
+                              pw.Text(
+                                  "${((locationsCount[6] / numInjections) * 100).toStringAsFixed(2)}%",
+                                  style: pw.TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ]),
+                      ),
+                    ])
+                  ]),
               pw.SizedBox(height: 10),
-
-              pw.Text("Injection Sites",
-                  style: pw.TextStyle(
-                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
-              pw.Container(
-                height: 100,
-                color: PdfColors.grey300,
-                child: pw.Center(child: pw.Text("Body Diagram Placeholder")),
-              ),
-              pw.SizedBox(height: 10),
-
-              pw.Text("Glucose vs. Carbohydrates",
-                  style: pw.TextStyle(
-                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
-              pw.Container(
-                height: 100,
-                color: PdfColors.grey300,
-                child: pw.Center(child: pw.Text("Scatter Plot Placeholder")),
-              ),
             ],
           );
         },
       ),
     );
-
-    pdf.addPage(pw.Page(
-        pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.all(32),
-        build: (pw.Context context) {
-          return pw.Column(children: []);
-        }));
-
-    if (Platform.isAndroid) {
-      var status = await Permission.storage.request();
-      if (!status.isGranted) {
-        throw Exception('Permiso de almacenamiento denegado');
-      }
-    }
 
     final output = await getApplicationDocumentsDirectory();
     final file = File("${output.path}/$fileName.pdf");
@@ -230,6 +524,15 @@ class _ReportFormPageState extends State<ReportFormPage> {
       ExerciceLogDAOFB dao4 = ExerciceLogDAOFB();
       exerciceLogs =
           await dao4.getCustomDateRangeLogs(formatedInitDate, formatedEndDate);
+      UserDAOFB dao5 = UserDAOFB();
+      List<UserModel> users =
+          await dao5.getById(AuthServiceManager.getCurrentUserUID());
+      if (!users.isEmpty) {
+        userName = users.first.fullName!;
+        weight = users.first.weight.toString();
+        height = users.first.height.toString();
+        typoOfDiabetes = users.first.typeOfDiabetes.toString();
+      }
     } else {
       GlucoseLogDAO dao = GlucoseLogDAO();
       glucoseLogs =
@@ -243,6 +546,14 @@ class _ReportFormPageState extends State<ReportFormPage> {
       ExerciceLogDAO dao4 = ExerciceLogDAO();
       exerciceLogs =
           await dao4.getCustomDateRangeLogs(formatedInitDate, formatedEndDate);
+      UserDAO dao5 = UserDAO();
+      List<UserModel> users = await dao5.getAll();
+      if (!users.isEmpty) {
+        userName = users.first.fullName!;
+        weight = users.first.weight.toString();
+        height = users.first.height.toString();
+        typoOfDiabetes = users.first.typeOfDiabetes.toString();
+      }
     }
     print(_rangoSeleccionado);
     _rangoSeleccionado == 'Periodo personalizado'
@@ -254,12 +565,90 @@ class _ReportFormPageState extends State<ReportFormPage> {
     print(dietLogs);
     print(exerciceLogs);
 
-    for (GlucoseLogModel log in glucoseLogs) {
-      avgGlucose += log.glucoseValue;
+    if (glucoseLogs.isNotEmpty) {
+      minGlucose = glucoseLogs.first.glucoseValue;
+      for (GlucoseLogModel log in glucoseLogs) {
+        avgGlucose += log.glucoseValue;
+        if (log.hyperglucemia) {
+          numHyperglucemias += 1;
+        }
+        if (log.hypoglucemia) {
+          numHypoglucemias += 1;
+        }
+        if (log.category == "Elevado") {
+          numHigh += 1;
+        }
+        if (log.category == "Bajo") {
+          numLow += 1;
+        }
+        if (log.category == "Normal") {
+          numNormal += 1;
+        }
+        if (maxGlucose < log.glucoseValue) {
+          maxGlucose = log.glucoseValue;
+        }
+        if (minGlucose > log.glucoseValue) {
+          minGlucose = log.glucoseValue;
+        }
+      }
+      avgGlucose = avgGlucose / glucoseLogs.length;
     }
-    avgGlucose = avgGlucose / glucoseLogs.length;
+    if (insulinLogs.isNotEmpty) {
+      Map<String, double> mapTotalInsulin = {};
+      int numDays = 0;
 
-    await createPDF("nuevo_estilo2");
+      for (InsulinLogModel log in insulinLogs) {
+        numInjections += 1;
+        insulinUnitsConsumed += log.fastActingInsulinConsumed.toDouble();
+
+        if (!mapTotalInsulin.containsKey(log.date)) {
+          mapTotalInsulin[log.date] = log.fastActingInsulinConsumed;
+          numDays += 1;
+        }
+
+        switch (log.location) {
+          case "Brazo izq.":
+            locationsCount[0] += 1;
+          case "Brazo der.":
+            locationsCount[1] += 1;
+          case "Gluteo izq.":
+            locationsCount[2] += 1;
+          case "Gluteo der.":
+            locationsCount[3] += 1;
+          case "Muslo izq.":
+            locationsCount[4] += 1;
+          case "Muslo der.":
+            locationsCount[5] += 1;
+          case "Barriga":
+            locationsCount[6] += 1;
+          default:
+        }
+      }
+      avgDailyInsulinUnits = insulinUnitsConsumed / numDays;
+    }
+    if (exerciceLogs.isNotEmpty) {
+      for (ExerciceLogModel log in exerciceLogs) {
+        physicalActivity += log.duration;
+      }
+    }
+
+    if (dietLogs.isNotEmpty) {
+      Map<String, double> mapTotalCarbs = {};
+      int numDays = 0;
+      double totalCarbs = 0;
+
+      for (DietLogModel log in dietLogs) {
+        totalCarbs += log.totalCarbs.toDouble();
+
+        if (!mapTotalCarbs.containsKey(log.date)) {
+          mapTotalCarbs[log.date] = log.totalCarbs.toDouble();
+          numDays += 1;
+        }
+      }
+      avgDailyCarbs = totalCarbs / numDays;
+    }
+
+    await createPDF("PDF2");
   }
 
   @override
