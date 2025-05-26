@@ -9,7 +9,7 @@ class ConfigurationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UpperNavBar(pageName: "Configuration"),
+      appBar: UpperNavBar(pageName: "Configuración"),
       body: DrawerScaffold(
           child:
               BackgroundBase(child: Center(child: ConfigurationPageWidget()))),

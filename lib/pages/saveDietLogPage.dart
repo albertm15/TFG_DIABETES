@@ -128,7 +128,7 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
     return DrawerScaffold(
       child: BackgroundBase(
         child: Scaffold(
-          appBar: UpperNavBar(pageName: "Añadir carbohidratos"),
+          appBar: UpperNavBar(pageName: "Añadir registro de comida"),
           body: BackgroundBase(
             child: ScreenMargins(
               child: Center(

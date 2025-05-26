@@ -46,7 +46,7 @@ class _CreateFoodState extends State<CreateFood> {
     return DrawerScaffold(
       child: BackgroundBase(
         child: Scaffold(
-          appBar: UpperNavBar(pageName: "Crear aliemnto"),
+          appBar: UpperNavBar(pageName: "Crear alimento"),
           body: GestureDetector(
             onTap: () {
               FocusScope.of(context).unfocus();

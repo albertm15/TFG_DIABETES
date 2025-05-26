@@ -67,6 +67,13 @@ class _ReportFormPageState extends State<ReportFormPage> {
     'Periodo personalizado'
   ];
 
+  String generatePdfName() {
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd_HHmmss');
+    final formatted = formatter.format(now);
+    return 'PDF_$formatted.pdf';
+  }
+
   Future<File> createPDF(String fileName) async {
     final Uint8List imageBytes = await rootBundle
         .load('assets/images/Diet_Image.png')
@@ -98,7 +105,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
             padding: const pw.EdgeInsets.all(4),
             child: pw.Text(col1,
                 style:
-                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 15)),
+                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 13)),
           ),
 
           /// col2 con línea derecha
@@ -109,7 +116,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
               ),
             ),
             padding: const pw.EdgeInsets.all(4),
-            child: pw.Text(col2, style: pw.TextStyle(fontSize: 15)),
+            child: pw.Text(col2, style: pw.TextStyle(fontSize: 13)),
           ),
 
           /// col3
@@ -117,13 +124,13 @@ class _ReportFormPageState extends State<ReportFormPage> {
             padding: const pw.EdgeInsets.all(4),
             child: pw.Text(col3,
                 style:
-                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 15)),
+                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 13)),
           ),
 
           /// col4
           pw.Padding(
             padding: const pw.EdgeInsets.all(4),
-            child: pw.Text(col4, style: pw.TextStyle(fontSize: 15)),
+            child: pw.Text(col4, style: pw.TextStyle(fontSize: 13)),
           ),
         ],
       );
@@ -141,7 +148,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Diabetes Report",
+                  pw.Text("Reporte de diabetes",
                       style: pw.TextStyle(
                           fontSize: 26, fontWeight: pw.FontWeight.bold)),
                   pw.Image(
@@ -159,20 +166,20 @@ class _ReportFormPageState extends State<ReportFormPage> {
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text("Patient: $userName",
+                  pw.Text("Paciente: $userName",
                       style: pw.TextStyle(fontSize: 15)),
-                  pw.Text("Type of diabetes: $typoOfDiabetes",
+                  pw.Text("Tipo de diabetes: $typoOfDiabetes",
                       style: pw.TextStyle(fontSize: 15)),
-                  pw.Text("Weight: $weight Kg",
+                  pw.Text("Peso: $weight Kg",
                       style: pw.TextStyle(fontSize: 15)),
-                  pw.Text("Height: $height cm",
+                  pw.Text("Altura: $height cm",
                       style: pw.TextStyle(fontSize: 15)),
                 ],
               ),
               pw.Divider(),
 
               // Summary
-              pw.Text("Summary",
+              pw.Text("Resumen",
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 8),
@@ -188,30 +195,30 @@ class _ReportFormPageState extends State<ReportFormPage> {
                 ),
                 children: [
                   _tableRow(
-                      "Average Glucose",
+                      "Glucose media",
                       "${avgGlucose.toStringAsFixed(2)} mg/dL",
-                      "Minimum Glucose",
+                      "Glucose minima",
                       "${minGlucose} mg/dL"),
-                  _tableRow("Maximum Glucose", "${maxGlucose} mg/dL",
-                      "Physical activity", "${physicalActivity} mins."),
+                  _tableRow("Glucose maxima", "${maxGlucose} mg/dL",
+                      "Actividad física", "${physicalActivity} mins."),
                   _tableRow(
-                      "Total Insulin units",
+                      "Insulina total consumida",
                       "${insulinUnitsConsumed.toStringAsFixed(2)} U.",
-                      "Numeber of injections",
+                      "Numero de inyecciones",
                       "${numInjections}"),
-                  _tableRow("Hypoglycemias", "${numHypoglucemias}",
-                      "Hyperglycemias", "${numHyperglucemias}"),
+                  _tableRow("Hipoglucemias", "${numHypoglucemias}",
+                      "Hiperglucemias", "${numHyperglucemias}"),
                   _tableRow(
-                      "Average daily carbs",
+                      "Carbohidratos medios diarios",
                       "${avgDailyCarbs.toStringAsFixed(2)}",
-                      "Average daily insulin units",
+                      "Insulina media diarios",
                       "${avgDailyInsulinUnits.toStringAsFixed(2)}"),
                 ],
               ),
               pw.SizedBox(height: 20),
 
               // Placeholder para gráficos
-              pw.Text("Glucose category",
+              pw.Text("Categoria de glucosa",
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 10),
@@ -648,13 +655,13 @@ class _ReportFormPageState extends State<ReportFormPage> {
       avgDailyCarbs = totalCarbs / numDays;
     }
 
-    await createPDF("PDF2");
+    await createPDF(generatePdfName());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UpperNavBar(pageName: "Añadir registro de glucosa"),
+      appBar: UpperNavBar(pageName: "Generar reporte"),
       body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();

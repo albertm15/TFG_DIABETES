@@ -14,7 +14,7 @@ class ReportsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UpperNavBar(pageName: "Reports"),
+      appBar: UpperNavBar(pageName: "Reportes"),
       body: DrawerScaffold(
           child: BackgroundBase(child: Center(child: _ReportsPageWidget()))),
       bottomNavigationBar: LowerNavBar(selectedSection: ""),
@@ -121,7 +121,9 @@ class _ReportsPageWidgetState extends State<_ReportsPageWidget> {
             padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
           ),
         ),
-        SizedBox(height: 8),
+        SizedBox(
+            height:
+                8), /*
         ElevatedButton(
           onPressed: () {
             Navigator.pushReplacement(
@@ -142,7 +144,7 @@ class _ReportsPageWidgetState extends State<_ReportsPageWidget> {
             ),
             padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
           ),
-        ),
+        ),*/
       ],
     ));
   }

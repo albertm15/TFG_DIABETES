@@ -29,7 +29,7 @@ class _InsulinMainPageState extends State<InsulinMainPage> {
     return DrawerScaffold(
         child: BackgroundBase(
             child: Scaffold(
-      appBar: UpperNavBar(pageName: "Insulin"),
+      appBar: UpperNavBar(pageName: "Insulina"),
       body: BackgroundBase(child: Center(child: InsulinMainPageWidget())),
       bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,

@@ -24,7 +24,7 @@ class _GlucoseMainPageState extends State<GlucoseMainPage> {
     return DrawerScaffold(
         child: BackgroundBase(
             child: Scaffold(
-      appBar: UpperNavBar(pageName: "Glucose"),
+      appBar: UpperNavBar(pageName: "Glucosa"),
       body: BackgroundBase(child: Center(child: GlucoseMainPageWidget())),
       bottomNavigationBar: LowerNavBar(selectedSection: "glucose"),
       backgroundColor: Colors.transparent,

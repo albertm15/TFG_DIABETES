@@ -21,7 +21,7 @@ class ExerciceAndHealthMainPage extends StatelessWidget {
     return DrawerScaffold(
         child: BackgroundBase(
             child: Scaffold(
-      appBar: UpperNavBar(pageName: "Exercice & Health"),
+      appBar: UpperNavBar(pageName: "Ejercicio y Salud"),
       body: BackgroundBase(
           child: Center(child: _ExerciceAndHealthMainPageWidget())),
       bottomNavigationBar: LowerNavBar(selectedSection: "exercice"),

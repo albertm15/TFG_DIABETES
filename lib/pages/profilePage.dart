@@ -19,7 +19,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UpperNavBar(pageName: "Profile"),
+      appBar: UpperNavBar(pageName: "Perfil"),
       body: DrawerScaffold(
           child: BackgroundBase(child: Center(child: ProfilePageWidget()))),
       bottomNavigationBar: LowerNavBar(selectedSection: ""),

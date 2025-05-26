@@ -18,10 +18,10 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
   //actualizar cada vez que se añada una nueva pantalla, añadirla tambien aqui:)
   void goBack(BuildContext context) {
     switch (pageName) {
-      case "Glucose" ||
-            "Insulin" ||
-            "Diet" ||
-            "Exercice & Health" ||
+      case "Glucosa" ||
+            "Insulina" ||
+            "Dieta" ||
+            "Ejercicio y Salud" ||
             "Todos los registros":
         Navigator.pushReplacement(
             context,
@@ -57,7 +57,7 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context) => BackgroundBase(child: DietMainPage())));
         break;
 
-      case "Calendar" ||
+      case "Calendario" ||
             "Añadir recordatorio" ||
             "Añadir registro de ejercicio":
         Navigator.pushReplacement(
@@ -80,6 +80,33 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
           Navigator.pop(context, 0);
         }
         break;
+    }
+  }
+
+  double getSize() {
+    switch (pageName) {
+      case "Conversor de comida" ||
+            "Recordatorios del día" ||
+            "Añadir carbohidratos" ||
+            "Añadir recordatorio" ||
+            "Detalles de ejercicio" ||
+            "Detalles de glucosa" ||
+            "Detalles de insulina" ||
+            "Detalles de comida":
+        return 25;
+      case "Añadir registro de glucosa" ||
+            "Seleccionar tipo de registro" ||
+            "Añadir registro de ejercicio" ||
+            "Añadir registro de comida" ||
+            "Detalles de recordatorio":
+        return 20;
+      case "Añadir Insulina" ||
+            "Añadir Inyección" ||
+            "Horario Insulina" ||
+            "Ejercicio y Salud":
+        return 30;
+      default:
+        return 35;
     }
   }
 
@@ -111,7 +138,7 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 35,
+                  fontSize: getSize(),
                 ),
               )),
               leading: Container(),
