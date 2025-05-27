@@ -20,7 +20,8 @@ class ExerciseLogForm extends StatefulWidget {
   State<ExerciseLogForm> createState() => _ExerciseLogFormState();
 }
 
-class _ExerciseLogFormState extends State<ExerciseLogForm> {
+class _ExerciseLogFormState extends State<ExerciseLogForm>
+    with WidgetsBindingObserver {
   final TextEditingController beforeController = TextEditingController();
   final TextEditingController afterController = TextEditingController();
   final TextEditingController duration = TextEditingController();
@@ -117,6 +118,28 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
     super.initState();
     if (widget.initialId != "") {
       loadData();
+    }
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
     }
   }
 
@@ -235,13 +258,43 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
                   // Botón añadir
                   ElevatedButton(
                     onPressed: () {
-                      saveData();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DrawerScaffold(
-                                  child: BackgroundBase(
-                                      child: ExerciceAndHealthMainPage()))));
+                      if (duration.text == "") {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Valor de duración vacio',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                              "Introduzca un valor en la duración del ejercicio realizado.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        saveData();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DrawerScaffold(
+                                    child: BackgroundBase(
+                                        child: ExerciceAndHealthMainPage()))));
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 85, 42, 196),
@@ -287,7 +340,8 @@ class _ExerciseLogFormState extends State<ExerciseLogForm> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(selectedSection: "exercice"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "exercice"),
       backgroundColor: Colors.transparent,
     );
   }

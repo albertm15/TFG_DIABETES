@@ -22,7 +22,8 @@ class ModifyInsulinSchedule extends StatefulWidget {
   _ModifyInsulinScheduleState createState() => _ModifyInsulinScheduleState();
 }
 
-class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
+class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule>
+    with WidgetsBindingObserver {
   String firstInjectionSchedule = "";
   String secondInjectionSchedule = "";
   List<InsulinModel> log = [];
@@ -112,6 +113,28 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
 
     _secondInjectionScheduleMinuteController.text =
         widget.secondInjectionSchedule.split(":")[1];
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
   }
 
   void setNewNotifications() async {
@@ -528,7 +551,8 @@ class _ModifyInsulinScheduleState extends State<ModifyInsulinSchedule> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,
     );
   }

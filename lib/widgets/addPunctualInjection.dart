@@ -13,7 +13,7 @@ class AddPunctualInjection extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => DrawerScaffold(
                           child: BackgroundBase(
-                        child: PunctualInjectionFormPage(""),
+                        child: PunctualInjectionFormPage(initialId: ""),
                       ))));
         },
         child: Container(

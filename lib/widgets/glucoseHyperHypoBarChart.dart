@@ -18,13 +18,13 @@ class GlucoseHyperHypoBarChart extends StatelessWidget {
           child: PieChart(
             PieChartData(
               sectionsSpace: 2,
-              centerSpaceRadius: 30,
+              centerSpaceRadius: 25,
               sections: [
                 PieChartSectionData(
                   value: hyperCount.toDouble(),
                   color: Colors.black,
                   title: "${hyperCount}",
-                  radius: 45,
+                  radius: 40,
                   titleStyle: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
@@ -32,7 +32,7 @@ class GlucoseHyperHypoBarChart extends StatelessWidget {
                   value: hypoCount.toDouble(),
                   color: Color(0xFF3C37FF),
                   title: "${hypoCount}",
-                  radius: 45,
+                  radius: 40,
                   titleStyle: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),

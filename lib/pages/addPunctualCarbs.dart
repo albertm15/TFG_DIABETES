@@ -9,7 +9,8 @@ class AddPunctualCarbs extends StatefulWidget {
   _AddPunctualCarbsState createState() => _AddPunctualCarbsState();
 }
 
-class _AddPunctualCarbsState extends State<AddPunctualCarbs> {
+class _AddPunctualCarbsState extends State<AddPunctualCarbs>
+    with WidgetsBindingObserver {
   TextEditingController carbsController = TextEditingController();
   double insulinUnits = 0;
 
@@ -21,9 +22,31 @@ class _AddPunctualCarbsState extends State<AddPunctualCarbs> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     carbsController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
   }
 
   @override
@@ -125,7 +148,8 @@ class _AddPunctualCarbsState extends State<AddPunctualCarbs> {
                   ),
                 ),
               )),
-          bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
+          bottomNavigationBar:
+              _isKeyboardVisible ? null : LowerNavBar(selectedSection: "diet"),
           backgroundColor: Colors.transparent,
         ),
       ),

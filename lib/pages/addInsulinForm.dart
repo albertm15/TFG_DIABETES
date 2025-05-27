@@ -15,7 +15,8 @@ class AddInsulinFormPage extends StatefulWidget {
   _AddInsulinFormPageState createState() => _AddInsulinFormPageState();
 }
 
-class _AddInsulinFormPageState extends State<AddInsulinFormPage> {
+class _AddInsulinFormPageState extends State<AddInsulinFormPage>
+    with WidgetsBindingObserver {
   double fastActingInsulin = 0;
   double slowActingInsulin = 0;
   List<InsulinModel> log = [];
@@ -54,6 +55,33 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage> {
       }
     }
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
   }
 
   @override
@@ -209,7 +237,8 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,
     );
   }

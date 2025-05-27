@@ -58,7 +58,7 @@ class MinimizedReminderListHorizontal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Recordatorios de la semana",
+                "Recordatorios activos",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               IconButton(
@@ -140,7 +140,9 @@ class MinimizedReminderListHorizontal extends StatelessWidget {
                             Text(reminder.time,
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.white)),
-                            Text(formatDay(reminder.date),
+                            Text(
+                                //formatDay(reminder.date),
+                                reminder.date,
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: const Color.fromARGB(

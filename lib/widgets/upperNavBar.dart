@@ -93,18 +93,23 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
             "Detalles de glucosa" ||
             "Detalles de insulina" ||
             "Detalles de comida":
-        return 25;
+        return 22;
       case "Añadir registro de glucosa" ||
             "Seleccionar tipo de registro" ||
-            "Añadir registro de ejercicio" ||
             "Añadir registro de comida" ||
             "Detalles de recordatorio":
-        return 20;
+        return 18;
+      case "Añadir registro de ejercicio":
+        return 17;
       case "Añadir Insulina" ||
             "Añadir Inyección" ||
             "Horario Insulina" ||
-            "Ejercicio y Salud":
-        return 30;
+            "Ejercicio y Salud" ||
+            "Generar reporte" ||
+            "Configuración" ||
+            "Todos los registros" ||
+            "Crear alimento":
+        return 28;
       default:
         return 35;
     }

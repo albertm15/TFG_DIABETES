@@ -17,16 +17,18 @@ import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
 class PunctualInjectionFormPage extends StatefulWidget {
-  String initialId;
-  double initialUnits = 0;
-  PunctualInjectionFormPage.withInitialUnits(this.initialUnits, this.initialId);
-  PunctualInjectionFormPage(this.initialId);
+  final String initialId;
+  final double initialUnits;
+  const PunctualInjectionFormPage.withInitialUnits(
+      {required this.initialUnits, required this.initialId});
+  const PunctualInjectionFormPage({required this.initialId}) : initialUnits = 0;
   @override
   _PunctualInjectionFormPageState createState() =>
       _PunctualInjectionFormPageState();
 }
 
-class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
+class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage>
+    with WidgetsBindingObserver {
   TextEditingController _insulinUnitsController = TextEditingController();
   int selectedIndex = 0;
   double fastInsulin = 0;
@@ -209,11 +211,40 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
     }
   }
 
+  /*@override
+  void initState() {
+    super.initState();
+    _insulinUnitsController.text = widget.initialUnits.toString();
+    loadData();
+  }*/
   @override
   void initState() {
     super.initState();
     _insulinUnitsController.text = widget.initialUnits.toString();
     loadData();
+    //
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
   }
 
   @override
@@ -463,7 +494,8 @@ class _PunctualInjectionFormPageState extends State<PunctualInjectionFormPage> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(selectedSection: "insulin"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "insulin"),
       backgroundColor: Colors.transparent,
     );
   }

@@ -44,7 +44,7 @@ class _ExerciceAndHealthMainPageWidgetState
   void loadData() async {
     if (AuthServiceManager.checkIfLogged()) {
       ReminderDAOFB dao = ReminderDAOFB();
-      reminderList = await dao.getLast7DaysLogs();
+      reminderList = await dao.getActiveReminders();
       ExerciceLogDAOFB dao2 = ExerciceLogDAOFB();
       exLogs = await dao2.getLast7DaysLogs();
     } else {

@@ -16,7 +16,8 @@ class ModifyDietSchedule extends StatefulWidget {
   _ModifyDietScheduleState createState() => _ModifyDietScheduleState();
 }
 
-class _ModifyDietScheduleState extends State<ModifyDietSchedule> {
+class _ModifyDietScheduleState extends State<ModifyDietSchedule>
+    with WidgetsBindingObserver {
   List<DietModel> log = [];
   String breakfastSchedule = "";
   String snackSchedule = "";
@@ -202,12 +203,6 @@ class _ModifyDietScheduleState extends State<ModifyDietSchedule> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    loadData();
-  }
-
   void setNewNotifications() async {
     await InsulinNotifications.cancelDietNotifications();
     await InsulinNotifications.scheduleDietNotification(
@@ -230,6 +225,34 @@ class _ModifyDietScheduleState extends State<ModifyDietSchedule> {
         int.parse(_dinnerScheduleHourController.text),
         int.parse(_dinnerScheduleMinuteController.text),
         "de la cena");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadData();
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
   }
 
   @override
@@ -1180,7 +1203,8 @@ class _ModifyDietScheduleState extends State<ModifyDietSchedule> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "diet"),
       backgroundColor: Colors.transparent,
     );
   }

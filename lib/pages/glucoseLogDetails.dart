@@ -86,6 +86,7 @@ class _GlucoseLogDetailsWidgetState extends State<_GlucoseLogDetailsWidget> {
   Widget build(BuildContext context) {
     return ScreenMargins(
         child: Center(
+            child: SingleChildScrollView(
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -285,6 +286,6 @@ class _GlucoseLogDetailsWidgetState extends State<_GlucoseLogDetailsWidget> {
               ),
             )
           ]),
-    ));
+    )));
   }
 }

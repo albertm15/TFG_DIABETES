@@ -108,4 +108,42 @@ class ReminderDAO {
 
     return logs;
   }
+
+  //getAllSinceTodayWithoutRepeat
+  Future<List<ReminderModel>> getAllSinceTodayWithoutRepeat() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('Reminders',
+        orderBy: 'time DESC',
+        where: "date >= ? and repeat = ?",
+        whereArgs: [DateFormat("yyyy-MM-dd").format(DateTime.now()), false]);
+
+    List<ReminderModel> logs = [];
+    for (Map<String, dynamic> log in data) {
+      logs.add(ReminderModel.fromMap(log));
+    }
+
+    return logs;
+  }
+
+  //getAllRepeat
+  Future<List<ReminderModel>> getAllRepeat() async {
+    final db = await insatnceDB.db;
+    List<Map<String, dynamic>> data = await db.query('Reminders',
+        orderBy: 'time DESC', where: "repeat = ?", whereArgs: [true]);
+
+    List<ReminderModel> logs = [];
+    for (Map<String, dynamic> log in data) {
+      logs.add(ReminderModel.fromMap(log));
+    }
+
+    return logs;
+  }
+
+  Future<List<ReminderModel>> getActiveReminders() async {
+    List<ReminderModel> allReminders = await getAllSinceTodayWithoutRepeat();
+    allReminders.addAll(await getAllRepeat());
+
+    allReminders.sort((a, b) => -a.date.compareTo(b.date));
+    return allReminders;
+  }
 }

@@ -134,7 +134,7 @@ class __InsulinLogDetailsWidgetState extends State<_InsulinLogDetailsWidget> {
                           MaterialPageRoute(
                               builder: (context) => BackgroundBase(
                                   child: PunctualInjectionFormPage(
-                                      insulinLog[0].id))));
+                                      initialId: insulinLog[0].id))));
                     },
                   ),
                 ],

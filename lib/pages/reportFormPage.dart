@@ -32,7 +32,8 @@ class ReportFormPage extends StatefulWidget {
   _ReportFormPageState createState() => _ReportFormPageState();
 }
 
-class _ReportFormPageState extends State<ReportFormPage> {
+class _ReportFormPageState extends State<ReportFormPage>
+    with WidgetsBindingObserver {
   String _rangoSeleccionado = '1 semana';
   DateTime _fechaInicio = DateTime.now();
   DateTime _fechaFin = DateTime.now();
@@ -659,6 +660,33 @@ class _ReportFormPageState extends State<ReportFormPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: UpperNavBar(pageName: "Generar reporte"),
@@ -851,7 +879,8 @@ class _ReportFormPageState extends State<ReportFormPage> {
               ],
             ),
           )),
-      bottomNavigationBar: LowerNavBar(selectedSection: "glucose"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "glucose"),
       backgroundColor: Colors.transparent,
     );
   }

@@ -22,13 +22,13 @@ class GlucoseCategoryRoundChartAdaptableSize extends StatelessWidget {
           child: PieChart(
             PieChartData(
               sectionsSpace: 2,
-              centerSpaceRadius: 30,
+              centerSpaceRadius: 25,
               sections: [
                 PieChartSectionData(
                   value: high.toDouble(),
                   color: Colors.black,
                   title: '${((high / total) * 100).toStringAsFixed(0)}%',
-                  radius: 45,
+                  radius: 40,
                   titleStyle: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
@@ -36,7 +36,7 @@ class GlucoseCategoryRoundChartAdaptableSize extends StatelessWidget {
                   value: normal.toDouble(),
                   color: Color.fromARGB(255, 85, 42, 196),
                   title: '${((normal / total) * 100).toStringAsFixed(0)}%',
-                  radius: 45,
+                  radius: 40,
                   titleStyle: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
@@ -44,7 +44,7 @@ class GlucoseCategoryRoundChartAdaptableSize extends StatelessWidget {
                   value: low.toDouble(),
                   color: Color(0xFF3C37FF),
                   title: '${((low / total) * 100).toStringAsFixed(0)}%',
-                  radius: 45,
+                  radius: 40,
                   titleStyle: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),

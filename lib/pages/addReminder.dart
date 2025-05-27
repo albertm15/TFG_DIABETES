@@ -19,7 +19,7 @@ class AddReminder extends StatefulWidget {
   _AddReminderState createState() => _AddReminderState();
 }
 
-class _AddReminderState extends State<AddReminder> {
+class _AddReminderState extends State<AddReminder> with WidgetsBindingObserver {
   DateTime selectedDate = DateTime.now();
   TextEditingController titleController = TextEditingController();
   TextEditingController customDaysController = TextEditingController();
@@ -166,6 +166,28 @@ class _AddReminderState extends State<AddReminder> {
     super.initState();
     if (widget.initialId != "") {
       loadData();
+    }
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
     }
   }
 
@@ -398,26 +420,75 @@ class _AddReminderState extends State<AddReminder> {
                   // Botón Confirmar
                   ElevatedButton(
                     onPressed: () {
-                      String titulo = titleController.text;
-                      int? customDays = repeatFrequency == 'Personalizado'
-                          ? int.tryParse(customDaysController.text)
-                          : null;
-
-                      // Validación personalizada
-                      if (repeatFrequency == 'Personalizado' &&
-                          (customDays == null || customDays <= 0)) {
+                      if (titleController.text == "") {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
                             backgroundColor: Color.fromARGB(255, 232, 80, 69),
                             title: Text(
-                              'Numero de dias vacio',
+                              'Titulo vacio',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                             content: Text(
-                              "Introduzca un valor valido en el numero de dias a repetir el recordatorio.",
+                              "Introduzca un valor en el titulo del recordatorio a crear.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (hourController.text == "") {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Hora vacia',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                              "Introduzca un valor en la hora del recordatorio a crear.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (minuteController.text == "") {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Minutos vacios',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                              "Introduzca un valor en los minutos del recordatorio a crear.",
                               style:
                                   TextStyle(color: Colors.black, fontSize: 16),
                             ),
@@ -434,23 +505,60 @@ class _AddReminderState extends State<AddReminder> {
                           ),
                         );
                       } else {
-                        print("Título: $titulo");
-                        print("Fecha: ${selectedDate.toString()}");
-                        print("Hora: ${getTime()}");
-                        print("Repetir: $repeat -> $repeatFrequency");
-                        if (repeatFrequency == 'Personalizado') {
-                          print("Días personalizados: $customDays");
+                        String titulo = titleController.text;
+                        int? customDays = repeatFrequency == 'Personalizado'
+                            ? int.tryParse(customDaysController.text)
+                            : null;
+
+                        // Validación personalizada
+                        if (repeatFrequency == 'Personalizado' &&
+                            (customDays == null || customDays <= 0)) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                              title: Text(
+                                'Numero de dias vacio',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              content: Text(
+                                "Introduzca un valor valido en el numero de dias a repetir el recordatorio.",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          print("Título: $titulo");
+                          print("Fecha: ${selectedDate.toString()}");
+                          print("Hora: ${getTime()}");
+                          print("Repetir: $repeat -> $repeatFrequency");
+                          if (repeatFrequency == 'Personalizado') {
+                            print("Días personalizados: $customDays");
+                          }
+                          setState(() {
+                            saveLog();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DrawerScaffold(
+                                        child: BackgroundBase(
+                                            child:
+                                                ExerciceAndHealthMainPage()))));
+                          });
                         }
-                        setState(() {
-                          saveLog();
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DrawerScaffold(
-                                      child: BackgroundBase(
-                                          child:
-                                              ExerciceAndHealthMainPage()))));
-                        });
                       }
                     },
                     child: Text("Confirmar", style: TextStyle(fontSize: 18)),
@@ -496,7 +604,8 @@ class _AddReminderState extends State<AddReminder> {
           ),
         ),
       ),
-      bottomNavigationBar: LowerNavBar(selectedSection: "exercice"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "exercice"),
       backgroundColor: Colors.transparent,
     );
   }

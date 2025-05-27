@@ -27,7 +27,7 @@ class ReminderListTile extends StatelessWidget {
             ),
           ],
         ),
-        title: Row(
+        title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(

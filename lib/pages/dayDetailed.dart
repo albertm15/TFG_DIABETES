@@ -75,7 +75,7 @@ class _DayDetailsPageState extends State<DayDetails> {
                           })),
                   Text(
                     '$dayName, $formattedDate',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                       icon: Icon(

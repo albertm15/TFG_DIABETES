@@ -255,7 +255,9 @@ class _SaveDietLogPageState extends State<SaveDietLogPage> {
                                         child: BackgroundBase(
                                             child: PunctualInjectionFormPage
                                                 .withInitialUnits(
-                                                    widget.totalUnits, "")))));
+                                                    initialUnits:
+                                                        widget.totalUnits,
+                                                    initialId: "")))));
                           } else {
                             Navigator.pushReplacement(
                                 context,

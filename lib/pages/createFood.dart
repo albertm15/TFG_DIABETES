@@ -13,7 +13,7 @@ class CreateFood extends StatefulWidget {
   _CreateFoodState createState() => _CreateFoodState();
 }
 
-class _CreateFoodState extends State<CreateFood> {
+class _CreateFoodState extends State<CreateFood> with WidgetsBindingObserver {
   TextEditingController nameController = TextEditingController();
   TextEditingController carbsController = TextEditingController();
 
@@ -36,9 +36,31 @@ class _CreateFoodState extends State<CreateFood> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     carbsController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
   }
 
   @override
@@ -102,10 +124,68 @@ class _CreateFoodState extends State<CreateFood> {
                     SizedBox(height: 50),
                     ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          saveData();
-                          Navigator.pop(context);
-                        });
+                        if (nameController.text == "") {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                              title: Text(
+                                'Nombre vacio',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              content: Text(
+                                "Introduzca un valor en el nombre del alimento a crear.",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else if (carbsController.text == "") {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                              title: Text(
+                                'Valor de carbohidratos vacio',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              content: Text(
+                                "Introduzca un valor en el campo de cantidad de carbohidratos por cada 100 gramos del alimento.",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          setState(() {
+                            saveData();
+                            Navigator.pop(context);
+                          });
+                        }
                       },
                       child: Text("Añadir"),
                       style: ElevatedButton.styleFrom(
@@ -123,7 +203,8 @@ class _CreateFoodState extends State<CreateFood> {
               ),
             ),
           ),
-          bottomNavigationBar: LowerNavBar(selectedSection: "diet"),
+          bottomNavigationBar:
+              _isKeyboardVisible ? null : LowerNavBar(selectedSection: "diet"),
           backgroundColor: Colors.transparent,
         ),
       ),

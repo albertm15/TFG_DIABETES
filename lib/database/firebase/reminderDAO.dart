@@ -212,4 +212,88 @@ class ReminderDAOFB {
       return List.empty();
     }
   }
+
+  //getAllSinceTodayWithoutRepeat
+  Future<List<ReminderModel>> getAllSinceTodayWithoutRepeat() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("Reminder")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo:
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .where("repeat", isEqualTo: false)
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("Reminder")
+            .where("userId", isEqualTo: uid)
+            .where("date",
+                isGreaterThanOrEqualTo:
+                    DateFormat("yyyy-MM-dd").format(DateTime.now()))
+            .where("repeat", isEqualTo: false)
+            .orderBy("date")
+            .orderBy("time")
+            .get();
+      }
+
+      List<ReminderModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(ReminderModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
+
+  //getAllRepeat
+  Future<List<ReminderModel>> getAllRepeat() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      String uid = AuthServiceManager.getCurrentUserUID();
+      QuerySnapshot snapshot;
+      final connectivity = await Connectivity().checkConnectivity();
+      if (!connectivity.contains(ConnectivityResult.wifi) &&
+          !connectivity.contains(ConnectivityResult.mobile)) {
+        snapshot = await FirebaseFirestore.instance
+            .collection("Reminder")
+            .where("userId", isEqualTo: uid)
+            .where("repeat", isEqualTo: true)
+            .orderBy("date")
+            .orderBy("time")
+            .get(GetOptions(source: Source.cache));
+      } else {
+        snapshot = await FirebaseFirestore.instance
+            .collection("Reminder")
+            .where("userId", isEqualTo: uid)
+            .where("repeat", isEqualTo: true)
+            .orderBy("date")
+            .orderBy("time")
+            .get();
+      }
+
+      List<ReminderModel> logs = [];
+      for (var doc in snapshot.docs) {
+        logs.add(ReminderModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return logs;
+    } else {
+      return List.empty();
+    }
+  }
+
+  Future<List<ReminderModel>> getActiveReminders() async {
+    List<ReminderModel> allReminders = await getAllSinceTodayWithoutRepeat();
+    allReminders.addAll(await getAllRepeat());
+
+    allReminders.sort((a, b) => -a.date.compareTo(b.date));
+    return allReminders;
+  }
 }

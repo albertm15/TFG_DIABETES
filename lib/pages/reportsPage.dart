@@ -1,4 +1,3 @@
-import 'package:diabetes_tfg_app/pages/configureAutomaticEmailSender.dart';
 import 'package:diabetes_tfg_app/pages/reportFormPage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';

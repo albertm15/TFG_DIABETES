@@ -99,7 +99,7 @@ class MinimizedLogsListHome extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Registros de la semana",
+                  "Registros del día",
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 IconButton(

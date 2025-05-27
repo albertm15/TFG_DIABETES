@@ -42,10 +42,11 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BackgroundBase(
-                                  child: GlucoseFormPage(
+                          builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
+                                      child: GlucoseFormPage(
                                 initialId: "",
-                              ))));
+                              )))));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -82,8 +83,10 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BackgroundBase(
-                              child: PunctualInjectionFormPage(""))));
+                          builder: (context) => DrawerScaffold(
+                              child: BackgroundBase(
+                                  child: PunctualInjectionFormPage(
+                                      initialId: "")))));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -124,10 +127,11 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BackgroundBase(
-                                  child: FoodConversorPage(
+                          builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
+                                      child: FoodConversorPage(
                                 initialId: "",
-                              ))));
+                              )))));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -164,10 +168,11 @@ class SelectLogTypeToRegisterWidget extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BackgroundBase(
-                                  child: ExerciseLogForm(
+                          builder: (context) => DrawerScaffold(
+                                  child: BackgroundBase(
+                                      child: ExerciseLogForm(
                                 initialId: "",
-                              ))));
+                              )))));
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

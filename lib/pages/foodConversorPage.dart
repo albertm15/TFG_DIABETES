@@ -27,7 +27,35 @@ class FoodConversorPage extends StatefulWidget {
   _FoodConversorPageState createState() => _FoodConversorPageState();
 }
 
-class _FoodConversorPageState extends State<FoodConversorPage> {
+class _FoodConversorPageState extends State<FoodConversorPage>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
+  }
+
+  bool _isKeyboardVisible = false;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0.0;
+
+    if (_isKeyboardVisible != newValue) {
+      setState(() {
+        _isKeyboardVisible = newValue;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DrawerScaffold(
@@ -38,7 +66,8 @@ class _FoodConversorPageState extends State<FoodConversorPage> {
           child: Center(
               child:
                   _FoodConversorPageStateWidget(initialId: widget.initialId))),
-      bottomNavigationBar: LowerNavBar(selectedSection: "food"),
+      bottomNavigationBar:
+          _isKeyboardVisible ? null : LowerNavBar(selectedSection: "food"),
       backgroundColor: Colors.transparent,
     )));
   }
