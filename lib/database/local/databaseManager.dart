@@ -29,7 +29,6 @@ class DatabaseManager {
         date TEXT
       );
     ''';
-  //añadir comida ya sea relacionando alimentos o lo mas probable una lista de los nombres de las comidas seleccionadas y su cantidad
 
   final String _dietTable = '''
       CREATE TABLE Diets(
@@ -138,6 +137,12 @@ class DatabaseManager {
     //await deleteDatabase(path);
 
     return openDatabase(path, version: 1, onCreate: _createDB);
+  }
+
+  static Future<void> deleteDB() async {
+    String dbPath = await getDatabasesPath();
+    String path = join(dbPath, "diabetes_tfg_app.db");
+    await deleteDatabase(path);
   }
 
   Future<void> _createDB(Database db, int version) async {

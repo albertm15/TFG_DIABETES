@@ -60,10 +60,16 @@ class AuthServiceManager {
     print("user logged out");
   }
 
-  static Future<void> deleteUser() async {
-    //pedir que se vuelva a loggear antes de borrar!
-    await FirebaseAuth.instance.currentUser!.delete();
-    //eliminar todos los datos de ese user de firebase y todos los logs!
+  static Future<void> deleteUser(String email, String password) async {
+    try {
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: email, password: password);
+      User user = FirebaseAuth.instance.currentUser!;
+      await user.reauthenticateWithCredential(credential);
+      await user.delete();
+    } catch (e) {
+      throw Exception('${e.toString()}');
+    }
   }
 
   static Future<void> updatePassword(String password) async {

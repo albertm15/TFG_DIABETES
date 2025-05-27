@@ -274,14 +274,16 @@ class InsulinNotifications {
       InsulinDAO dao = InsulinDAO();
       notifications = await dao.getAll();
     }
-    scheduleInsulinNotification(
-        int.parse(notifications[0].firstInjectionSchedule.split(":")[0]),
-        int.parse(notifications[0].firstInjectionSchedule.split(":")[1]),
-        "primera");
-    scheduleInsulinNotification(
-        int.parse(notifications[0].secondInjectionSchedule.split(":")[0]),
-        int.parse(notifications[0].secondInjectionSchedule.split(":")[1]),
-        "segunda");
+    if (notifications.isNotEmpty) {
+      scheduleInsulinNotification(
+          int.parse(notifications[0].firstInjectionSchedule.split(":")[0]),
+          int.parse(notifications[0].firstInjectionSchedule.split(":")[1]),
+          "primera");
+      scheduleInsulinNotification(
+          int.parse(notifications[0].secondInjectionSchedule.split(":")[0]),
+          int.parse(notifications[0].secondInjectionSchedule.split(":")[1]),
+          "segunda");
+    }
   }
 
   static Future<void> scheduleAllDietNotifications() async {
@@ -294,26 +296,29 @@ class InsulinNotifications {
       DietDAO dao = DietDAO();
       notifications = await dao.getAll();
     }
-    scheduleInsulinNotification(
-        int.parse(notifications[0].breakfastSchedule.split(":")[0]),
-        int.parse(notifications[0].breakfastSchedule.split(":")[1]),
-        "del desayuno");
-    scheduleInsulinNotification(
-        int.parse(notifications[0].snackSchedule.split(":")[0]),
-        int.parse(notifications[0].snackSchedule.split(":")[1]),
-        "del tente en pié");
-    scheduleInsulinNotification(
-        int.parse(notifications[0].lunchSchedule.split(":")[0]),
-        int.parse(notifications[0].lunchSchedule.split(":")[1]),
-        "de la comida");
-    scheduleInsulinNotification(
-        int.parse(notifications[0].afternoonSnackSchedule.split(":")[0]),
-        int.parse(notifications[0].afternoonSnackSchedule.split(":")[1]),
-        "de la merienda");
-    scheduleInsulinNotification(
-        int.parse(notifications[0].dinnerSchedule.split(":")[0]),
-        int.parse(notifications[0].dinnerSchedule.split(":")[1]),
-        "de la cena");
+
+    if (notifications.isNotEmpty) {
+      scheduleInsulinNotification(
+          int.parse(notifications[0].breakfastSchedule.split(":")[0]),
+          int.parse(notifications[0].breakfastSchedule.split(":")[1]),
+          "del desayuno");
+      scheduleInsulinNotification(
+          int.parse(notifications[0].snackSchedule.split(":")[0]),
+          int.parse(notifications[0].snackSchedule.split(":")[1]),
+          "del tente en pié");
+      scheduleInsulinNotification(
+          int.parse(notifications[0].lunchSchedule.split(":")[0]),
+          int.parse(notifications[0].lunchSchedule.split(":")[1]),
+          "de la comida");
+      scheduleInsulinNotification(
+          int.parse(notifications[0].afternoonSnackSchedule.split(":")[0]),
+          int.parse(notifications[0].afternoonSnackSchedule.split(":")[1]),
+          "de la merienda");
+      scheduleInsulinNotification(
+          int.parse(notifications[0].dinnerSchedule.split(":")[0]),
+          int.parse(notifications[0].dinnerSchedule.split(":")[1]),
+          "de la cena");
+    }
   }
 
   static void scheduleAll() {

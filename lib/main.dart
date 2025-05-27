@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ void main() async {
 
   //-----------------------------------------------------------------------------------------------------------------
   //--- testing DB
+  /*
   print("insert");
   GlucoseLogModel logModel = GlucoseLogModel.newEntity(
       "9ZHHlxtd9ThGLNRD8ZRhhEu0uVm1",
@@ -147,6 +149,7 @@ void main() async {
   await foodDao.insert(FoodModel.newEntity("allDB", 32, "Platanos"));
   await foodDao.insert(FoodModel.newEntity("allDB", 2, "Alcachofas"));
   */
+  */
 /*
   ExerciceLogDAOFB exerciceLogDAOFB = ExerciceLogDAOFB();
   await exerciceLogDAOFB.insert(ExerciceLogModel.newEntity(
@@ -164,10 +167,32 @@ void main() async {
 
   if (AuthServiceManager.checkIfLogged()) {
     runApp(MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('es'), // Español
+          Locale('en'), // Opcional: Inglés también
+        ],
+        locale: Locale('es'),
         home: DrawerScaffold(child: BackgroundBase(child: Homepage())),
         debugShowCheckedModeBanner: false));
   } else {
-    runApp(MaterialApp(home: Welcomepage(), debugShowCheckedModeBanner: false));
+    runApp(MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('es'), // Español
+          Locale('en'), // Opcional: Inglés también
+        ],
+        locale: Locale('es'),
+        home: Welcomepage(),
+        debugShowCheckedModeBanner: false));
   }
 }
 
