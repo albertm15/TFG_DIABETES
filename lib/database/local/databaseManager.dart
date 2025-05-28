@@ -108,7 +108,8 @@ class DatabaseManager {
         typeOfDiabetes INTEGER,
         fullName TEXT,
         sex TEXT,
-        country TEXT
+        country TEXT,
+        imagePathUrl TEXT
       );
     ''';
 
@@ -142,6 +143,12 @@ class DatabaseManager {
   static Future<void> deleteDB() async {
     String dbPath = await getDatabasesPath();
     String path = join(dbPath, "diabetes_tfg_app.db");
+
+    if (_db != null) {
+      await _db!.close();
+      _db = null;
+    }
+
     await deleteDatabase(path);
   }
 
@@ -156,5 +163,52 @@ class DatabaseManager {
     await db.execute(_reminderTable);
     await db.execute(_userTable);
     await db.execute(_dietLogFoodRelationTable);
+
+    await db.insert("Users", {
+      'id': 'localUser',
+      'email': '',
+      'passwordHash': '',
+      'height': 0,
+      'weight': 0,
+      'typeOfDiabetes': 1,
+      'fullName': '',
+      'sex': '',
+      'country': '',
+      'imagePathUrl': ''
+    });
+
+    await db.insert("Insulins", {
+      'id': 'localUser',
+      'userId': 'localUser',
+      'firstInjectionSchedule': '00:00',
+      'secondInjectionSchedule': '00:00',
+      'totalSlowActingInsulin': 0,
+      'totalFastActingInsulin': 0,
+    });
+
+    await db.insert("Foods", {
+      'id': '1',
+      'userId': 'localUser',
+      'carbsPer100': 80,
+      'name': 'Arroz',
+    });
+    await db.insert("Foods", {
+      'id': '2',
+      'userId': 'localUser',
+      'carbsPer100': 100,
+      'name': 'Carbohidratos',
+    });
+    await db.insert("Foods", {
+      'id': '3',
+      'userId': 'localUser',
+      'carbsPer100': 2,
+      'name': 'Alcachofas',
+    });
+    await db.insert("Foods", {
+      'id': '4',
+      'userId': 'localUser',
+      'carbsPer100': 32,
+      'name': 'Platanos',
+    });
   }
 }

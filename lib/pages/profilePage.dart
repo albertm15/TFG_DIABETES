@@ -1,38 +1,10 @@
 import 'dart:io';
 import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
-import 'package:diabetes_tfg_app/database/firebase/dietDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/dietLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/dietLogFoodRelationDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/exerciceLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/foodDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/reminderDAO.dart';
 import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
 import 'package:diabetes_tfg_app/database/local/databaseManager.dart';
-import 'package:diabetes_tfg_app/database/local/dietDAO.dart';
-import 'package:diabetes_tfg_app/database/local/dietLogDAO.dart';
-import 'package:diabetes_tfg_app/database/local/dietLogFoodRelationDAO.dart';
-import 'package:diabetes_tfg_app/database/local/exerciceLogDAO.dart';
-import 'package:diabetes_tfg_app/database/local/foodDAO.dart';
-import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
-import 'package:diabetes_tfg_app/database/local/insulinDAO.dart';
-import 'package:diabetes_tfg_app/database/local/insulinLogDAO.dart';
-import 'package:diabetes_tfg_app/database/local/reminderDAO.dart';
 import 'package:diabetes_tfg_app/database/local/userDAO.dart';
-import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
-import 'package:diabetes_tfg_app/models/dietLogFoodRelationModel.dart';
-import 'package:diabetes_tfg_app/models/dietLogModel.dart';
-import 'package:diabetes_tfg_app/models/dietModel.dart';
-import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
-import 'package:diabetes_tfg_app/models/foodModel.dart';
-import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
-import 'package:diabetes_tfg_app/models/insulinModel.dart';
-import 'package:diabetes_tfg_app/models/reminderModel.dart';
 import 'package:diabetes_tfg_app/models/userModel.dart';
-import 'package:diabetes_tfg_app/pages/insulinMainPage.dart';
 import 'package:diabetes_tfg_app/pages/welcomePage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
@@ -130,8 +102,10 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
     setState(() {
       nameController.text = userList[0].fullName ?? '';
       emailController.text = userList[0].email;
-      heightController.text = userList[0].height.toString();
-      weightController.text = userList[0].weight.toString();
+      heightController.text =
+          userList[0].height != null ? userList[0].height.toString() : "0";
+      weightController.text =
+          userList[0].weight != null ? userList[0].weight.toString() : "0";
       countryController.text = userList[0].country ?? '';
       typeOfDiabetes = userList[0].typeOfDiabetes ?? 1;
       gender = userList[0].sex ?? "Hombre";
@@ -320,160 +294,110 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                     },
                   );
                   if (confirm == true) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        final passwordController = TextEditingController();
+                    if (!AuthServiceManager.checkIfLogged()) {
+                      await DatabaseManager.deleteDB();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Welcomepage(),
+                          ));
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          final passwordController = TextEditingController();
 
-                        return AlertDialog(
-                          alignment: Alignment.center,
-                          title: Text(
-                            "Confirmar eliminación",
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
-                          ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text("Introduce tu contraseña para confirmar:"),
-                              TextField(
-                                controller: passwordController,
-                                obscureText: true,
+                          return AlertDialog(
+                            alignment: Alignment.center,
+                            title: Text(
+                              "Confirmar eliminación",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text("Introduce tu contraseña para confirmar:"),
+                                TextField(
+                                  controller: passwordController,
+                                  obscureText: true,
+                                ),
+                              ],
+                            ),
+                            backgroundColor: Colors.white,
+                            actionsAlignment: MainAxisAlignment.center,
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("Cancelar",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 16)),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  try {
+                                    if (AuthServiceManager.checkIfLogged()) {
+                                      final email =
+                                          AuthServiceManager.getCurrentUser()
+                                              .email!;
+                                      final password = passwordController.text;
+                                      await AuthServiceManager.deleteUser(
+                                          email, password);
+                                    } else {
+                                      await DatabaseManager.deleteDB();
+                                    }
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Welcomepage(),
+                                        ));
+                                  } catch (error) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        backgroundColor:
+                                            Color.fromARGB(255, 232, 80, 69),
+                                        title: Text(
+                                          'Algo salió mal',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        content: Text(
+                                          transformErrorMessage(
+                                              error.toString()),
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: Text(
+                                              'OK',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20),
+                                            ),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Text("Eliminar",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
                               ),
                             ],
-                          ),
-                          backgroundColor: Colors.white,
-                          actionsAlignment: MainAxisAlignment.center,
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("Cancelar",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 16)),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                try {
-                                  if (AuthServiceManager.checkIfLogged()) {
-                                    final email =
-                                        AuthServiceManager.getCurrentUser()
-                                            .email!;
-                                    final password = passwordController.text;
-                                    await AuthServiceManager.deleteUser(
-                                        email, password);
-                                    InsulinNotifications.cancelAll();
-                                    DietDAOFB dao1 = DietDAOFB();
-                                    DietLogDAOFB dao2 = DietLogDAOFB();
-                                    DietLogFoodRelationDAOFB dao3 =
-                                        DietLogFoodRelationDAOFB();
-                                    ExerciceLogDAOFB dao4 = ExerciceLogDAOFB();
-                                    FoodDAOFB dao5 = FoodDAOFB();
-                                    GlucoseLogDAOFB dao6 = GlucoseLogDAOFB();
-                                    InsulinDAOFB dao7 = InsulinDAOFB();
-                                    InsulinLogDAOFB dao8 = InsulinLogDAOFB();
-                                    ReminderDAOFB dao9 = ReminderDAOFB();
-                                    UserDAOFB dao10 = UserDAOFB();
-                                    List<DietModel> lis1 = await dao1.getAll();
-                                    List<DietLogModel> lis2 =
-                                        await dao2.getAll();
-                                    List<DietLogFoodRelationModel> lis3 =
-                                        await dao3.getAll();
-                                    List<ExerciceLogModel> lis4 =
-                                        await dao4.getAll();
-                                    List<FoodModel> lis5 =
-                                        await dao5.getAllFromUser();
-                                    List<GlucoseLogModel> lis6 =
-                                        await dao6.getAll();
-                                    List<InsulinModel> lis7 =
-                                        await dao7.getAll();
-                                    List<InsulinLogModel> lis8 =
-                                        await dao8.getAll();
-                                    List<ReminderModel> lis9 =
-                                        await dao9.getAll();
-                                    List<UserModel> lis10 =
-                                        await dao10.getAll();
-
-                                    for (DietModel log in lis1) {
-                                      await dao1.delete(log);
-                                    }
-                                    for (DietLogModel log in lis2) {
-                                      await dao2.delete(log);
-                                    }
-                                    for (DietLogFoodRelationModel log in lis3) {
-                                      await dao3.delete(log);
-                                    }
-                                    for (ExerciceLogModel log in lis4) {
-                                      await dao4.delete(log);
-                                    }
-                                    for (FoodModel log in lis5) {
-                                      await dao5.delete(log);
-                                    }
-                                    for (GlucoseLogModel log in lis6) {
-                                      await dao6.delete(log);
-                                    }
-                                    for (InsulinModel log in lis7) {
-                                      await dao7.delete(log);
-                                    }
-                                    for (InsulinLogModel log in lis8) {
-                                      await dao8.delete(log);
-                                    }
-                                    for (ReminderModel log in lis9) {
-                                      await dao9.delete(log);
-                                    }
-                                    for (UserModel log in lis10) {
-                                      await dao10.delete(log);
-                                    }
-                                  } else {
-                                    await DatabaseManager.deleteDB();
-                                  }
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Welcomepage(),
-                                      ));
-                                } catch (error) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      backgroundColor:
-                                          Color.fromARGB(255, 232, 80, 69),
-                                      title: Text(
-                                        'Algo salió mal',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      content: Text(
-                                        transformErrorMessage(error.toString()),
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 16),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          child: Text(
-                                            'OK',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20),
-                                          ),
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Text("Eliminar",
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16)),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                          );
+                        },
+                      );
+                    }
                   }
                 },
                 child: Text("Eliminar cuenta", style: TextStyle(fontSize: 18)),

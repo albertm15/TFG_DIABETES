@@ -48,7 +48,7 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
       List<UserModel> users =
           await dao.getById(AuthServiceManager.getCurrentUserUID());
       if (!users.isEmpty) {
-        userName = users.first.fullName != null
+        userName = users.first.fullName != null && users.first.fullName != ""
             ? users.first.fullName!
             : "Usuario desconocido";
       }
@@ -56,7 +56,9 @@ class _DrawerScaffoldState extends State<DrawerScaffold> {
       UserDAO dao = UserDAO();
       List<UserModel> users = await dao.getAll();
       if (!users.isEmpty) {
-        userName = users.first.fullName!;
+        userName = users.first.fullName != null && users.first.fullName != ""
+            ? users.first.fullName!
+            : "Usuario desconocido";
       }
     }
     setState(() {});

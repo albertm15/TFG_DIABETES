@@ -1,20 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:diabetes_tfg_app/auxiliarResources/insulinNotifications.dart';
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
-import 'package:diabetes_tfg_app/database/firebase/exerciceLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/foodDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/glucoseLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/insulinLogDAO.dart';
-import 'package:diabetes_tfg_app/database/firebase/userDAO.dart';
-import 'package:diabetes_tfg_app/database/local/glucoseLogDAO.dart';
-import 'package:diabetes_tfg_app/models/InsulinLogModel.dart';
-import 'package:diabetes_tfg_app/models/exerciceLogModel.dart';
-import 'package:diabetes_tfg_app/models/foodModel.dart';
-import 'package:diabetes_tfg_app/models/gluoseLogModel.dart';
-import 'package:diabetes_tfg_app/models/insulinModel.dart';
-import 'package:diabetes_tfg_app/models/userModel.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/welcomePage.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
@@ -22,7 +8,6 @@ import 'package:diabetes_tfg_app/widgets/drawerScaffold.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 

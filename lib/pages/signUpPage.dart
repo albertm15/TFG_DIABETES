@@ -1,4 +1,6 @@
 import 'package:diabetes_tfg_app/database/firebase/authServiceManager.dart';
+import 'package:diabetes_tfg_app/database/firebase/insulinDAO.dart';
+import 'package:diabetes_tfg_app/models/insulinModel.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/logIngPage.dart';
 import 'package:flutter/material.dart';
@@ -169,6 +171,13 @@ class _SignUpPageState extends State<SignUpPage> {
                                   _passwordController1.text,
                                 );
                                 if (signUpSuccess) {
+                                  InsulinDAOFB dao1 = InsulinDAOFB();
+                                  dao1.insert(InsulinModel.newEntity(
+                                      AuthServiceManager.getCurrentUserUID(),
+                                      "00:00",
+                                      "00:00",
+                                      0,
+                                      0));
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
