@@ -90,7 +90,7 @@ class _WelcomepageState extends State<Welcomepage> {
                       )),
                   */
                   Image.asset('assets/images/logo.png',
-                      width: 400, height: 400, color: Colors.white),
+                      width: 350, height: 359, color: Colors.white),
                   //SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {

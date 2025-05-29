@@ -150,15 +150,15 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   LegendItem(
-                      color: Colors.black,
+                      color: Colors.greenAccent,
                       label: "Brazo izq.: ${locationsCount[0]}"),
                   const SizedBox(width: 8),
                   LegendItem(
-                      color: Color.fromARGB(255, 85, 42, 196),
+                      color: Colors.amberAccent,
                       label: "Brazo der.: ${locationsCount[1]}"),
                   const SizedBox(width: 8),
                   LegendItem(
-                      color: Color(0xFF3C37FF),
+                      color: Colors.blueAccent,
                       label: "Gluteo izq.: ${locationsCount[2]}"),
                   const SizedBox(width: 8),
                 ],
@@ -167,15 +167,15 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   LegendItem(
-                      color: Colors.black,
+                      color: Colors.purple,
                       label: "Gluteo der.: ${locationsCount[3]}"),
                   const SizedBox(width: 8),
                   LegendItem(
-                      color: Color.fromARGB(255, 85, 42, 196),
+                      color: Colors.cyanAccent,
                       label: "Muslo izq.: ${locationsCount[4]}"),
                   const SizedBox(width: 8),
                   LegendItem(
-                      color: Color(0xFF3C37FF),
+                      color: Colors.deepOrangeAccent,
                       label: "Muslo der.: ${locationsCount[5]}"),
                 ],
               ),
@@ -183,7 +183,7 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   LegendItem(
-                      color: Colors.black,
+                      color: Colors.red,
                       label: "Barriga: ${locationsCount[6]}"),
                 ],
               ),
