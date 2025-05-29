@@ -32,7 +32,7 @@ class _HomePageState extends State<Homepage> {
     return DrawerScaffold(
         child: BackgroundBase(
             child: Scaffold(
-      appBar: UpperNavBar(pageName: "Home Page"),
+      appBar: UpperNavBar(pageName: "Glucsafe"),
       //body: Container(child: Center(child: Text("Hello"))),
       body: Container(child: Center(child: HomePageWidget())),
       bottomNavigationBar: LowerNavBar(selectedSection: "home"),

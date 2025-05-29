@@ -36,7 +36,9 @@ class _WelcomepageState extends State<Welcomepage> {
                   Padding(
                       padding: const EdgeInsets.all(30.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          /*
                           Container(
                               width: 100,
                               height: 100,
@@ -50,20 +52,21 @@ class _WelcomepageState extends State<Welcomepage> {
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 25),
                               )),
+                              */
                           Column(
                             children: [
                               Text(
                                 "Bienvenid@ a",
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30,
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                "NOMBRE_APP",
+                                //"NOMBRE_APP",
+                                "Glucsafe",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 50,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
@@ -72,6 +75,7 @@ class _WelcomepageState extends State<Welcomepage> {
                           )
                         ],
                       )),
+                  /*
                   Container(
                       width: 250,
                       height: 350,
@@ -84,7 +88,10 @@ class _WelcomepageState extends State<Welcomepage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.black, fontSize: 25),
                       )),
-                  SizedBox(height: 20),
+                  */
+                  Image.asset('assets/images/logo.png',
+                      width: 400, height: 400, color: Colors.white),
+                  //SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushReplacement(

@@ -158,7 +158,7 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               */
               actions: [
-                if (pageName == "Home Page")
+                if (pageName == "Home Page" || pageName == "Glucsafe")
                   SizedBox(
                     width: 40,
                   )
