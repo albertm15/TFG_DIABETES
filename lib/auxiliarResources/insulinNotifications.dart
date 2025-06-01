@@ -298,23 +298,23 @@ class InsulinNotifications {
     }
 
     if (notifications.isNotEmpty) {
-      scheduleInsulinNotification(
+      scheduleDietNotification(
           int.parse(notifications[0].breakfastSchedule.split(":")[0]),
           int.parse(notifications[0].breakfastSchedule.split(":")[1]),
           "del desayuno");
-      scheduleInsulinNotification(
+      scheduleDietNotification(
           int.parse(notifications[0].snackSchedule.split(":")[0]),
           int.parse(notifications[0].snackSchedule.split(":")[1]),
           "del tente en pié");
-      scheduleInsulinNotification(
+      scheduleDietNotification(
           int.parse(notifications[0].lunchSchedule.split(":")[0]),
           int.parse(notifications[0].lunchSchedule.split(":")[1]),
           "de la comida");
-      scheduleInsulinNotification(
+      scheduleDietNotification(
           int.parse(notifications[0].afternoonSnackSchedule.split(":")[0]),
           int.parse(notifications[0].afternoonSnackSchedule.split(":")[1]),
           "de la merienda");
-      scheduleInsulinNotification(
+      scheduleDietNotification(
           int.parse(notifications[0].dinnerSchedule.split(":")[0]),
           int.parse(notifications[0].dinnerSchedule.split(":")[1]),
           "de la cena");
@@ -328,6 +328,9 @@ class InsulinNotifications {
   }
 
   static Future<void> cancelAll() async {
+    await cancelInsulinNotifications();
+    await cancelDietNotifications();
+    await cancelRemindersNotifications();
     await flutterLocalNotificationsPlugin.cancelAll();
     nextInsulinId = 0;
     nextDietId = 2;
