@@ -64,7 +64,7 @@ class _WelcomepageState extends State<Welcomepage> {
                               ),
                               Text(
                                 //"NOMBRE_APP",
-                                "Glucsafe",
+                                "Glucare",
                                 style: TextStyle(
                                   fontSize: 50,
                                   fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class _WelcomepageState extends State<Welcomepage> {
                         style: TextStyle(color: Colors.black, fontSize: 25),
                       )),
                   */
-                  Image.asset('assets/images/logo.png',
+                  Image.asset('assets/images/logo_wo_bg.png',
                       width: 350, height: 359, color: Colors.white),
                   //SizedBox(height: 20),
                   ElevatedButton(
