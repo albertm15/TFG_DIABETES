@@ -5,6 +5,7 @@ import 'package:diabetes_tfg_app/pages/exerciceAndHealthMainPage.dart';
 import 'package:diabetes_tfg_app/pages/glucoseMainPage.dart';
 import 'package:diabetes_tfg_app/pages/homePage.dart';
 import 'package:diabetes_tfg_app/pages/insulinMainPage.dart';
+import 'package:diabetes_tfg_app/pages/selectAddOrSubInsulin.dart';
 import 'package:diabetes_tfg_app/widgets/backgroundBase.dart';
 import 'package:flutter/material.dart';
 
@@ -35,12 +36,20 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context) =>
                     BackgroundBase(child: GlucoseMainPage())));
         break;
-      case "Añadir Insulina" || "Añadir Inyección" || "Horario Insulina":
+      case "Añadir Inyección" || "Horario Insulina" || "Seleccionar operación":
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) =>
                     BackgroundBase(child: InsulinMainPage())));
+        break;
+
+      case "Añadir Insulina" || "Restar Insulina":
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    BackgroundBase(child: SelectAddOrSubInsulin())));
         break;
 
       case "Seleccionar tipo de registro":
@@ -94,6 +103,8 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
             "Detalles de insulina" ||
             "Detalles de comida":
         return 22;
+      case "Seleccionar operación":
+        return 21;
       case "Añadir registro de glucosa" ||
             "Seleccionar tipo de registro" ||
             "Añadir registro de comida" ||
@@ -102,6 +113,7 @@ class UpperNavBar extends StatelessWidget implements PreferredSizeWidget {
       case "Añadir registro de ejercicio":
         return 17;
       case "Añadir Insulina" ||
+            "Restar Insulina" ||
             "Añadir Inyección" ||
             "Horario Insulina" ||
             "Ejercicio y Salud" ||

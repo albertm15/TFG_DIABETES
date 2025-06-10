@@ -47,18 +47,24 @@ class _ResetForgottenPasswordPageState
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/logo_wo_bg.png',
                       color: Colors.white,
+                      height: 100,
+                      width: 100,
                     ),
-                    child: Text(
-                      "Logo",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black, fontSize: 25),
-                    )),
+                    Text(
+                      "Glucare",
+                      style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
                 SizedBox(
                   height: 20,
                 ),

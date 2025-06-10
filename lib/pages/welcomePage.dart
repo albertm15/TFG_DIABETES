@@ -56,7 +56,7 @@ class _WelcomepageState extends State<Welcomepage> {
                           Column(
                             children: [
                               Text(
-                                "Bienvenid@ a",
+                                "Bienvenido/a a",
                                 style: TextStyle(
                                   fontSize: 30,
                                   color: Colors.white,

@@ -40,18 +40,19 @@ class _AddReminderState extends State<AddReminder> with WidgetsBindingObserver {
   }
 
   void loadData() async {
+    List<ReminderModel> log = [];
     if (AuthServiceManager.checkIfLogged()) {
       ReminderDAOFB dao = ReminderDAOFB();
-      List<ReminderModel> log = await dao.getById(widget.initialId);
+      log = await dao.getById(widget.initialId);
       titleController.text = log.first.title;
       selectedDate = DateTime.parse(log.first.date);
       hourController.text = log.first.time.split(":")[0];
       minuteController.text = log.first.time.split(":")[1];
       repeat = log.first.repeat;
-      titleController.text = log.first.repeatConfig;
+      repeatFrequency = log.first.repeatConfig;
     } else {
       ReminderDAO dao = ReminderDAO();
-      List<ReminderModel> log = await dao.getById(widget.initialId);
+      log = await dao.getById(widget.initialId);
       titleController.text = log.first.title;
       selectedDate = DateTime.parse(log.first.date);
       hourController.text = log.first.time.split(":")[0];
@@ -59,7 +60,9 @@ class _AddReminderState extends State<AddReminder> with WidgetsBindingObserver {
       repeat = log.first.repeat;
       repeatFrequency = log.first.repeatConfig;
     }
-    setState(() {});
+    setState(() {
+      titleController.text = log.first.title;
+    });
   }
 
   void saveLog() async {
@@ -108,9 +111,9 @@ class _AddReminderState extends State<AddReminder> with WidgetsBindingObserver {
     }
     if (widget.initialId != "") {
       //borrar la notificación actual
-      InsulinNotifications.cancelRemindersNotifications();
+      await InsulinNotifications.cancelRemindersNotifications();
       //añadir todas
-      InsulinNotifications.scheduleAllReminders();
+      await InsulinNotifications.scheduleAllReminders();
     } else {
       switch (repeatFrequency) {
         case 'Cada día':
@@ -121,6 +124,7 @@ class _AddReminderState extends State<AddReminder> with WidgetsBindingObserver {
               int.parse(hourController.text),
               int.parse(minuteController.text),
               "Recordatorio: ${titleController.text}");
+          break;
         case 'Cada semana':
           InsulinNotifications.scheduleWeeklyReminderNotification(
               selectedDate.day,
@@ -129,6 +133,7 @@ class _AddReminderState extends State<AddReminder> with WidgetsBindingObserver {
               int.parse(hourController.text),
               int.parse(minuteController.text),
               "Recordatorio: ${titleController.text}");
+          break;
         case 'Cada mes':
           InsulinNotifications.scheduleMonthlyReminderNotification(
               selectedDate.day,
@@ -137,6 +142,7 @@ class _AddReminderState extends State<AddReminder> with WidgetsBindingObserver {
               int.parse(hourController.text),
               int.parse(minuteController.text),
               "Recordatorio: ${titleController.text}");
+          break;
         default:
           InsulinNotifications.schedulePuctualReminderNotification(
               selectedDate.day,

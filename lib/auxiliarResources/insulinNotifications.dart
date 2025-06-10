@@ -137,11 +137,33 @@ class InsulinNotifications {
 
   static Future<void> scheduleDailyReminderNotification(int day, int month,
       int year, int hour, int minute, String message) async {
-    final now = tz.TZDateTime.now(tz.local);
     var scheduledDate = tz.TZDateTime(tz.local, year, month, day, hour, minute);
 
-    if (!scheduledDate.isBefore(now)) {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      nextReminderId++,
+      'Recodatorio',
+      '$message.',
+      scheduledDate,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'reminder_channel',
+          'Notificación de reocrdatorio',
+          channelDescription: 'Notificaciones de recordatorio',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  static Future<void> scheduleWeeklyReminderNotification(int day, int month,
+      int year, int hour, int minute, String message) async {
+    var scheduledDate = tz.TZDateTime(tz.local, year, month, day, hour, minute);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
         nextReminderId++,
         'Recodatorio',
         '$message.',
@@ -157,61 +179,33 @@ class InsulinNotifications {
           iOS: DarwinNotificationDetails(),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.time,
-      );
-    }
-  }
-
-  static Future<void> scheduleWeeklyReminderNotification(int day, int month,
-      int year, int hour, int minute, String message) async {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate = tz.TZDateTime(tz.local, year, month, day, hour, minute);
-
-    if (!scheduledDate.isBefore(now)) {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-          nextReminderId++,
-          'Recodatorio',
-          '$message.',
-          scheduledDate,
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'reminder_channel',
-              'Notificación de reocrdatorio',
-              channelDescription: 'Notificaciones de recordatorio',
-              importance: Importance.max,
-              priority: Priority.high,
-            ),
-            iOS: DarwinNotificationDetails(),
-          ),
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
-    }
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
   }
 
   static Future<void> scheduleMonthlyReminderNotification(int day, int month,
       int year, int hour, int minute, String message) async {
-    final now = tz.TZDateTime.now(tz.local);
+    //final now = tz.TZDateTime.now(tz.local);
     var scheduledDate = tz.TZDateTime(tz.local, year, month, day, hour, minute);
 
-    if (!scheduledDate.isBefore(now)) {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-          nextReminderId++,
-          'Recodatorio',
-          '$message.',
-          scheduledDate,
-          const NotificationDetails(
-            android: AndroidNotificationDetails(
-              'reminder_channel',
-              'Notificación de reocrdatorio',
-              channelDescription: 'Notificaciones de recordatorio',
-              importance: Importance.max,
-              priority: Priority.high,
-            ),
-            iOS: DarwinNotificationDetails(),
+    //if (!scheduledDate.isBefore(now)) {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        nextReminderId++,
+        'Recodatorio',
+        '$message.',
+        scheduledDate,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'reminder_channel',
+            'Notificación de reocrdatorio',
+            channelDescription: 'Notificaciones de recordatorio',
+            importance: Importance.max,
+            priority: Priority.high,
           ),
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime);
-    }
+          iOS: DarwinNotificationDetails(),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime);
+    //}
   }
 
   static Future<void> scheduleAllReminders() async {
@@ -219,16 +213,16 @@ class InsulinNotifications {
 
     if (AuthServiceManager.checkIfLogged()) {
       ReminderDAOFB dao = ReminderDAOFB();
-      reminders = await dao.getAllSinceToday();
+      reminders = await dao.getActiveReminders();
     } else {
       ReminderDAO dao = ReminderDAO();
-      reminders = await dao.getAllSinceToday();
+      reminders = await dao.getActiveReminders();
     }
 
     for (ReminderModel reminder in reminders) {
       switch (reminder.repeatConfig) {
         case 'Cada día':
-          InsulinNotifications.scheduleDailyReminderNotification(
+          await InsulinNotifications.scheduleDailyReminderNotification(
               int.parse(reminder.date.split("-")[2]),
               int.parse(reminder.date.split("-")[1]),
               int.parse(reminder.date.split("-")[0]),
@@ -236,7 +230,7 @@ class InsulinNotifications {
               int.parse(reminder.time.split(":")[1]),
               "Recordatorio: ${reminder.title}");
         case 'Cada semana':
-          InsulinNotifications.scheduleWeeklyReminderNotification(
+          await InsulinNotifications.scheduleWeeklyReminderNotification(
               int.parse(reminder.date.split("-")[2]),
               int.parse(reminder.date.split("-")[1]),
               int.parse(reminder.date.split("-")[0]),
@@ -244,7 +238,7 @@ class InsulinNotifications {
               int.parse(reminder.time.split(":")[1]),
               "Recordatorio: ${reminder.title}");
         case 'Cada mes':
-          InsulinNotifications.scheduleMonthlyReminderNotification(
+          await InsulinNotifications.scheduleMonthlyReminderNotification(
               int.parse(reminder.date.split("-")[2]),
               int.parse(reminder.date.split("-")[1]),
               int.parse(reminder.date.split("-")[0]),
@@ -252,7 +246,7 @@ class InsulinNotifications {
               int.parse(reminder.time.split(":")[1]),
               "Recordatorio: ${reminder.title}");
         default:
-          InsulinNotifications.schedulePuctualReminderNotification(
+          await InsulinNotifications.schedulePuctualReminderNotification(
               int.parse(reminder.date.split("-")[2]),
               int.parse(reminder.date.split("-")[1]),
               int.parse(reminder.date.split("-")[0]),
@@ -275,11 +269,11 @@ class InsulinNotifications {
       notifications = await dao.getAll();
     }
     if (notifications.isNotEmpty) {
-      scheduleInsulinNotification(
+      await scheduleInsulinNotification(
           int.parse(notifications[0].firstInjectionSchedule.split(":")[0]),
           int.parse(notifications[0].firstInjectionSchedule.split(":")[1]),
           "primera");
-      scheduleInsulinNotification(
+      await scheduleInsulinNotification(
           int.parse(notifications[0].secondInjectionSchedule.split(":")[0]),
           int.parse(notifications[0].secondInjectionSchedule.split(":")[1]),
           "segunda");
@@ -298,23 +292,23 @@ class InsulinNotifications {
     }
 
     if (notifications.isNotEmpty) {
-      scheduleDietNotification(
+      await scheduleDietNotification(
           int.parse(notifications[0].breakfastSchedule.split(":")[0]),
           int.parse(notifications[0].breakfastSchedule.split(":")[1]),
           "del desayuno");
-      scheduleDietNotification(
+      await scheduleDietNotification(
           int.parse(notifications[0].snackSchedule.split(":")[0]),
           int.parse(notifications[0].snackSchedule.split(":")[1]),
           "del tente en pié");
-      scheduleDietNotification(
+      await scheduleDietNotification(
           int.parse(notifications[0].lunchSchedule.split(":")[0]),
           int.parse(notifications[0].lunchSchedule.split(":")[1]),
           "de la comida");
-      scheduleDietNotification(
+      await scheduleDietNotification(
           int.parse(notifications[0].afternoonSnackSchedule.split(":")[0]),
           int.parse(notifications[0].afternoonSnackSchedule.split(":")[1]),
           "de la merienda");
-      scheduleDietNotification(
+      await scheduleDietNotification(
           int.parse(notifications[0].dinnerSchedule.split(":")[0]),
           int.parse(notifications[0].dinnerSchedule.split(":")[1]),
           "de la cena");

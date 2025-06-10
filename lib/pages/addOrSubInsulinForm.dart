@@ -11,12 +11,18 @@ import 'package:diabetes_tfg_app/widgets/upperNavBar.dart';
 import 'package:flutter/material.dart';
 
 class AddInsulinFormPage extends StatefulWidget {
+  final bool isAdd;
+
+  const AddInsulinFormPage({required this.isAdd});
+
   @override
   _AddInsulinFormPageState createState() => _AddInsulinFormPageState();
 }
 
 class _AddInsulinFormPageState extends State<AddInsulinFormPage>
     with WidgetsBindingObserver {
+  double actualFastActingInsulin = 0;
+  double actualSlowActingInsulin = 0;
   double fastActingInsulin = 0;
   double slowActingInsulin = 0;
   List<InsulinModel> log = [];
@@ -33,12 +39,22 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
         dao.insert(InsulinModel.newEntity(
             AuthServiceManager.getCurrentUserUID(), "12:00", "00:00", 0, 0));
       }
-      for (InsulinModel insulin in log) {
-        insulin.totalFastActingInsulin = insulin.totalFastActingInsulin +
-            double.parse(_fastActingInsulinController.text);
-        insulin.totalSlowActingInsulin = insulin.totalSlowActingInsulin +
-            double.parse(_slowActingInsulinController.text);
-        dao.update(insulin);
+      if (widget.isAdd) {
+        for (InsulinModel insulin in log) {
+          insulin.totalFastActingInsulin = insulin.totalFastActingInsulin +
+              double.parse(_fastActingInsulinController.text);
+          insulin.totalSlowActingInsulin = insulin.totalSlowActingInsulin +
+              double.parse(_slowActingInsulinController.text);
+          dao.update(insulin);
+        }
+      } else {
+        for (InsulinModel insulin in log) {
+          insulin.totalFastActingInsulin = insulin.totalFastActingInsulin -
+              double.parse(_fastActingInsulinController.text);
+          insulin.totalSlowActingInsulin = insulin.totalSlowActingInsulin -
+              double.parse(_slowActingInsulinController.text);
+          dao.update(insulin);
+        }
       }
     } else {
       InsulinDAO dao = InsulinDAO();
@@ -46,12 +62,41 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
       if (log.isEmpty) {
         dao.insert(InsulinModel.newEntity("localUser", "12:00", "00:00", 0, 0));
       }
+      if (widget.isAdd) {
+        for (InsulinModel insulin in log) {
+          insulin.totalFastActingInsulin = insulin.totalFastActingInsulin +
+              double.parse(_fastActingInsulinController.text);
+          insulin.totalSlowActingInsulin = insulin.totalSlowActingInsulin +
+              double.parse(_slowActingInsulinController.text);
+          dao.update(insulin);
+        }
+      } else {
+        for (InsulinModel insulin in log) {
+          insulin.totalFastActingInsulin = insulin.totalFastActingInsulin -
+              double.parse(_fastActingInsulinController.text);
+          insulin.totalSlowActingInsulin = insulin.totalSlowActingInsulin -
+              double.parse(_slowActingInsulinController.text);
+          dao.update(insulin);
+        }
+      }
+    }
+    setState(() {});
+  }
+
+  void loadData() async {
+    if (AuthServiceManager.checkIfLogged()) {
+      InsulinDAOFB dao = InsulinDAOFB();
+      log = await dao.getAll();
       for (InsulinModel insulin in log) {
-        insulin.totalFastActingInsulin = insulin.totalFastActingInsulin +
-            double.parse(_fastActingInsulinController.text);
-        insulin.totalSlowActingInsulin = insulin.totalSlowActingInsulin +
-            double.parse(_slowActingInsulinController.text);
-        dao.update(insulin);
+        actualFastActingInsulin = insulin.totalFastActingInsulin;
+        actualSlowActingInsulin = insulin.totalSlowActingInsulin;
+      }
+    } else {
+      InsulinDAO dao = InsulinDAO();
+      log = await dao.getAll();
+      for (InsulinModel insulin in log) {
+        actualFastActingInsulin = insulin.totalFastActingInsulin;
+        actualSlowActingInsulin = insulin.totalSlowActingInsulin;
       }
     }
     setState(() {});
@@ -60,6 +105,7 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
   @override
   void initState() {
     super.initState();
+    loadData();
     WidgetsBinding.instance.addObserver(this);
     _isKeyboardVisible = WidgetsBinding.instance.window.viewInsets.bottom > 0.0;
   }
@@ -87,7 +133,8 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: UpperNavBar(pageName: "Añadir Insulina"),
+      appBar: UpperNavBar(
+          pageName: "${widget.isAdd == true ? "Añadir" : "Restar"} Insulina"),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -102,7 +149,7 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Añadir Insulina",
+                    "${widget.isAdd == true ? "Añadir" : "Restar"} Insulina",
                     style: TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
@@ -116,12 +163,18 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
-                      labelText: "Unidades de insulina lenta",
+                      labelText:
+                          "Unidades de insulina lenta a ${widget.isAdd == true ? "añadir" : "restar"}",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                      "Insulina de absorción lenta actual: ${actualSlowActingInsulin.toStringAsFixed(1)}"),
                   SizedBox(height: 24),
                   TextFormField(
                     controller: _fastActingInsulinController,
@@ -129,12 +182,18 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                     decoration: InputDecoration(
-                      labelText: "Unidades de insulina rapida",
+                      labelText:
+                          "Unidades de insulina rapida a ${widget.isAdd == true ? "añadir" : "restar"}",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                      "Insulina de absorción rápida actual: ${actualFastActingInsulin.toStringAsFixed(1)}"),
                   SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: () {
@@ -210,6 +269,70 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
                             ],
                           ),
                         );
+                      } else if (!widget.isAdd &&
+                          (actualFastActingInsulin -
+                                  double.parse(
+                                      _fastActingInsulinController.text)) <
+                              0) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Valor de insulina rapida no valido',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                              "El valor de insulina rapida a restar es mayor que el total actual, introduzca un valor valido en la insulina rapida.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (!widget.isAdd &&
+                          (actualSlowActingInsulin -
+                                  double.parse(
+                                      _slowActingInsulinController.text)) <
+                              0) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color.fromARGB(255, 232, 80, 69),
+                            title: Text(
+                              'Valor de insulina lenta no valido',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            content: Text(
+                              "El valor de insulina lenta a restar es mayor que el total actual, introduzca un valor valido en la insulina lenta.",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ],
+                          ),
+                        );
                       } else {
                         saveData();
                         Navigator.pushReplacement(
@@ -229,7 +352,8 @@ class _AddInsulinFormPageState extends State<AddInsulinFormPage>
                       padding:
                           EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     ),
-                    child: Text("Añadir", style: TextStyle(fontSize: 24)),
+                    child: Text("${widget.isAdd == true ? "Añadir" : "Restar"}",
+                        style: TextStyle(fontSize: 24)),
                   ),
                 ],
               ),
