@@ -92,7 +92,7 @@ class _FoodConversorPageStateWidgetState
   Map<String, TextEditingController> controllers = {};
   int punctualCarbs = 0;
 
-  void getData() async {
+  Future<void> getData() async {
     if (AuthServiceManager.checkIfLogged()) {
       FoodDAOFB dao = FoodDAOFB();
       foodList = await dao.getAll();
@@ -123,6 +123,7 @@ class _FoodConversorPageStateWidgetState
     for (Selectedfood food in selectedFoods) {
       controllers[food.food.name]?.text = food.quantity.toString();
     }
+    setState(() {});
   }
 
   Future<void> loadSelectedFoods() async {
@@ -212,9 +213,9 @@ class _FoodConversorPageStateWidgetState
   }
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
-    getData();
+    await getData();
     filteredSearchFood = foodList;
 
     searchController.addListener(() {

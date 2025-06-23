@@ -113,7 +113,7 @@ class MinimizedLogsListHome extends StatelessWidget {
                                       BackgroundBase(child: AllLogsPage()))));
                     },
                     icon: Icon(
-                      Icons.unfold_more_rounded,
+                      Icons.arrow_forward_ios_rounded,
                       color: Colors.black,
                     )),
               ],

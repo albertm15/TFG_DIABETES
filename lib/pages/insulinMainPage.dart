@@ -149,6 +149,15 @@ class _InsulinMainPageWidgetState extends State<InsulinMainPageWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Text(
+                    "Resumen semanal:",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   LegendItem(
                       color: Colors.greenAccent,
                       label: "Brazo izq.: ${locationsCount[0]}"),
