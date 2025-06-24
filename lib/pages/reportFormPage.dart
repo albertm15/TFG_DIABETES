@@ -77,7 +77,7 @@ class _ReportFormPageState extends State<ReportFormPage>
 
   Future<File> createPDF(String fileName) async {
     final Uint8List imageBytes = await rootBundle
-        .load('assets/images/Diet_Image.png')
+        .load('assets/images/logo_wo_bg_black.png')
         .then((data) => data.buffer.asUint8List());
     final pw.ImageProvider imageProvider = pw.MemoryImage(imageBytes);
     final Uint8List imageBytes2 = await rootBundle
